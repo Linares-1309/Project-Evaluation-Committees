@@ -15,13 +15,12 @@ const AuthProvider = ({ children }) => {
         setCargando(false);
         return;
       }
-
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
       try {
         const url = `/user/profile`;
@@ -29,6 +28,7 @@ const AuthProvider = ({ children }) => {
         setAuth(data);
       } catch (error) {
         console.log(error.response.data.msg);
+        localStorage.removeItem("token");
         setAuth({});
       }
       setCargando(false);

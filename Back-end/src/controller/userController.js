@@ -209,19 +209,22 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Funcion para traer el perfil del usuario
-export const profile = async (req, res) => {
-  console.log(req.user);
+// Función para traer el perfil del usuario
+export const profileUser = async (req, res) => {
   try {
-    const { user } = req;
-    res.json({ user }); // Respuesta exitosa con los datos del perfil del usuario.
+    const { user } = req;  // Debería estar pasando el usuario autenticado en `req.user`
+    
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.json({ user });  // Respuesta exitosa con los datos del perfil del usuario.
   } catch (error) {
     logger.error("Error al traer el perfil del usuario!", error);
-    return res
-      .status(500)
-      .json({ message: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
+    return res.status(500).json({ message: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
   }
 };
+
 
 //Funcion para enviar el correo de recuperacion de la contraseña
 export const forgotPassword = async (req, res) => {

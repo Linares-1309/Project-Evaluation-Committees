@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useState } from "react";
 // import { IoLogIn } from "react-icons/io5";
 import { Link } from "react-router-dom";

@@ -19,7 +19,7 @@ const checkAuth = () => {
       );
       // Busca el usuario en la base de datos
       const user = await UserModel.findByPk(decodedIdUser, {
-        attributes: { exclude: ["password", "email"] },
+        attributes: { exclude: ["password", "token"] },
       });
 
       if (!user) {

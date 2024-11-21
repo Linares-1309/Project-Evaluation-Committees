@@ -3,32 +3,38 @@ import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "./UserFuctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from './../../../hooks/useAuth.jsx';
 
 const Login = () => {
   const [Id_User, setId_User] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
   const navigate = useNavigate()
+  const { setAuth } = useAuth();
   // Usamos useMutation para hacer la mutación de login
   const { mutate, isLoading, isError, error} = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       // Si el login es exitoso, almacenamos el token
       localStorage.setItem("token", data.token);
+      setAuth(data)
       setAlerta({
         msg: data.msg,
         error: false,
       });
-      const timer = setTimeout(() => {
-        navigate("/admin")
-      }, 2000); // Desaparece después de 2 segundos
+      navigate("/admin")
+      // const timer = setTimeout(() => {
+      // }, 2000);
   
-      return () => clearTimeout(timer); // Limpia el timeout si el componente se desmonta
+      // return () => clearTimeout(timer); 
     },
     onError: (error) => {
+      // Limpiar el localStorage
+      localStorage.removeItem("token")
+      localStorage.clear()
       // Si ocurre un error, mostramos el mensaje de error
       setAlerta({
-        msg: error.message, // El mensaje es extraído del error lanzado
+        msg: error.msg, // El mensaje es extraído del error lanzado
         error: true,
       });
     },
