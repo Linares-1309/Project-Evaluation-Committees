@@ -2,12 +2,19 @@
 // import Header from "./Header.jsx";
 // import Footer from "../layoutPublic/Footer.jsx";
 import useAuth from "../../hooks/useAuth";
-import { FaHome, FaUsers, FaFileAlt, FaClipboardList, FaStar  } from "react-icons/fa";
+import {
+  FaHome,
+  FaUsers,
+  FaFileAlt,
+  FaClipboardList,
+  FaStar,
+} from "react-icons/fa";
+import { LiaUsersCogSolid } from "react-icons/lia";
 import { IoSettings } from "react-icons/io5";
 import { VscLightbulbAutofix } from "react-icons/vsc";
-import {RiLogoutCircleFill } from "react-icons/ri";
+import { RiLogoutCircleFill } from "react-icons/ri";
 
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 
 const LayoutPrivate = () => {
   const { auth, cargando, cerrarSesion } = useAuth();
@@ -61,18 +68,18 @@ const LayoutPrivate = () => {
                     />
                   </Link>
                 </div>
-                <div className="flex items-center">
+                <Link to="/admin/perfil" className="flex items-center mr-5">
+                <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">{auth?.user?.username || auth?.username}</h3>
                   <div className="flex items-center ms-3">
                     <div>
                       <button
                         type="button"
                         className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                         aria-expanded="false"
-                        data-dropdown-toggle="dropdown-user"
                       >
                         <span className="sr-only">Open user menu</span>
                         <img
-                          className="w-9 h-9 rounded-full"
+                          className="w-10 h-10 rounded-full"
                           src="/user.png"
                           alt="user photo"
                         />
@@ -127,7 +134,7 @@ const LayoutPrivate = () => {
                       </ul>
                     </div> */}
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </nav>
@@ -137,34 +144,33 @@ const LayoutPrivate = () => {
             className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
             aria-label="Sidebar"
           >
-            <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between">
               <ul className="space-y-2 font-medium">
                 <li>
                   <Link
                     to="/admin"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-
                   >
-                    <FaHome size={22} />
+                    <FaHome size={23} className="text-green-500" />
 
                     <span className="ms-3">Inicio</span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/ideas"
+                    to="/admin/ideas"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                    <VscLightbulbAutofix size={21} />
+                    <VscLightbulbAutofix size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Ideas</span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/comites"
+                    to="/admin/comites"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                    <FaFileAlt size={22} />
+                    <FaFileAlt size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Comités
                     </span>
@@ -172,10 +178,10 @@ const LayoutPrivate = () => {
                 </li>
                 <li>
                   <Link
-                    to="/users"
+                    to="/admin/proponentes"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                    <FaUsers size={22} />
+                    <FaUsers size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Proponentes
                     </span>
@@ -183,10 +189,10 @@ const LayoutPrivate = () => {
                 </li>
                 <li>
                   <Link
-                    to="/settings"
+                    to="/admin/criterios"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                    <FaStar   size={22} />
+                    <FaStar size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Criterios
                     </span>
@@ -194,84 +200,45 @@ const LayoutPrivate = () => {
                 </li>
                 <li>
                   <Link
-                    to="/settings"
+                    to="/admin/conjunto-criterios"
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                    <FaClipboardList size={21}/>
+                    <FaClipboardList size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
-                    Conjunto Criterios
-                    </span>
-                  </Link>
-                  <button
-                    type="button"
-                    className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    aria-controls="dropdown-example"
-                    data-collapse-toggle="dropdown-example"
-                  >
-                    <FaClipboardList size={21}/>
-                    <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
                       Conjunto Criterios
                     </span>
-                    <svg
-                      className="w-3 h-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 10 6"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 4 4 4-4"
-                      />
-                    </svg>
-                  </button>
-                  <ul id="dropdown-example" className="hidden py-2 space-y-2">
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Products
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Billing
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        Invoice
-                      </a>
-                    </li>
-                  </ul>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  <Link
+                    to="/admin/usuarios"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-            <IoSettings size={21}/>
+                    <LiaUsersCogSolid size={23} className="text-green-500" />
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Usuarios
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/ajustes"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                  >
+                    <IoSettings size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Ajustes
                     </span>
-                  </a>
+                  </Link>
                 </li>
-                <li>
+              </ul>
+              <ul>
+                <li className="space-y-2 font-medium">
                   <a
                     onClick={cerrarSesion}
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
-                <RiLogoutCircleFill size={21}/>
+                    <RiLogoutCircleFill size={23} className="text-green-500" />
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Cerrar Sesion
                     </span>
@@ -283,259 +250,12 @@ const LayoutPrivate = () => {
 
           <div className="p-4 sm:ml-64">
             <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
+              <div className="grid grid-cols-1 gap-4 mb-4 text-center">
+                <Outlet />
               </div>
-              <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-                <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                  <p className="text-2xl text-gray-400 dark:text-gray-500">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 18 18"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 1v16M1 9h16"
-                      />
-                    </svg>
-                  </p>
-                </div>
-              </div>
+              <div className="grid grid-cols-1 gap-4 mb-4 text-center">2</div>
+
+              <div className="grid grid-cols-2 gap-4"></div>
             </div>
           </div>
         </>

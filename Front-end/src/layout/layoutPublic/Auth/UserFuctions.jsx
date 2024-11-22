@@ -57,7 +57,7 @@ export const updateUser = async (datos) => {
       },
     };
 
-    const { data } = await ClientAxios.delete(
+    const { data } = await ClientAxios.update(
       `/user/${datos.Id_User}`,
       { username: datos.username },
       config

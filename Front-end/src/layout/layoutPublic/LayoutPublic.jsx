@@ -11,7 +11,7 @@ const LayoutPublic = () => {
 
       <div className="flex w-full flex-col min-h-screen">
         <Header />
-        <div className="flex-grow px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex-grow sm:px-4 py-6 lg:px-8">
           <Outlet />
         </div>
         <Footer />
