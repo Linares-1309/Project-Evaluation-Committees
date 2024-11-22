@@ -25,49 +25,60 @@ export default function Header() {
   };
 
   return (
-    <div className="w-full">  
+    <div className="w-full">
       <div className="bg-header shadow py-5 px-7">
         <nav className="flex justify-between">
           <div className="flex items-center lg:pr-8">
-            <img src="/logoTecnoparque.png" className="w-40 drop-shadow-2xl" alt="Logo"/>
+            <img
+              src="/logoTecnoparque.png"
+              className="w-40 drop-shadow-2xl"
+              alt="Logo"
+            />
             {/* <h2 className="font-bold text-2xl leading-6 text-black ">
               TECNOPARQUE
             </h2> */}
           </div>
           <ul className="hidden md:flex flex-auto space-x-2 items-center">
-            <Link to='/'
+            <Link
+              to="/"
               onClick={() => selected(0)}
               className={`${
                 style[0]
                   ? "text-black border-b-4 border-green-500"
                   : "text-black"
-              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase`}
+              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase font-serif`}
             >
               INICIO
             </Link>
-            <Link to='contact'
+            <Link
+              to="contact"
               onClick={() => selected(1)}
               className={`${
                 style[1]
                   ? "text-black border-b-4 border-green-500"
                   : "text-black"
-              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase`}
+              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase font-serif`}
             >
               Contacto
             </Link>
-            <Link to='lineas'
+            <Link
+              to="lineas"
               onClick={() => selected(2)}
               className={`${
                 style[2]
                   ? "text-black border-b-4 border-green-500"
                   : "text-black"
-              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase`}
+              } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase font-serif`}
             >
-                Lineas
+              Lineas
             </Link>
           </ul>
           <div className=" flex space-x-5 justify-center items-center pl-2">
-            <Link to="/login" className="text-black font-medium" onClick={() => selected(null)}>
+            <Link
+              to="/login"
+              className="text-black font-medium font-serif items-center flex justify-center flex-col"
+              onClick={() => selected(null)}
+            >
               <IoLogIn size={28} title="Login" />
               Iniciar Sesion
             </Link>
@@ -122,19 +133,22 @@ export default function Header() {
                 dropDown ? "hidden" : "block"
               } font-normal text-base leading-4 absolute top-2  w-full flex flex-col rounded shadow-md`}
             >
-              <Link to='/'
+              <Link
+                to="/"
                 onClick={() => setSelectedText("Inicio")}
                 className="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-bold uppercase"
               >
                 Inicio
               </Link>
-              <Link to='contact'
+              <Link
+                to="contact"
                 onClick={() => setSelectedText("Contacto")}
                 className="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-bold uppercase"
               >
                 Contacto
               </Link>
-              <Link to='lineas'
+              <Link
+                to="lineas"
                 onClick={() => setSelectedText("Lineas")}
                 className="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-bold uppercase"
               >

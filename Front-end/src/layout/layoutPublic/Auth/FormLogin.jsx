@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate()
   const { setAuth } = useAuth();
   // Usamos useMutation para hacer la mutación de login
-  const { mutate, isLoading, isError, error} = useMutation({
+  const { mutate, isLoading} = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       // Si el login es exitoso, almacenamos el token
@@ -94,11 +94,10 @@ const Login = () => {
             <button
               type="submit"
               className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto mt-10"
+              disabled={isLoading}
             >
               {isLoading ? "Cargando..." : "Iniciar Sesión"}
             </button>
-            {isError && <p>Error: {error.message}</p>}{" "}
-            {/* Mostrar el error si existe */}
           </form>
           <nav className="lg:flex lg:justify-between font-semibold">
             <Link

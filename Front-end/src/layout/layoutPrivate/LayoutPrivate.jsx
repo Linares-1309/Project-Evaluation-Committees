@@ -7,8 +7,7 @@ import { IoSettings } from "react-icons/io5";
 import { VscLightbulbAutofix } from "react-icons/vsc";
 import {RiLogoutCircleFill } from "react-icons/ri";
 
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const LayoutPrivate = () => {
   const { auth, cargando, cerrarSesion } = useAuth();
@@ -79,7 +78,7 @@ const LayoutPrivate = () => {
                         />
                       </button>
                     </div>
-                    <div
+                    {/* <div
                       className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                       id="dropdown-user"
                     >
@@ -126,7 +125,7 @@ const LayoutPrivate = () => {
                           </a>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -143,7 +142,8 @@ const LayoutPrivate = () => {
                 <li>
                   <Link
                     to="/admin"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+
                   >
                     <FaHome size={22} />
 
@@ -153,7 +153,7 @@ const LayoutPrivate = () => {
                 <li>
                   <Link
                     to="/ideas"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
                     <VscLightbulbAutofix size={21} />
                     <span className="flex-1 ms-3 whitespace-nowrap">Ideas</span>
@@ -162,7 +162,7 @@ const LayoutPrivate = () => {
                 <li>
                   <Link
                     to="/comites"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
                     <FaFileAlt size={22} />
                     <span className="flex-1 ms-3 whitespace-nowrap">
@@ -173,7 +173,7 @@ const LayoutPrivate = () => {
                 <li>
                   <Link
                     to="/users"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
                     <FaUsers size={22} />
                     <span className="flex-1 ms-3 whitespace-nowrap">
@@ -184,7 +184,7 @@ const LayoutPrivate = () => {
                 <li>
                   <Link
                     to="/settings"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
                   >
                     <FaStar   size={22} />
                     <span className="flex-1 ms-3 whitespace-nowrap">
@@ -193,6 +193,15 @@ const LayoutPrivate = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    to="/settings"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                  >
+                    <FaClipboardList size={21}/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                    Conjunto Criterios
+                    </span>
+                  </Link>
                   <button
                     type="button"
                     className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"

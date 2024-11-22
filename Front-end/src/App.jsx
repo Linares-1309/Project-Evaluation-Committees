@@ -28,7 +28,6 @@ function App() {
               <Route path="forgot-password/:token" element={<NewPassword />} />
             </Route>
             <Route path="/admin" element={<LayoutPrivate />}>
-              {/* <Route index element={<Home />} /> */}
             </Route>
           </Routes>
         </AuthProvider>
