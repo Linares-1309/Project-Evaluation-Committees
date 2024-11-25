@@ -19,7 +19,7 @@ router
   .post(checkAuthWithRol(["Admin"]), createCriteria);
 
 router
-  .route("/:id_conjunto_criterio")
+  .route("/:id_criterio")
   .get(checkAuthWithRol(["Admin"]), getCriteria)
   .put(checkAuthWithRol(["Admin"]), updateCriteria)
   .delete(checkAuthWithRol(["Admin"]), deleteCriteria);

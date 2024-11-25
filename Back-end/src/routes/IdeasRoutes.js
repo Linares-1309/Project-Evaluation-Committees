@@ -19,7 +19,7 @@ router
   .post(checkAuthWithRol(["Admin"]), createNewIdea);
 
 router
-  .route("/:id_proponente")
+  .route("/:id_idea")
   .get(checkAuthWithRol(["Admin"]), getIdea)
   .put(checkAuthWithRol(["Admin"]), updateIdea)
   .delete(checkAuthWithRol(["Admin"]), deleteIdea);
