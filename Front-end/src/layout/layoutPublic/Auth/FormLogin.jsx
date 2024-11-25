@@ -25,9 +25,8 @@ const Login = () => {
         error: false,
       });
       const timer = setTimeout(() => {
-      navigate("/admin");
-
-      }, 2000);
+        navigate("/admin");
+      }, 1000);
 
       return () => clearTimeout(timer);
     },
@@ -35,9 +34,10 @@ const Login = () => {
       // Limpiar el localStorage
       localStorage.removeItem("token");
       localStorage.clear();
+
       // Si ocurre un error, mostramos el mensaje de error
       setAlerta({
-        msg: error.msg, // El mensaje es extraído del error lanzado
+        msg: error.message, // El mensaje es extraído del error lanzado
         error: true,
       });
     },
@@ -60,65 +60,67 @@ const Login = () => {
   const { msg } = alerta;
   return (
     <>
-      <div className="w-full flex justify-center py-10">
-        <div className="border-2 py-10 px-8 w-2/6 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
+      <div className="flex justify-center p-14">
+        <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
           <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
             Iniciar Sesión
           </h1>
           {msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
+            className="max-w-sm mx-auto flex flex-col justify-center"
             onSubmit={handleSubmit}
-            className="m-8 items-center flex flex-col justify-center"
           >
-            <div>
-              <div className="relative mb-4">
+            <div className="mb-2">
+              <label
+                htmlFor="website-admin-document"
+                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
+              >
+                Documento
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                  <FiUser className="text-gray-600" size={14} />
+                </span>
                 <input
                   type="text"
-                  id="floating_outlined"
-                  className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-500 peer pl-8"
-                  placeholder=" "
+                  id="website-admin-document"
+                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Ej. 1107008523"
                   value={Id_User}
                   onChange={(e) => setId_User(e.target.value)}
                 />
-                <label
-                  htmlFor="floating_outlined"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-green-500 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1 select-none"
-                >
-                  Documento
-                </label>
-                <div className="absolute left-3 top-1/2 transform -translate-y-1">
-                  <FiUser className="text-gray-600" size={14} />
-                </div>
               </div>
-              <div className="relative ">
+            </div>
+            <div className="mb-5">
+              <label
+                htmlFor="website-admin-password"
+                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
+              >
+                Contraseña
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                  <MdOutlinePassword className="text-gray-600" size={14} />
+                </span>
                 <input
-                  type="text"
-                  id="floating_outlined"
-                  className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-500 peer pl-8"
-                  placeholder=" "
+                  type="password"
+                  id="website-admin-password"
+                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Ingrese su contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <label
-                  htmlFor="floating_outlined"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-green-500 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1  select-none"
-                >
-                  Contraseña
-                </label>
-                <div className="absolute left-3 top-1/2 transform -translate-y-1">
-                  <MdOutlinePassword className="text-gray-600" size={14} />
-                </div>
               </div>
             </div>
             <button
               type="submit"
-              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto mt-10"
+              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto"
               disabled={isLoading}
             >
               {isLoading ? "Cargando..." : "Iniciar Sesión"}
             </button>
           </form>
-          <nav className="lg:flex lg:justify-between font-semibold">
+          <nav className="lg:flex lg:justify-between font-semibold mt-5">
             <Link
               to="/forgot-password"
               className="block text-center text-zinc-700 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"

@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { verifyToken, newPassword } from "./UserFuctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 import { Link, useParams } from "react-router-dom";
+import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 
 const NewPassword = () => {
   const [password, setPassword] = useState("");
@@ -69,7 +70,6 @@ const NewPassword = () => {
       setAlerta({ msg: "Las contraseñas no coinciden!", error: true });
       return;
     }
-
     if (password.length < 8) {
       setAlerta({
         msg: "Las contraseñas son muy cortas, mínimo 8 caracteres!",
@@ -83,36 +83,110 @@ const NewPassword = () => {
   };
 
   return (
-    <div className="w-full flex justify-center py-10">
-      <div className="border-2 py-10 px-8 w-2/6 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
-        <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
-          Actualizar Contraseña
-        </h1>
-        {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-        {tokenValido && (
+    <>
+      {/* <div className="w-full flex justify-center py-10">
+        <div className="border-2 py-10 px-8 w-2/6 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
+          <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
+            Actualizar Contraseña
+          </h1>
+          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
+          {tokenValido && (
+            <form
+              onSubmit={handleSubmit}
+              className="m-8 items-center flex flex-col justify-center"
+            >
+              <div>
+                <div className="space-y-1">
+                  <label className="uppercase font-bold text-gray-600">
+                    Contraseña:
+                  </label>
+                  <input
+                    type="password"
+                    className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="uppercase font-bold text-gray-600">
+                    Repetir Contraseña:
+                  </label>
+                  <input
+                    type="password"
+                    className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
+                    value={passwordRepeat}
+                    onChange={(e) => setPasswordRepeat(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto mt-10"
+                disabled={verifyLoading || newPassLoading}
+              >
+                {verifyLoading || newPassLoading
+                  ? "Cargando..."
+                  : "Actualizar Contraseña"}
+              </button>
+            </form>
+          )}
+          {passwordModificado && (
+            <Link
+              to="/login"
+              className="block text-center my-5 text-zinc-950 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
+            >
+              Iniciar Sesión
+            </Link>
+          )}
+        </div>
+      </div> */}
+      <div className="flex justify-center p-14">
+        <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
+          <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
+            Actualizar Contraseña
+          </h1>
+          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
+            className="max-w-sm mx-auto flex flex-col justify-center"
             onSubmit={handleSubmit}
-            className="m-8 items-center flex flex-col justify-center"
           >
-            <div>
-              <div className="space-y-1">
-                <label className="uppercase font-bold text-gray-600">
-                  Contraseña:
-                </label>
+            <div className="mb-2">
+              <label
+                htmlFor="website-admin-password"
+                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
+              >
+                Contraseña
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                  <RiLockPasswordLine className="text-gray-600" size={14} />
+                </span>
                 <input
                   type="password"
-                  className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
+                  id="website-admin-password"
+                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Ingrese la contraseña!"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div className="space-y-1">
-                <label className="uppercase font-bold text-gray-600">
-                  Repetir Contraseña:
-                </label>
+            </div>
+            <div className="mb-5">
+              <label
+                htmlFor="website-admin-password-repeat"
+                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
+              >
+                Repita la Contraseña
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                  <RiLockPasswordFill className="text-gray-600" size={14} />
+                </span>
                 <input
                   type="password"
-                  className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
+                  id="website-admin-password-repeat"
+                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                  placeholder="Ingrese su contraseña"
                   value={passwordRepeat}
                   onChange={(e) => setPasswordRepeat(e.target.value)}
                 />
@@ -120,25 +194,25 @@ const NewPassword = () => {
             </div>
             <button
               type="submit"
-              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto mt-10"
-              disabled={verifyLoading || newPassLoading}
+              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto"
+              disabled={verifyLoading}
             >
-              {verifyLoading || newPassLoading
-                ? "Cargando..."
-                : "Actualizar Contraseña"}
+              {verifyLoading ? "Cargando..." : "Guardar Contraseña"}
             </button>
           </form>
-        )}
-        {passwordModificado && (
-          <Link
-            to="/login"
-            className="block text-center my-5 text-zinc-950 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
-          >
-            Iniciar Sesión
-          </Link>
-        )}
+          {passwordModificado && (
+            <nav className="lg:flex lg:justify-between font-semibold mt-5">
+              <Link
+                to="/login"
+                className="block text-center text-zinc-700 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
+              >
+                Iniciar Sesión
+              </Link>
+            </nav>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

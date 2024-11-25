@@ -116,12 +116,12 @@ export const login = async (req, res) => {
       return;
     }
     // Comprobar si la contraseña es correcta
-    if (await user.verifyPassword(password)) {
+    if ((await user.verifyPassword(password))) {
       const userString = user.Id_User.toString();
       const Id_UserHash = Buffer.from(userString).toString("base64");
       // Si la contraseña es correcta se retorna los datos del usuario logeado
       res.status(200).json({
-        msg: "Login Exitoso, Bienvenid@!",
+        msg: "Login Exitoso, Bienvenid@!.",
         Id_User: user.Id_User,
         username: user.username,
         email: user.email,
@@ -133,9 +133,7 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     logger.error("Error al realizar el logeo! ", error);
-    res
-      .status(500)
-      .json({ msg: "Ocurrio un error durante la autenticacion!" });
+    res.status(500).json({ msg: "Ocurrio un error durante la autenticacion!" });
   }
 };
 
@@ -160,14 +158,12 @@ export const createUser = async (req, res) => {
     }
 
     // Validar el formato del correo electrónico.
-    const emailRegex = /(gmail\.com|hotmail\.com)/;
+    const emailRegex = /(gmail\.com|hotmail\.com|sena\.com)/;
     if (!emailRegex.test(email)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "El correo electrónico debe ser válido y terminar en @gmail.com o @hotmail.com.",
-        });
+      return res.status(400).json({
+        message:
+          "El correo electrónico debe ser válido y terminar en @gmail.com o @hotmail.com.",
+      });
     }
 
     // Prevenir usuarios duplicados por correo.
@@ -212,19 +208,20 @@ export const createUser = async (req, res) => {
 // Función para traer el perfil del usuario
 export const profileUser = async (req, res) => {
   try {
-    const { user } = req;  // Debería estar pasando el usuario autenticado en `req.user`
-    
+    const { user } = req; // Debería estar pasando el usuario autenticado en `req.user`
+
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    return res.json({ user });  // Respuesta exitosa con los datos del perfil del usuario.
+    return res.json({ user }); // Respuesta exitosa con los datos del perfil del usuario.
   } catch (error) {
     logger.error("Error al traer el perfil del usuario!", error);
-    return res.status(500).json({ message: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
+    return res
+      .status(500)
+      .json({ message: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
   }
 };
-
 
 //Funcion para enviar el correo de recuperacion de la contraseña
 export const forgotPassword = async (req, res) => {

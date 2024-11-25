@@ -8,7 +8,7 @@ export const getAllCriteria = async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios("/", config);
+    const { data } = await ClientAxios("criteria/", config);
     return data;
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
@@ -38,7 +38,7 @@ export const createCriteria = async (dataCriteria) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios("/", dataCriteria,  config);
+    const { data } = await ClientAxios("/", dataCriteria, config);
     return data;
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
@@ -53,7 +53,11 @@ export const updateCriteria = async (dataCriteria) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios.post(`/${dataCriteria.id_criterio}`, dataCriteria, config);
+    const { data } = await ClientAxios.post(
+      `/${dataCriteria.id_criterio}`,
+      dataCriteria,
+      config
+    );
     return data;
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");

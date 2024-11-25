@@ -10,10 +10,10 @@ export const getAllSetOfCriteria = async (req, res) => {
         .json({ msg: "No se encontraron conjuntos de criterios!" });
     } else {
       return res.status(200).json({
-        msg:
-          setOfCriteria.length <= 1
-            ? `Se encontro ${setOfCriteria.length} conjunto de criterios de evaluación!`
-            : `Se encontraron ${setOfCriteria.length} conjuntos de criterios de evaluación!`,
+        // msg:
+        //   setOfCriteria.length <= 1
+        //     ? `Se encontro ${setOfCriteria.length} conjunto de criterios de evaluación!`
+        //     : `Se encontraron ${setOfCriteria.length} conjuntos de criterios de evaluación!`,
         setOfCriteria: setOfCriteria,
       });
     }
@@ -52,7 +52,7 @@ export const getSetOfCriteria = async (req, res) => {
 
 export const createSetOfCriteria = async (req, res) => {
   try {
-    const newSetOfCriteria = await CriteriaModel.create({
+    const newSetOfCriteria = await SetOfCriteriaModel.create({
       ...req.body,
     });
     return res.status(201).json({
