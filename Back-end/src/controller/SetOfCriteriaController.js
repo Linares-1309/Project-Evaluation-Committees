@@ -29,6 +29,7 @@ export const getAllSetOfCriteria = async (req, res) => {
 
 export const getSetOfCriteria = async (req, res) => {
   const { id_conjunto_criterio } = req.params;
+  
   try {
     const setOfCriteria = await SetOfCriteriaModel.findByPk(
       id_conjunto_criterio

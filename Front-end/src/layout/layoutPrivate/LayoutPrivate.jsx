@@ -253,7 +253,6 @@ const LayoutPrivate = () => {
               <div className="grid grid-cols-1 gap-4 mb-4 text-center">
                 <Outlet />
               </div>
-              <div className="grid grid-cols-1 gap-4 mb-4 text-center">2</div>
 
               <div className="grid grid-cols-2 gap-4"></div>
             </div>
