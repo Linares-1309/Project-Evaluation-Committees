@@ -3,12 +3,13 @@ import { DataTypes } from "sequelize";
 import SetOfCriteriaModel from "./SetOfCriteriaModel.js";
 
 const CriteriaModel = db.define(
-  "conjunto_criterios",
+  "criterios",
   {
     id_criterio: {
       type: DataTypes.NUMBER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     des_criterio: { type: DataTypes.STRING(45) },
     id_conjunto_criterio: {

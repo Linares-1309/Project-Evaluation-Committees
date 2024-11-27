@@ -59,14 +59,19 @@ export const getCriteria = async (req, res) => {
   }
 };
 export const createCriteria = async (req, res) => {
+  const { des_criterio, id_conjunto_criterio } = req.body;
   try {
-    const newCriteria = await CriteriaModel.create({
-      ...req.body,
-    });
+    const newCriteria = await CriteriaModel.create(
+      {
+        des_criterio: des_criterio,
+        id_conjunto_criterio: id_conjunto_criterio,
+      },
+      {
+        logging: console.log,
+      }
+    );
     if (newCriteria) {
       return res.status(201).json({
-        des_criterio: newCriteria.des_criterio,
-        id_conjunto_criterio: newCriteria.id_conjunto_criterio,
         msg: "Criterio de evaluación registrado correctamente!",
       });
     } else {
@@ -78,6 +83,7 @@ export const createCriteria = async (req, res) => {
     logger.error(
       `Ocurrio un error al registrar el criterio de evaluación: ${error}`
     );
+
     return res.status(500).json({
       msg: "Ocurrio un error al registrar el criterio de evaluación!",
     });
@@ -87,19 +93,45 @@ export const createCriteria = async (req, res) => {
 export const updateCriteria = async (req, res) => {
   const { id_criterio } = req.params;
   const { des_criterio, id_conjunto_criterio } = req.body;
+
   try {
+    if (!des_criterio || !id_conjunto_criterio) {
+      return res.status(400).json({
+        msg: "Faltan datos necesarios para actualizar el criterio!",
+      });
+    }
+    const existingCriterio = await CriteriaModel.findOne({
+      where: { id_criterio: id_criterio },
+    });
+
+    if (!existingCriterio) {
+      return res.status(404).json({
+        msg: "Criterio no encontrado, no se puede actualizar!",
+      });
+    }
+    // Verificar si los datos son los mismos que ya están almacenados
+    if (
+      existingCriterio.des_criterio === des_criterio &&
+      existingCriterio.id_conjunto_criterio === id_conjunto_criterio
+    ) {
+      return res.status(200).json({
+        msg: "Los datos no han cambiado, no se puede actualizar.",
+      });
+    }
+
     const updateCriteria = await CriteriaModel.update(
       {
-        des_criterio,
-        id_conjunto_criterio,
+        des_criterio: des_criterio,
+        id_conjunto_criterio: id_conjunto_criterio,
       },
       {
-        where: id_criterio,
+        where: { id_criterio: id_criterio },
       }
     );
-    if (updateCriteria === 0) {
+
+    if (updateCriteria[0] === 0) {
       return res.status(404).json({
-        msg: "Error, no se encontro el criterio a actualizar!",
+        msg: "Error, no se encontró el criterio a actualizar!",
       });
     } else {
       return res
@@ -107,6 +139,8 @@ export const updateCriteria = async (req, res) => {
         .json({ msg: "Criterio actualizado correctamente!" });
     }
   } catch (error) {
+    console.log(error);
+
     logger.error(`Ocurrio un error al actualizar el criterio: ${error}`);
     return res.status(500).json({
       msg: "Ocurrio un error al actualizar el criterio!",

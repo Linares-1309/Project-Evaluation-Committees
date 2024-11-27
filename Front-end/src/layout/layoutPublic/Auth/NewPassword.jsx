@@ -84,62 +84,6 @@ const NewPassword = () => {
 
   return (
     <>
-      {/* <div className="w-full flex justify-center py-10">
-        <div className="border-2 py-10 px-8 w-2/6 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
-          <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
-            Actualizar Contraseña
-          </h1>
-          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-          {tokenValido && (
-            <form
-              onSubmit={handleSubmit}
-              className="m-8 items-center flex flex-col justify-center"
-            >
-              <div>
-                <div className="space-y-1">
-                  <label className="uppercase font-bold text-gray-600">
-                    Contraseña:
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="uppercase font-bold text-gray-600">
-                    Repetir Contraseña:
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full h-10 p-2 border-2 rounded-md focus:outline-green-500 focus:ring-green-500"
-                    value={passwordRepeat}
-                    onChange={(e) => setPasswordRepeat(e.target.value)}
-                  />
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto mt-10"
-                disabled={verifyLoading || newPassLoading}
-              >
-                {verifyLoading || newPassLoading
-                  ? "Cargando..."
-                  : "Actualizar Contraseña"}
-              </button>
-            </form>
-          )}
-          {passwordModificado && (
-            <Link
-              to="/login"
-              className="block text-center my-5 text-zinc-950 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
-            >
-              Iniciar Sesión
-            </Link>
-          )}
-        </div>
-      </div> */}
       <div className="flex justify-center p-14">
         <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
           <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">

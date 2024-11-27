@@ -29,9 +29,9 @@ const PostSetOfCriteria = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if ([desConjuntoCriterios].includes(" ")) {
+    if (desConjuntoCriterios.length < 10) {
       setAlerta({
-        msg: "Campo Obligatorio!",
+        msg: "El Campo no puede ir vacio o con pocos caracteres!",
         error: true,
       });
       return;
@@ -42,10 +42,7 @@ const PostSetOfCriteria = () => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
-          <h3 className="font-bold text-2xl uppercase text-gray-700 mb-2">
-            Registrar Conjunto de Criterios
-          </h3>
+        <div className="py-10 flex flex-col items-center space-y-4">
           {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
             className="max-w-sm mx-auto flex flex-col items-center"

@@ -2,9 +2,9 @@ import { getAllSetOfCriteria } from "./SetOfCriteriaFunctions.jsx";
 import { useState, useEffect } from "react";
 import Alerta from "../../../components/Alerta.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import WriteTable from "../../../tables/DataTables.jsx";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import WriteTable from "../../../tables/DataTables.jsx";
 import GetSetOfCriteria from "./getSetOfCriteria.jsx";
 import DeleteSetOfCriteria from "./DeleteSetOfCriteria.jsx";
 import ModalDialog from "../../../components/ModalDialog.jsx";
@@ -60,6 +60,7 @@ const SetOfCriteriaList = () => {
     queryClient.invalidateQueries("conjunto-criterios"); // Refrescar la lista de criterios
   };
 
+  const titleForm = ["Registrar Conjunto de Criterios de Evluación"];
   const titles = ["ID Conjunto Criterios", "Descripción", "Acciones"];
   const ButtonsForOtherModules = (id_conjunto_criterio) => [
     <button
@@ -85,8 +86,8 @@ const SetOfCriteriaList = () => {
 
   const formattedData = setOfCriteria.map((conjuntoCriterio) => {
     const rowData = [
-      conjuntoCriterio.id_conjunto_criterio,
-      conjuntoCriterio.des_conjunto_criterio,
+      conjuntoCriterio?.id_conjunto_criterio,
+      conjuntoCriterio?.des_conjunto_criterio,
     ];
     rowData.push(ButtonsForOtherModules(conjuntoCriterio.id_conjunto_criterio));
 
@@ -98,18 +99,23 @@ const SetOfCriteriaList = () => {
       <h1 className="font-serif font-semibold uppercase text-2xl">
         Conjunto de Criterios
       </h1>
-      {/* <button className="text-lg font-serif text-white bg-green-500 font-semibold rounded-md hover:bg-green-600 py-1.5 w-40 flex items-center px-3">
-        <FaPlusCircle className="mr-3" size={18} /> AGREGAR
-      </button> */}
-      <ModalDialog toggleModal={toggleModal} isOpen={isOpen}/>
+      <ModalDialog
+        toggleModal={toggleModal}
+        isOpen={isOpen}
+        form={<PostSetOfCriteria />}
+        titleForm={titleForm}
+      />
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
-      <PostSetOfCriteria/>
+
       {selectedIdEdit && (
         <GetSetOfCriteria id_conjunto_criterio={selectedIdEdit} />
       )}
       {selectedIdDelete && (
-        <DeleteSetOfCriteria id_conjunto_criterio={selectedIdDelete} onSuccessDel={refreshData} />
+        <DeleteSetOfCriteria
+          id_conjunto_criterio={selectedIdDelete}
+          onSuccessDel={refreshData}
+        />
       )}
     </>
   );

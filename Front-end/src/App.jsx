@@ -13,7 +13,7 @@ import NewPassword from "./layout/layoutPublic/Auth/NewPassword.jsx";
 import LayoutPrivate from "./layout/layoutPrivate/LayoutPrivate.jsx";
 import CrudIdeas from "./layout/layoutPrivate/Ideas/CrudIdeas.jsx";
 import CrudEvaluationCommittees from "./layout/layoutPrivate/EvaluationCommittees/CrudEvaluationCommittees.jsx";
-import CrudProponents from "./layout/layoutPrivate/Proponents/CrudProponents.jsx";
+import ProponentsList from "./layout/layoutPrivate/Proponents/ProponentsList.jsx";
 import CriteriaList from "./layout/layoutPrivate/Criteria/CriteriaList.jsx";
 import CrudUsers from "./layout/layoutPrivate/Users/CrudUsers.jsx";
 import Settings from "./layout/layoutPrivate/Settings/Settings.jsx";
@@ -39,15 +39,15 @@ function App() {
               <Route index element={<Home />} />
               <Route path="ideas" element={<CrudIdeas />} />
               <Route path="comites" element={<CrudEvaluationCommittees />} />
-              <Route path="proponentes" element={<CrudProponents />} />
+              <Route path="proponentes" element={<ProponentsList />} />
               <Route path="criterios" element={<CriteriaList />} />
               <Route
                 path="conjunto-criterios"
                 element={<SetOfCriteriaList />}
               />
-              <Route path="usuarios" element={<CrudUsers />}/>
-              <Route path="ajustes" element={<Settings/>}/>
-              <Route path="perfil" element={<UserProfile/>}/>
+              <Route path="usuarios" element={<CrudUsers />} />
+              <Route path="ajustes" element={<Settings />} />
+              <Route path="perfil" element={<UserProfile />} />
             </Route>
           </Routes>
         </AuthProvider>

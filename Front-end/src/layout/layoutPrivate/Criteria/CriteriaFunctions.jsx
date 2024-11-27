@@ -8,8 +8,10 @@ export const getAllCriteria = async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios("criteria/", config);
-    return data;
+    const response = await ClientAxios("criteria/", config);
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -23,8 +25,10 @@ export const getCriteria = async (id_criterio) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios(`/${id_criterio}`, config);
-    return data;
+    const response = await ClientAxios(`criteria/${id_criterio}`, config);
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -38,8 +42,10 @@ export const createCriteria = async (dataCriteria) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios("/", dataCriteria, config);
-    return data;
+    const response = await ClientAxios("criteria/", dataCriteria, config);
+    if (response.status === 201) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -53,12 +59,17 @@ export const updateCriteria = async (dataCriteria) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios.post(
-      `/${dataCriteria.id_criterio}`,
-      dataCriteria,
+    const response = await ClientAxios.put(
+      `criteria/${dataCriteria.id_criterio}`,
+      {
+        des_criterio: dataCriteria?.desCriterio,
+        id_conjunto_criterio: dataCriteria?.idConjuntoCriterios,
+      },
       config
     );
-    return data;
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -71,8 +82,10 @@ export const deleteCriteria = async (id_criterio) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const { data } = await ClientAxios(`/${id_criterio}`, config);
-    return data;
+    const response = await ClientAxios(`criteria/${id_criterio}`, config);
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
