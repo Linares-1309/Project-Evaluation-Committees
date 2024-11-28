@@ -6,6 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import WriteTable from "../../../tables/DataTables.jsx";
 import ModalWindow from "../../../components/ModalDialog.jsx";
+
 import GetCriteria from "./GetCriteria.jsx";
 import DeleteCriteria from "./DeleteCriteria.jsx";
 import PostCriteria from "./PostCriteria.jsx";
@@ -66,7 +67,7 @@ const CriteriaList = () => {
 
   // Función que se llama cuando se elimina un criterio
   const refreshData = () => {
-    queryClient.invalidateQueries("conjunto-criterios"); // Refrescar la lista de criterios
+    queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
   };
 
   const titleForm = ["Registrar Criterios de Evluación"];

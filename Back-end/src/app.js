@@ -14,7 +14,7 @@ import { logger } from "./middleware/logMiddleware.js";
 import UserRouter from "./routes/userRoutes.js";
 import SetOfCriteriaRoutes from "./routes/SetOfCriteriaRoutes.js";
 import CriteriaRoutes from "./routes/CriteriaRoutes.js";
-import ProponentRoutes from "./routes/CriteriaRoutes.js";
+import ProponentRoutes from "./routes/ProponentRoutes.js";
 import IdeasRoutes from "./routes/IdeasRoutes.js";
 import EvaluationCommitteesRoutes from "./routes/EvaluationCommitteesRoutes.js";
 

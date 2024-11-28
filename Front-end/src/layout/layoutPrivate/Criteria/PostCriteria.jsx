@@ -42,6 +42,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
       setConjuntoCriterios(data);
     }
   }, [loading, isError, error, data]);
+
   // Crea el NUEVO criterio
   const { mutate, isLoading } = useMutation({
     mutationFn: createCriteria,
@@ -119,7 +120,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
     <>
       <div className="flex justify-center">
         <div className="py-10 flex flex-col items-center space-y-4">
-          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
+          {alerta?.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
             className="max-w-sm mx-auto flex flex-col items-center"
             onSubmit={handleSubmit}
@@ -165,7 +166,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
             </div>
             <button
               type="submit"
-              className="text-white uppercase bg-gradient-to-r from-green-300 via-green-400 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 flex items-center justify-center"
+              className="text-white uppercase bg-gradient-to-r from-green-300 via-green-400 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 flex items-center justify-center mt-4"
               disabled={isLoading}
             >
               <BsFillSendFill size={15} className="mr-2" />

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { deleteCriteria } from "./CriteriaFunctions.jsx";
@@ -68,8 +67,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
         }
       });
     }
-  }, [id_criterio]); // Solo ejecutar cuando `id_conjunto_criterio` esté disponible
-  return <div>DeleteCriteria</div>;
+  }, [id_criterio]); // Solo ejecutar cuando `id_criterio` esté disponible
 };
 
 export default DeleteCriteria;

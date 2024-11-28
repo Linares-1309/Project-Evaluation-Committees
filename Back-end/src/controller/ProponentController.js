@@ -1,6 +1,5 @@
 import ProponentModel from "../models/ProponentModel.js";
 import { logger } from "../middleware/logMiddleware.js";
-import { underscoredIf } from "sequelize/lib/utils";
 
 export const getAllProponents = async (req, res) => {
   try {
@@ -16,6 +15,7 @@ export const getAllProponents = async (req, res) => {
             ? `Se encontro ${proponents.length} proponente!`
             : `Se encontraron ${proponents.length} proponentes!`,
         proponents: proponents,
+        msg: "esta loco el server",
       });
     }
   } catch (error) {
@@ -28,6 +28,7 @@ export const getAllProponents = async (req, res) => {
 
 export const getProponent = async (req, res) => {
   const { id_proponente } = req.params;
+
   try {
     const proponent = await ProponentModel.findByPk(id_proponente);
     if (proponent) {
@@ -47,18 +48,35 @@ export const getProponent = async (req, res) => {
 
 export const createNewProponent = async (req, res) => {
   try {
+    const documentExist = await ProponentModel.findOne({
+      where: { id_proponente: req.body.id_proponente },
+    });
+    if (documentExist) {
+      return res
+        .status(400)
+        .json({ msg: "El documento ya se encuentra registrado!" });
+    }
+
+    const emailExist = await ProponentModel.findOne({
+      where: { correo_proponente: req.body.correo_proponente },
+    });
+    if (emailExist) {
+      return res
+        .status(400)
+        .json({ msg: "El correo ya se encuentra registrado!" });
+    }
+
     const newProponent = await ProponentModel.create({
       ...req.body,
     });
+
     return res.status(201).json({
-      id_proponente: newProponent?.id_proponente,
-      nombres_proponente: newProponent?.nombres_proponente,
-      apellidos_proponente: newProponent?.apellidos_proponente,
-      correo_proponente: newProponent?.correo_proponente,
-      telefono_proponente: newProponent?.telefono_proponente,
-      msg: "El proponente ha sido registrado correctamente!",
+      proponent: newProponent,
+      msg: "Proponente registrado correctamente!",
     });
   } catch (error) {
+    console.log(error);
+    
     logger.error(`Ocurrio un error al registrar el proponente ${error}`);
     return res.status(500).json({
       msg: "Ocurrio un error al registrar el proponente!",
@@ -68,6 +86,7 @@ export const createNewProponent = async (req, res) => {
 
 export const updateProponent = async (req, res) => {
   const { id_proponente } = req.params;
+
   const {
     nombres_proponente,
     apellidos_proponente,
@@ -75,6 +94,28 @@ export const updateProponent = async (req, res) => {
     telefono_proponente,
   } = req.body;
   try {
+    const existingProponent = await ProponentModel.findOne({
+      where: { id_proponente: id_proponente },
+    });
+
+    if (!existingProponent) {
+      return res.status(404).json({
+        msg: "Proponente no encontrado, no se puede actualizar!",
+      });
+    }
+
+    if (
+      // existingProponent.id_proponente === id_proponente &&
+      existingProponent.nombres_proponente === nombres_proponente &&
+      existingProponent.apellidos_proponente === apellidos_proponente &&
+      existingProponent.correo_proponente === correo_proponente &&
+      existingProponent.telefono_proponente === telefono_proponente
+    ) {
+      return res.status(200).json({
+        msg: "Los datos no han cambiado, no se puede actualizar.",
+      });
+    }
+
     const updateProponent = await ProponentModel.update(
       {
         nombres_proponente,
@@ -83,7 +124,7 @@ export const updateProponent = async (req, res) => {
         telefono_proponente,
       },
       {
-        where: id_proponente,
+        where: {id_proponente: id_proponente},
       }
     );
     if (updateProponent === 0) {
