@@ -125,7 +125,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="py-10 flex flex-col items-center space-y-4 w-full">
+        <div className="py-5 flex flex-col items-center space-y-4 w-full">
           {alerta?.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
 
 

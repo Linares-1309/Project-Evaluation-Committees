@@ -1,23 +1,56 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { createNewSetOfCriteria } from "./SetOfCriteriaFunctions";
+import { useEffect, useState } from "react";
+import {
+  createNewSetOfCriteria,
+  updateSetOfCriteria,
+} from "./SetOfCriteriaFunctions";
 import Alerta from "../../../components/Alerta";
 import { BsFillSendFill } from "react-icons/bs";
 
-const PostSetOfCriteria = () => {
+const PostSetOfCriteria = ({
+  onSuccessSave,
+  setOfCriteriaSelect,
+  textButton,
+}) => {
   const [desConjuntoCriterios, setDesConjuntoCriterios] = useState("");
   const [alerta, setAlerta] = useState({});
-  const [textButton, setTextButton] = useState("Enviar");
 
+  // Crear nuevo vonjunto de criterios
   const { mutate, isLoading } = useMutation({
     mutationFn: createNewSetOfCriteria,
     onSuccess: (data) => {
+      onSuccessSave();
       setAlerta({
         msg: data.msg,
         error: false,
       });
       setDesConjuntoCriterios("");
+    },
+    onError: (error) => {
+      setAlerta({
+        msg: error.message,
+        error: true,
+      });
+    },
+  });
+
+  // Actualizar elconjunto de criterios EXISTENTE
+  const {
+    mutate: mutateUpdate,
+    isLoading: isLoadingUpdate,
+    isError: isErrorUpdate,
+    error: errorUpdate,
+  } = useMutation({
+    mutationFn: updateSetOfCriteria,
+    onSuccess: (data) => {
+      onSuccessSave()
+      setAlerta({
+        msg: data.msg,
+        error: false,
+      });
     },
     onError: (error) => {
       setAlerta({
@@ -36,13 +69,27 @@ const PostSetOfCriteria = () => {
       });
       return;
     }
-    const data = { desConjuntoCriterios };
-    mutate(data);
+    if (textButton === "Enviar") {
+      const data = { desConjuntoCriterios };
+      mutate(data);
+    } else if (textButton === "Actualizar") {
+      const id_conjunto_criterio = setOfCriteriaSelect.id_conjunto_criterio;
+      const data = { id_conjunto_criterio, desConjuntoCriterios };
+      mutateUpdate(data);
+    }
   };
+
+  const setDataForm = () => {
+    setDesConjuntoCriterios(setOfCriteriaSelect?.des_conjunto_criterio);
+  };
+  useEffect(() => {
+    setDataForm();
+  }, [setOfCriteriaSelect]);
+
   return (
     <>
       <div className="flex justify-center">
-        <div className="py-10 flex flex-col items-center space-y-4">
+        <div className="py-5 flex flex-col items-center space-y-4">
           {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
             className="max-w-sm mx-auto flex flex-col items-center"

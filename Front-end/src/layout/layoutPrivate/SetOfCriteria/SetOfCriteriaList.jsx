@@ -16,6 +16,12 @@ const SetOfCriteriaList = () => {
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [textButton, setTextButton] = useState("Enviar");
+
+  const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({
+    id_conjunto_criterio: "",
+    des_conjunto_criterio: "",
+  });
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -67,7 +73,11 @@ const SetOfCriteriaList = () => {
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
       title="Editar"
-      onClick={() => handleEditClick(id_conjunto_criterio)}
+      onClick={() => [
+        handleEditClick(id_conjunto_criterio),
+        toggleModal(),
+        setTextButton("Actualizar"),
+      ]}
     >
       <FaEdit className="mr-1" />
       Editar
@@ -94,6 +104,10 @@ const SetOfCriteriaList = () => {
     return rowData;
   });
 
+  const updateTextButton = (text) => {
+    setTextButton(text);
+  };
+
   return (
     <>
       <h1 className="font-serif font-semibold uppercase text-2xl">
@@ -102,14 +116,24 @@ const SetOfCriteriaList = () => {
       <ModalDialog
         toggleModal={toggleModal}
         isOpen={isOpen}
-        form={<PostSetOfCriteria />}
+        form={
+          <PostSetOfCriteria
+            onSuccessSave={refreshData}
+            setOfCriteriaSelect={setOfCriteriaSelect}
+            textButton={textButton}
+          />
+        }
         titleForm={titleForm}
+        updateTextButton={updateTextButton}
       />
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
 
       {selectedIdEdit && (
-        <GetSetOfCriteria id_conjunto_criterio={selectedIdEdit} />
+        <GetSetOfCriteria
+          id_conjunto_criterio={selectedIdEdit}
+          setSetOfCriteriaSelect={setSetOfCriteriaSelect}
+        />
       )}
       {selectedIdDelete && (
         <DeleteSetOfCriteria

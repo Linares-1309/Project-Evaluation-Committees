@@ -26,7 +26,7 @@ const IdeasModel = db.define(
   },
   {
     timestamps: true,
-    createdAt: "create_time",
+    createdAt: "create-time",
     updatedAt: false,
     freezeTableName: true,
   }

@@ -1,29 +1,30 @@
-import { getAllCriteria } from "./CriteriaFunctions.jsx";
+import { getAllIdeas } from "./IdeasFunctions.jsx";
 import { useState, useEffect } from "react";
 import Alerta from "../../../components/Alerta.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import WriteTable from "../../../tables/DataTables.jsx";
-import ModalWindow from "../../../components/ModalDialog.jsx";
+import ModalWindow from "../../../components/ModalDialog";
 
-import GetCriteria from "./GetCriteria.jsx";
-import DeleteCriteria from "./DeleteCriteria.jsx";
-import PostCriteria from "./PostCriteria.jsx";
+import GetIdea from "./GetIdea.jsx";
+import DeleteIdea from "./DeleteIdea.jsx";
+import PostIdeas from "./PostIdeas.jsx";
 
-const CriteriaList = () => {
+const IdeasList = () => {
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
-  const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
+  const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
-
   const [isOpen, setIsOpen] = useState(false);
-
-  const [criteriaSelect, setCriteriaSelect] = useState({
-    id_criterio: "",
-    des_criterio: "",
-    id_conjunto_criterio: "",
+  const [ideaSelect, setIdeaSelect] = useState({
+    id_idea: "",
+    nom_idea: "",
+    estado_idea: "",
+    des_idea: "",
+    cal_final: "",
+    id_proponente: "",
   });
 
   const toggleModal = () => {
@@ -32,21 +33,20 @@ const CriteriaList = () => {
 
   const queryClient = useQueryClient();
 
-  const handleEditClick = (id_conjunto_criterio) => {
-    setSelectedIdEdit(id_conjunto_criterio);
+  const handleEditClick = (id_idea) => {
+    setSelectedIdEdit(id_idea);
   };
 
-  const handleDeleteClick = (id_conjunto_criterio) => {
-    setSelectedIdDelete(id_conjunto_criterio);
+  const handleDeleteClick = (id_idea) => {
+    setSelectedIdDelete(id_idea);
   };
 
-  // Realizamos la consulta
+  //  Consumo a Axios
   const { data, error, isLoading, isError } = useQuery({
-    queryKey: ["criterios"],
-    queryFn: getAllCriteria,
+    queryKey: ["ideas"],
+    queryFn: getAllIdeas,
   });
 
-  // Usamos useEffect para manejar las actualizaciones de alerta
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -63,18 +63,20 @@ const CriteriaList = () => {
       setAlerta({});
       setCrearDataTable(true);
     }
-  }, [isLoading, isError, error]); // Dependencias: cada vez que cambien estos valores
+  }, [isLoading, isError, error]);
 
-  // Función que se llama cuando se elimina un criterio
   const refreshData = () => {
-    queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
+    queryClient.invalidateQueries("ideas");
   };
 
-  const titleForm = ["Registrar Criterios de Evluación"];
+  const titleForm = ["Registrar Ideas"];
   const titles = [
-    "ID Criterio",
+    "ID Idea",
+    "Nombre Idea",
+    "Estado",
     "Descripción",
-    "Conjunto de Criterios",
+    "Calificacion",
+    "Nombre Proponente",
     "Acciones",
   ];
   const ButtonsForOtherModules = (id_criterio) => [
@@ -100,19 +102,21 @@ const CriteriaList = () => {
       <MdDelete className="mr-1" /> Eliminar
     </button>,
   ];
-  const setCriteria = data?.Criteria || [];
 
-  const formattedData = setCriteria.map((criterios) => {
+  const ideas = data?.ideas || [];
+  const formattedData = ideas.map((idea) => {
     const rowData = [
-      criterios?.id_criterio,
-      criterios?.des_criterio,
-      criterios?.criterio?.des_conjunto_criterio,
+      idea?.id_idea,
+      idea?.nom_idea,
+      idea?.estado_idea,
+      idea?.des_idea,
+      idea?.cal_final,
+      idea?.proponents?.nombres_proponente,
     ];
-    rowData.push(ButtonsForOtherModules(criterios?.id_criterio));
-
+    rowData.push(ButtonsForOtherModules(idea?.id_idea));
     return rowData;
   });
-  
+
   const updateTextButton = (text) => {
     setTextButton(text);
   };
@@ -120,14 +124,14 @@ const CriteriaList = () => {
   return (
     <>
       <h1 className="font-serif font-semibold uppercase text-2xl">
-        Criterios de Evaluación
+        Ideas de Innovación
       </h1>
       <ModalWindow
         toggleModal={toggleModal}
         isOpen={isOpen}
         form={
-          <PostCriteria
-            criteriaSelect={criteriaSelect}
+          <PostIdeas
+            ideaSelect={ideaSelect}
             textButton={textButton}
             onSuccessSave={refreshData}
           />
@@ -138,19 +142,13 @@ const CriteriaList = () => {
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (
-        <GetCriteria
-          id_criterio={selectedIdEdit}
-          setCriteriaSelect={setCriteriaSelect}
-        />
+        <GetIdea id_idea={selectedIdEdit} setIdeaSelect={setIdeaSelect} />
       )}
       {selectedIdDelete && (
-        <DeleteCriteria
-          id_criterio={selectedIdDelete}
-          onSuccessDel={refreshData}
-        />
+        <DeleteIdea id_idea={selectedIdDelete} onSuccessDel={refreshData} />
       )}
     </>
   );
 };
 
-export default CriteriaList;
+export default IdeasList;

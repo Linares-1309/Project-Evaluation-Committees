@@ -11,7 +11,7 @@ import NewPassword from "./layout/layoutPublic/Auth/NewPassword.jsx";
 
 // Parte Privada
 import LayoutPrivate from "./layout/layoutPrivate/LayoutPrivate.jsx";
-import CrudIdeas from "./layout/layoutPrivate/Ideas/CrudIdeas.jsx";
+import IdeasList from "./layout/layoutPrivate/Ideas/IdeasList.jsx";
 import CrudEvaluationCommittees from "./layout/layoutPrivate/EvaluationCommittees/CrudEvaluationCommittees.jsx";
 import ProponentsList from "./layout/layoutPrivate/Proponents/ProponentsList.jsx";
 import CriteriaList from "./layout/layoutPrivate/Criteria/CriteriaList.jsx";
@@ -37,7 +37,7 @@ function App() {
             </Route>
             <Route path="/admin/" element={<LayoutPrivate />}>
               <Route index element={<Home />} />
-              <Route path="ideas" element={<CrudIdeas />} />
+              <Route path="ideas" element={<IdeasList />} />
               <Route path="comites" element={<CrudEvaluationCommittees />} />
               <Route path="proponentes" element={<ProponentsList />} />
               <Route path="criterios" element={<CriteriaList />} />

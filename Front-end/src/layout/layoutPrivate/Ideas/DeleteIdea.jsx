@@ -1,40 +1,39 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { deleteProponent } from "./ProponentsFunctions";
+/* eslint-disable no-unused-vars */
+import { deleteIdea } from "./IdeasFunctions";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 
-const DeleteProponents = ({ id_proponente, onSuccessDel }) => {
-  const { mutateAsyn: deleteProponentById, isLoading: isDeleting } =
-    useMutation({
-      mutationFn: deleteProponent,
-      onSuccess: () => {
-        onSuccessDel();
-        Swal.fire({
-          title: "¡Borrado!",
-          text: "El registro ha sido eliminado con éxito.",
-          icon: "success",
-          confirmButtonColor: "#39a900",
-          confirmButtonText: "Ok",
-        });
-      },
-      onError: () => {
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un problema al eliminar el registro.",
-          icon: "error",
-          confirmButtonColor: "#39a900",
-          confirmButtonText: "Ok",
-        });
-      },
-    });
+const DeleteIdea = ({ id_idea, onSuccessDel }) => {
+  const { mutateAsyn: deleteIdeaById, isLoading: isDeleting } = useMutation({
+    mutationFn: deleteIdea,
+    onSuccess: () => {
+      onSuccessDel();
+      Swal.fire({
+        title: "¡Borrado!",
+        text: "El registro ha sido eliminado con éxito.",
+        icon: "success",
+        confirmButtonColor: "#39a900",
+        confirmButtonText: "Ok",
+      });
+    },
+    onError: () => {
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un problema al eliminar el registro.",
+        icon: "error",
+        confirmButtonColor: "#39a900",
+        confirmButtonText: "Ok",
+      });
+    },
+  });
 
   const handleDelete = async () => {
     try {
-      await deleteProponentById(id_proponente);
+      await deleteIdeaById(id_idea); // Realizar la eliminación
     } catch (error) {
-      console.error(error); 
+      console.error(error);
     }
   };
 
@@ -50,7 +49,7 @@ const DeleteProponents = ({ id_proponente, onSuccessDel }) => {
 
   // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
-    if (id_proponente) {
+    if (id_idea) {
       Swal.fire({
         title: "¿Estás seguro de que quieres eliminar este registro?",
         text: "¡No podrás revertir esto!",
@@ -67,7 +66,7 @@ const DeleteProponents = ({ id_proponente, onSuccessDel }) => {
         }
       });
     }
-  }, [id_proponente]); // Solo ejecutar cuando `id_proponente` esté disponible
+  }, [id_idea]); // Solo ejecutar cuando `id_idea` esté disponible
 };
 
-export default DeleteProponents;
+export default DeleteIdea;

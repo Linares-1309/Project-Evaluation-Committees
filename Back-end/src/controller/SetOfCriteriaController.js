@@ -10,10 +10,6 @@ export const getAllSetOfCriteria = async (req, res) => {
         .json({ msg: "No se encontraron conjuntos de criterios!" });
     } else {
       return res.status(200).json({
-        // msg:
-        //   setOfCriteria.length <= 1
-        //     ? `Se encontro ${setOfCriteria.length} conjunto de criterios de evaluación!`
-        //     : `Se encontraron ${setOfCriteria.length} conjuntos de criterios de evaluación!`,
         setOfCriteria: setOfCriteria,
       });
     }

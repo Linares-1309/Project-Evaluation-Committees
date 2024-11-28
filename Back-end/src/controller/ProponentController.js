@@ -10,12 +10,7 @@ export const getAllProponents = async (req, res) => {
         .json({ msg: "No se encontraron proponentes registrados!" });
     } else {
       return res.status(200).json({
-        msg:
-          proponents.length < 2
-            ? `Se encontro ${proponents.length} proponente!`
-            : `Se encontraron ${proponents.length} proponentes!`,
         proponents: proponents,
-        msg: "esta loco el server",
       });
     }
   } catch (error) {
@@ -76,7 +71,7 @@ export const createNewProponent = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    
+
     logger.error(`Ocurrio un error al registrar el proponente ${error}`);
     return res.status(500).json({
       msg: "Ocurrio un error al registrar el proponente!",
@@ -124,7 +119,7 @@ export const updateProponent = async (req, res) => {
         telefono_proponente,
       },
       {
-        where: {id_proponente: id_proponente},
+        where: { id_proponente: id_proponente },
       }
     );
     if (updateProponent === 0) {

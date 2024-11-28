@@ -6,6 +6,8 @@ import { logger } from "./logMiddleware.js";
 const checkAuthWithRol = (roles = []) => {
   return async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log("Este es ", req.headers.authorization);
+    
 
     if (!token) {
       return res.status(401).json({ msg: "No se ha proporcionado un token!" });

@@ -1,6 +1,3 @@
-// import { Outlet } from "react-router-dom";
-// import Header from "./Header.jsx";
-// import Footer from "../layoutPublic/Footer.jsx";
 import useAuth from "../../hooks/useAuth";
 import {
   FaHome,
@@ -69,7 +66,9 @@ const LayoutPrivate = () => {
                   </Link>
                 </div>
                 <Link to="/admin/perfil" className="flex items-center mr-5">
-                <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">{auth?.user?.username || auth?.username}</h3>
+                  <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">
+                    {auth?.user?.username || auth?.username}
+                  </h3>
                   <div className="flex items-center ms-3">
                     <div>
                       <button
@@ -145,7 +144,7 @@ const LayoutPrivate = () => {
             aria-label="Sidebar"
           >
             <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between">
-              <ul className="space-y-2 font-medium">
+              <ul className="space-y-2 font-medium select-none">
                 <li>
                   <Link
                     to="/admin"
@@ -249,7 +248,7 @@ const LayoutPrivate = () => {
           </aside>
 
           <div className="p-4 sm:ml-64">
-            <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+            <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 h-screen">
               <div className="grid grid-cols-1 gap-4 mb-4 text-center">
                 <Outlet />
               </div>
@@ -261,14 +260,6 @@ const LayoutPrivate = () => {
       ) : (
         <Navigate to="/" />
       )}
-
-      {/* <div className="flex w-full flex-col min-h-screen">
-        <Header />
-        <div className="flex-grow px-4 py-6 sm:px-6 lg:px-8">
-          <Outlet />
-        </div>
-        <Footer />
-      </div> */}
     </>
   );
 };

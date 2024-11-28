@@ -26,6 +26,8 @@ export const getAllIdeas = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
+    
     logger.error(`Ocurrio un error al otener las ideas! ${error}`);
     return res.status(500).json({
       msg: "Ocurrio un error al obtener las ideas!",

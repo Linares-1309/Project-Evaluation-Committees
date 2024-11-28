@@ -8,7 +8,7 @@ import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions";
 import Alerta from "../../../components/Alerta.jsx";
 import { BsFillSendFill } from "react-icons/bs";
 
-const PostCriteria = ({ criteriaSelect, textButton }) => {
+const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
   const [desCriterio, setDesCriterio] = useState("");
   const [idConjuntoCriterios, setIdConjuntoCriterios] = useState("");
   const [alerta, setAlerta] = useState({});
@@ -22,7 +22,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
     isError,
     isLoading: loading,
   } = useQuery({
-    queryKey: ["conjunto-criterios-for-critria"],
+    queryKey: ["conjunto-criterios-for-criteria"],
     queryFn: getAllSetOfCriteria,
   });
 
@@ -47,6 +47,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
   const { mutate, isLoading } = useMutation({
     mutationFn: createCriteria,
     onSuccess: (data) => {
+      onSuccessSave()
       setAlerta({
         msg: data.msg,
         error: false,
@@ -69,6 +70,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
   } = useMutation({
     mutationFn: updateCriteria,
     onSuccess: (data) => {
+      onSuccessSave()
       setAlerta({
         msg: data.msg,
         error: false,
@@ -119,7 +121,7 @@ const PostCriteria = ({ criteriaSelect, textButton }) => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="py-10 flex flex-col items-center space-y-4">
+        <div className="py-5 flex flex-col items-center space-y-4">
           {alerta?.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
           <form
             className="max-w-sm mx-auto flex flex-col items-center"

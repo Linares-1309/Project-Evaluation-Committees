@@ -2,13 +2,7 @@ import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllSetOfCriteria = async () => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const resonse = await ClientAxios("set-of-criteria/", config);
+    const resonse = await ClientAxios("set-of-criteria/");
     if (resonse.status === 200) {
       return resonse.data;
     }
@@ -19,15 +13,8 @@ export const getAllSetOfCriteria = async () => {
 
 export const getSetOfCriteria = async (id_conjunto_criterio) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     const response = await ClientAxios(
-      `set-of-criteria/${id_conjunto_criterio}`,
-      config
+      `set-of-criteria/${id_conjunto_criterio}`
     );
     if (response.status === 200) {
       return response.data;
@@ -39,17 +26,9 @@ export const getSetOfCriteria = async (id_conjunto_criterio) => {
 
 export const createNewSetOfCriteria = async (data_SetOfCriteria) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios.post(
-      "set-of-criteria/",
-      { des_conjunto_criterio: data_SetOfCriteria.desConjuntoCriterios },
-      config
-    );
+    const response = await ClientAxios.post("set-of-criteria/", {
+      des_conjunto_criterio: data_SetOfCriteria.desConjuntoCriterios,
+    });
     if (response.status === 201) {
       return response.data;
     }
@@ -61,16 +40,9 @@ export const createNewSetOfCriteria = async (data_SetOfCriteria) => {
 
 export const updateSetOfCriteria = async (data_SetOfCriteria) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios.post(
+    const response = await ClientAxios.put(
       `set-of-criteria/${data_SetOfCriteria.id_conjunto_criterio}`,
-      data_SetOfCriteria,
-      config
+      { des_conjunto_criterio: data_SetOfCriteria.desConjuntoCriterios }
     );
     if (response.status === 200) {
       return response.data;
@@ -81,15 +53,8 @@ export const updateSetOfCriteria = async (data_SetOfCriteria) => {
 };
 export const deleteSetOfCriteria = async (id_conjunto_criterio) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     const response = await ClientAxios.delete(
-      `set-of-criteria/${id_conjunto_criterio}`,
-      config
+      `set-of-criteria/${id_conjunto_criterio}`
     );
     if (response.status === 200) {
       return response.data;

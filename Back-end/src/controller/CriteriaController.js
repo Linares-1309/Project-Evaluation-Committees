@@ -16,10 +16,6 @@ export const getAllCriteria = async (req, res) => {
       return res.status(404).json({ msg: "No se encontraron criterios!" });
     } else {
       return res.status(200).json({
-        msg:
-          Criteria.length < 2
-            ? `Se encontro ${Criteria.length} criterio de evaluación!`
-            : `Se encontraron ${Criteria.length} criterios de evaluación!`,
         Criteria: Criteria,
       });
     }

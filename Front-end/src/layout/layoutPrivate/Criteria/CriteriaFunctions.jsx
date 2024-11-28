@@ -2,13 +2,7 @@ import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllCriteria = async () => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios("criteria/", config);
+    const response = await ClientAxios("criteria/");
     if (response.status === 200) {
       return response.data;
     }
@@ -19,13 +13,7 @@ export const getAllCriteria = async () => {
 
 export const getCriteria = async (id_criterio) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios(`criteria/${id_criterio}`, config);
+    const response = await ClientAxios(`criteria/${id_criterio}`);
     if (response.status === 200) {
       return response.data;
     }
@@ -36,13 +24,10 @@ export const getCriteria = async (id_criterio) => {
 
 export const createCriteria = async (dataCriteria) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios("criteria/", dataCriteria, config);
+    const response = await ClientAxios.post("/criteria", {
+      des_criterio: dataCriteria?.desCriterio,
+      id_conjunto_criterio: dataCriteria?.idConjuntoCriterios,
+    });
     if (response.status === 201) {
       return response.data;
     }
@@ -53,19 +38,12 @@ export const createCriteria = async (dataCriteria) => {
 
 export const updateCriteria = async (dataCriteria) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     const response = await ClientAxios.put(
       `criteria/${dataCriteria.id_criterio}`,
       {
         des_criterio: dataCriteria?.desCriterio,
         id_conjunto_criterio: dataCriteria?.idConjuntoCriterios,
-      },
-      config
+      }
     );
     if (response.status === 200) {
       return response.data;
@@ -76,13 +54,7 @@ export const updateCriteria = async (dataCriteria) => {
 };
 export const deleteCriteria = async (id_criterio) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await ClientAxios(`criteria/${id_criterio}`, config);
+    const response = await ClientAxios.delete(`criteria/${id_criterio}`);
     if (response.status === 200) {
       return response.data;
     }
