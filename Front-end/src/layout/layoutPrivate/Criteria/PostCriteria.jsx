@@ -101,7 +101,7 @@ const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
       const data = { id_criterio, desCriterio, idConjuntoCriterios };
       mutateUpdate(data);
     }
-  };
+  };     
 
   const setOfCriteria = conjuntoCriterios.setOfCriteria || [];
 
