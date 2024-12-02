@@ -8,7 +8,7 @@ import { logger } from "../middleware/logMiddleware.js";
 export const getAllUsers = async (req, res) => {
   try {
     const users = await UserModel.findAll({
-      where: { userType: "Calificador" },
+      // where: { userType: "Calificador" },
       attributes: { exclude: ["password", "token", "create_time"] },
     });
     if (users.length === 0) {

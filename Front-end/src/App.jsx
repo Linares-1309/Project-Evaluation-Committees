@@ -12,10 +12,10 @@ import NewPassword from "./layout/layoutPublic/Auth/NewPassword.jsx";
 // Parte Privada
 import LayoutPrivate from "./layout/layoutPrivate/LayoutPrivate.jsx";
 import IdeasList from "./layout/layoutPrivate/Ideas/IdeasList.jsx";
-import CrudEvaluationCommittees from "./layout/layoutPrivate/EvaluationCommittees/CrudEvaluationCommittees.jsx";
+import EvaluationCommitteesList from "./layout/layoutPrivate/EvaluationCommittees/EvaluationCommitteesList.jsx";
 import ProponentsList from "./layout/layoutPrivate/Proponents/ProponentsList.jsx";
 import CriteriaList from "./layout/layoutPrivate/Criteria/CriteriaList.jsx";
-import CrudUsers from "./layout/layoutPrivate/Users/CrudUsers.jsx";
+import UsersList from "./layout/layoutPrivate/Users/UsersList.jsx";
 import Settings from "./layout/layoutPrivate/Settings/Settings.jsx";
 import UserProfile from "./layout/layoutPrivate/UserProfile/UserProfile.jsx";
 import SetOfCriteriaList from "./layout/layoutPrivate/SetOfCriteria/SetOfCriteriaList.jsx";
@@ -38,14 +38,14 @@ function App() {
             <Route path="/admin/" element={<LayoutPrivate />}>
               <Route index element={<Home />} />
               <Route path="ideas" element={<IdeasList />} />
-              <Route path="comites" element={<CrudEvaluationCommittees />} />
+              <Route path="comites" element={<EvaluationCommitteesList />} />
               <Route path="proponentes" element={<ProponentsList />} />
               <Route path="criterios" element={<CriteriaList />} />
               <Route
                 path="conjunto-criterios"
                 element={<SetOfCriteriaList />}
               />
-              <Route path="usuarios" element={<CrudUsers />} />
+              <Route path="usuarios" element={<UsersList />} />
               <Route path="ajustes" element={<Settings />} />
               <Route path="perfil" element={<UserProfile />} />
             </Route>

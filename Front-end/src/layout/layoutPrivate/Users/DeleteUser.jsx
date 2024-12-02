@@ -1,38 +1,37 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { deleteCriteria } from "./CriteriaFunctions.jsx";
+import { deleteUser } from "./UsersFunctions";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 
-const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
-  const { mutateAsync: deleteCriteriaById, isLoading: isDeleting } = useMutation(
-    {
-      mutationFn: deleteCriteria,
-      onSuccess: () => {
-        onSuccessDel();
-        Swal.fire({
-          title: "¡Borrado!",
-          text: "El registro ha sido eliminado con éxito.",
-          icon: "success",
-          confirmButtonColor: "#39a900",
-          confirmButtonText: "Ok",
-        });
-      },
-      onError: () => {
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un problema al eliminar el registro.",
-          icon: "error",
-          confirmButtonColor: "#39a900",
-          confirmButtonText: "Ok",
-        });
-      },
-    }
-  );
+const DeleteUser = ({ Id_User, onSuccessDel }) => {
+  const { mutateAsync: deleteUserById, isLoading: isDeleting } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      onSuccessDel();
+      Swal.fire({
+        title: "¡Borrado!",
+        text: "El registro ha sido eliminado con éxito.",
+        icon: "success",
+        confirmButtonColor: "#39a900",
+        confirmButtonText: "Ok",
+      });
+    },
+    onError: () => {
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un problema al eliminar el registro.",
+        icon: "error",
+        confirmButtonColor: "#39a900",
+        confirmButtonText: "Ok",
+      });
+    },
+  });
+
   const handleDelete = async () => {
     try {
-      await deleteCriteriaById(id_criterio); // Realizar la eliminación
+      await deleteUserById(Id_User); // Realizar la eliminación
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +49,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
 
   // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
-    if (id_criterio) {
+    if (Id_User) {
       Swal.fire({
         title: "¿Estás seguro de que quieres eliminar este registro?",
         text: "¡No podrás revertir esto!",
@@ -67,7 +66,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
         }
       });
     }
-  }, [id_criterio]); // Solo ejecutar cuando `id_criterio` esté disponible
+  }, [Id_User]); // Solo ejecutar cuando `Id_User` esté disponible
 };
 
-export default DeleteCriteria;
+export default DeleteUser;

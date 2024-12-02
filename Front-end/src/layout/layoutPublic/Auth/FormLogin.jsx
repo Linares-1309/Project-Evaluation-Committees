@@ -19,6 +19,7 @@ const Login = () => {
     onSuccess: (data) => {
       // Si el login es exitoso, almacenamos el token
       localStorage.setItem("token", data.token);
+
       setAuth(data);
       setAlerta({
         msg: data.msg,

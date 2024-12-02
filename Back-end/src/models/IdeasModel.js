@@ -13,9 +13,12 @@ const IdeasModel = db.define(
     nom_idea: { type: DataTypes.STRING(150) },
     estado_idea: {
       type: DataTypes.ENUM("Convocado", "No convocado"),
+      defaultValue: "No convocado"
     },
-    des_idea: { type: DataTypes.STRING(115) },
-    cal_final: { type: DataTypes.DECIMAL(10, 2) },
+    des_idea: { type: DataTypes.STRING(255) },
+    cal_final: { type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0
+     },
     id_proponente: {
       type: DataTypes.INTEGER,
       references: {

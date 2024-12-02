@@ -1,16 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, createContext } from "react";
 import ClientAxios from "../config/AxiosConfig.jsx";
+import { jwtDecode } from "jwt-decode"
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [cargando, setCargando] = useState(true);
   const [auth, setAuth] = useState({});
+  const [roleUser, setRoleUser] = useState("");
 
   useEffect(() => {
     const autenticarUser = async () => {
       const token = localStorage.getItem("token");
+      const decode = jwtDecode(token)
+      setRoleUser(decode.rol)
+
       if (!token) {
         setCargando(false);
         return;
@@ -27,7 +32,7 @@ const AuthProvider = ({ children }) => {
         const { data } = await ClientAxios(url, config);
         setAuth(data);
       } catch (error) {
-        console.log(error.response.data.msg);
+        console.log(error);
         localStorage.removeItem("token");
         setAuth({});
       }
@@ -48,6 +53,7 @@ const AuthProvider = ({ children }) => {
         setAuth,
         cargando,
         cerrarSesion,
+        roleUser,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { useEffect } from "react";
 
 const DeleteProponents = ({ id_proponente, onSuccessDel }) => {
-  const { mutateAsyn: deleteProponentById, isLoading: isDeleting } =
+  const { mutateAsync: deleteProponentById, isLoading: isDeleting } =
     useMutation({
       mutationFn: deleteProponent,
       onSuccess: () => {

@@ -39,3 +39,4 @@ const checkAuthWithRol = (roles = []) => {
   };
 };
 export default checkAuthWithRol;
+

@@ -23,8 +23,14 @@ export const getIdea = async (id_idea) => {
 };
 
 export const createNewIdea = async (dataideas) => {
+  console.log(dataideas);
+  
   try {
-    const response = await ClientAxios.post("/ideas/", dataideas);
+    const response = await ClientAxios.post("/ideas/", {
+      nom_idea: dataideas?.nombreIdea,
+      des_idea: dataideas?.descripcionIdea,
+      id_proponente: dataideas?.idProponente
+    });
     if (response.status === 201) {
       return response.data;
     }
