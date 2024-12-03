@@ -8,7 +8,7 @@ import { logger } from "../middleware/logMiddleware.js";
 export const getAllUsers = async (req, res) => {
   try {
     const users = await UserModel.findAll({
-      where: { userType: "Calificador" },
+      // where: { userType: "Calificador" },
       attributes: { exclude: ["password", "token", "create_time"] },
     });
     if (users.length === 0) {
@@ -146,7 +146,7 @@ export const createUser = async (req, res) => {
     if (isNaN(Id_User)) {
       return res
         .status(400)
-        .json({ message: "El Documento del usuario debe ser un número." });
+        .json({ msg: "El Documento del usuario debe ser un número." });
     }
 
     // Validar que el nombre del usuario solo contenga letras.
@@ -154,15 +154,15 @@ export const createUser = async (req, res) => {
     if (!nameRegex.test(username)) {
       return res
         .status(400)
-        .json({ message: "El Nombre del usuario debe ser solo en letras." });
+        .json({ msg: "El Nombre del usuario debe ser solo en letras." });
     }
 
     // Validar el formato del correo electrónico.
     const emailRegex = /(gmail\.com|hotmail\.com|sena\.com)/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
-        message:
-          "El correo electrónico debe ser válido y terminar en @gmail.com o @hotmail.com.",
+        msg:
+          "El correo electrónico debe terminar en @gmail.com o @hotmail.com",
       });
     }
 
@@ -173,7 +173,7 @@ export const createUser = async (req, res) => {
     if (emailExist) {
       return res
         .status(400)
-        .json({ message: "El correo ya se encuentra registrado!" });
+        .json({ msg: "El correo ya se encuentra registrado!" });
     }
 
     // Prevenir usuarios duplicados por documento.
@@ -183,7 +183,7 @@ export const createUser = async (req, res) => {
     if (documentExist) {
       return res
         .status(400)
-        .json({ message: "El documento ya se encuentra registrado!" });
+        .json({ msg: "El documento ya se encuentra registrado!" });
     }
 
     // Crear el nuevo usuario.
@@ -201,7 +201,7 @@ export const createUser = async (req, res) => {
     logger.error("Error al crear la cuenta! ", error);
     return res
       .status(500)
-      .json({ message: "Ocurrio un error al crear la cuenta." }); // Captura de errores y manejo de excepciones.
+      .json({ msg: "Ocurrio un error al crear la cuenta." }); // Captura de errores y manejo de excepciones.
   }
 };
 
@@ -211,7 +211,7 @@ export const profileUser = async (req, res) => {
     const { user } = req; // Debería estar pasando el usuario autenticado en `req.user`
 
     if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
     return res.json({ user }); // Respuesta exitosa con los datos del perfil del usuario.
@@ -219,7 +219,7 @@ export const profileUser = async (req, res) => {
     logger.error("Error al traer el perfil del usuario!", error);
     return res
       .status(500)
-      .json({ message: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
+      .json({ msg: "Error al traer el perfil del usuario!" }); // Captura de errores y manejo de excepciones.
   }
 };
 

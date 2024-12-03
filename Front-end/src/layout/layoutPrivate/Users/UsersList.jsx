@@ -1,30 +1,30 @@
-import { getAllIdeas } from "./IdeasFunctions.jsx";
+import { getAllUsers } from "./UsersFunctions";
 import { useState, useEffect } from "react";
-import Alerta from "../../../components/Alerta.jsx";
+import Alerta from "../../../components/Alerta";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import WriteTable from "../../../tables/DataTables.jsx";
+import WriteTable from "../../../tables/DataTables";
 import ModalWindow from "../../../components/ModalDialog";
 
-import GetIdea from "./GetIdea.jsx";
-import DeleteIdea from "./DeleteIdea.jsx";
-import PostIdeas from "./PostIdeas.jsx";
+import GetUser from "./GetUser";
+import DeleteUser from "./DeleteUser";
+import PostUser from "./PostUser";
 
-const IdeasList = () => {
+const UsersList = () => {
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
-  const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
+  const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
+
   const [isOpen, setIsOpen] = useState(false);
-  const [ideaSelect, setIdeaSelect] = useState({
-    id_idea: "",
-    nom_idea: "",
-    estado_idea: "",
-    des_idea: "",
-    cal_final: "",
-    id_proponente: "",
+
+  const [userSelect, setUserSelect] = useState({
+    Id_User: "",
+    username: "",
+    email: "",
+    userType: "",
   });
 
   const toggleModal = () => {
@@ -33,20 +33,21 @@ const IdeasList = () => {
 
   const queryClient = useQueryClient();
 
-  const handleEditClick = (id_idea) => {
-    setSelectedIdEdit(id_idea);
+  const handleEditClick = (Id_User) => {
+    setSelectedIdEdit(Id_User);
   };
 
-  const handleDeleteClick = (id_idea) => {
-    setSelectedIdDelete(id_idea);
+  const handleDeleteClick = (Id_User) => {
+    setSelectedIdDelete(Id_User);
   };
 
-  //  Consumo a Axios
+  // Realizamos la consulta
   const { data, error, isLoading, isError } = useQuery({
-    queryKey: ["ideas"],
-    queryFn: getAllIdeas,
+    queryKey: ["usuarios"],
+    queryFn: getAllUsers,
   });
 
+  // Usamos useEffect para manejar las actualizaciones de alerta
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -63,29 +64,29 @@ const IdeasList = () => {
       setAlerta({});
       setCrearDataTable(true);
     }
-  }, [isLoading, isError, error]);
+  }, [isLoading, isError, error]); // Dependencias: cada vez que cambien estos valores
 
+  // Función que se llama cuando el usuario "ADMIN" elimina un usuario
   const refreshData = () => {
-    queryClient.invalidateQueries("ideas");
+    queryClient.invalidateQueries("criterios"); // Refrescar la lista de usuarios
   };
 
-  const titleForm = ["Registrar Ideas"];
+  const titleForm = ["Agregar Usuarios"];
   const titles = [
-    "ID Idea",
-    "Nombre Idea",
-    "Estado",
-    "Descripción",
-    "Calificacion",
-    "Nombre Proponente",
+    "Documento",
+    "Nombre de Usuario",
+    "Correo",
+    "Tipo de Usuario",
     "Acciones",
   ];
-  const ButtonsForOtherModules = (id_criterio) => [
+
+  const ButtonsForOtherModules = (Id_User) => [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
       title="Editar"
       onClick={() => [
-        handleEditClick(id_criterio),
+        handleEditClick(Id_User),
         toggleModal(),
         setTextButton("Actualizar"),
       ]}
@@ -97,23 +98,23 @@ const IdeasList = () => {
       className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="delete"
       title="Eliminar"
-      onClick={() => handleDeleteClick(id_criterio)}
+      onClick={() => handleDeleteClick(Id_User)}
     >
       <MdDelete className="mr-1" /> Eliminar
     </button>,
   ];
 
-  const ideas = data?.ideas || [];
-  const formattedData = ideas.map((idea) => {
+  const users = data?.users || [];
+
+  const formattedData = users.map((user) => {
     const rowData = [
-      idea?.id_idea,
-      idea?.nom_idea,
-      idea?.estado_idea,
-      idea?.des_idea,
-      idea?.cal_final,
-      idea?.proponente?.nombres_proponente +" "+ idea?.proponente?.apellidos_proponente,
+      user?.Id_User,
+      user?.username,
+      user?.email,
+      user?.userType,
     ];
-    rowData.push(ButtonsForOtherModules(idea?.id_idea));
+    rowData.push(ButtonsForOtherModules(user?.id_criterio));
+
     return rowData;
   });
 
@@ -123,15 +124,13 @@ const IdeasList = () => {
 
   return (
     <>
-      <h1 className="font-serif font-semibold uppercase text-2xl">
-        Ideas de Innovación
-      </h1>
+      <h1 className="font-serif font-semibold uppercase text-2xl">Usuarios</h1>
       <ModalWindow
         toggleModal={toggleModal}
         isOpen={isOpen}
         form={
-          <PostIdeas
-            ideaSelect={ideaSelect}
+          <PostUser
+            userSelect={userSelect}
             textButton={textButton}
             onSuccessSave={refreshData}
           />
@@ -142,13 +141,13 @@ const IdeasList = () => {
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (
-        <GetIdea id_idea={selectedIdEdit} setIdeaSelect={setIdeaSelect} />
+        <GetUser Id_User={selectedIdEdit} setUserSelect={setUserSelect} />
       )}
       {selectedIdDelete && (
-        <DeleteIdea id_idea={selectedIdDelete} onSuccessDel={refreshData} />
+        <DeleteUser Id_User={selectedIdDelete} onSuccessDel={refreshData} />
       )}
     </>
   );
 };
 
-export default IdeasList;
+export default UsersList;

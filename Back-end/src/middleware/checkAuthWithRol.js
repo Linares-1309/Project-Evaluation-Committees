@@ -5,9 +5,7 @@ import { logger } from "./logMiddleware.js";
 // Middleware para validar el usuario y el rol
 const checkAuthWithRol = (roles = []) => {
   return async (req, res, next) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    console.log("Este es ", req.headers.authorization);
-    
+    const token = req.headers.authorization?.split(" ")[1];    
 
     if (!token) {
       return res.status(401).json({ msg: "No se ha proporcionado un token!" });
@@ -39,3 +37,4 @@ const checkAuthWithRol = (roles = []) => {
   };
 };
 export default checkAuthWithRol;
+

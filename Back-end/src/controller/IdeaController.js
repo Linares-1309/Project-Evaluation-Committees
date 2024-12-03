@@ -27,7 +27,7 @@ export const getAllIdeas = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    
+
     logger.error(`Ocurrio un error al otener las ideas! ${error}`);
     return res.status(500).json({
       msg: "Ocurrio un error al obtener las ideas!",
@@ -84,13 +84,16 @@ export const updateIdea = async (req, res) => {
   const { nom_idea, estado_idea, des_idea, cal_final, id_proponente } =
     req.body;
   try {
-    const update = await IdeasModel.update({
-      nom_idea,
-      estado_idea,
-      des_idea,
-      cal_final,
-      id_proponente,
-    });
+    const update = await IdeasModel.update(
+      {
+        nom_idea,
+        estado_idea,
+        des_idea,
+        cal_final,
+        id_proponente,
+      },
+      { where: { id_idea: id_idea } }
+    );
     if (update === 0) {
       return res
         .status(404)
@@ -110,7 +113,7 @@ export const deleteIdea = async (req, res) => {
   const { id_idea } = req.params;
   try {
     const deleted = await IdeasModel.findOne({
-      where: id_idea,
+      where: {id_idea: id_idea},
     });
     if (deleted) {
       await deleted.destroy();

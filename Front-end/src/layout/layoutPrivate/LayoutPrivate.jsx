@@ -14,7 +14,8 @@ import { RiLogoutCircleFill } from "react-icons/ri";
 import { Link, Navigate, Outlet } from "react-router-dom";
 
 const LayoutPrivate = () => {
-  const { auth, cargando, cerrarSesion } = useAuth();
+  const { auth, cargando, cerrarSesion, roleUser } = useAuth();
+
   if (cargando) {
     return (
       <>
@@ -27,6 +28,7 @@ const LayoutPrivate = () => {
       </>
     );
   }
+  
   return (
     <>
       {auth?.user?.Id_User || auth?.Id_User ? (
@@ -144,106 +146,119 @@ const LayoutPrivate = () => {
             aria-label="Sidebar"
           >
             <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between">
-              <ul className="space-y-2 font-medium select-none">
-                <li>
-                  <Link
-                    to="/admin"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <FaHome size={23} className="text-green-500" />
+              {roleUser === "Admin" ? (
+                <ul className="space-y-2 font-medium select-none">
+                  <li>
+                    <Link
+                      to="/admin"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <FaHome size={23} className="text-green-500" />
 
-                    <span className="ms-3">Inicio</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/ideas"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <VscLightbulbAutofix size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Ideas</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/comites"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <FaFileAlt size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Comités
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/proponentes"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <FaUsers size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Proponentes
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/criterios"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <FaStar size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Criterios
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/conjunto-criterios"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <FaClipboardList size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Conjunto Criterios
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/usuarios"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <LiaUsersCogSolid size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Usuarios
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/ajustes"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <IoSettings size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Ajustes
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-              <ul>
-                <li className="space-y-2 font-medium">
-                  <a
-                    onClick={cerrarSesion}
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                  >
-                    <RiLogoutCircleFill size={23} className="text-green-500" />
-                    <span className="flex-1 ms-3 whitespace-nowrap">
-                      Cerrar Sesion
-                    </span>
-                  </a>
-                </li>
-              </ul>
+                      <span className="ms-3">Inicio</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/ideas"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <VscLightbulbAutofix
+                        size={23}
+                        className="text-green-500"
+                      />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Ideas
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/comites"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <FaFileAlt size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Comités
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/proponentes"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <FaUsers size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Proponentes
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/criterios"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <FaStar size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Criterios
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/conjunto-criterios"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <FaClipboardList size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Conjunto Criterios
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/usuarios"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <LiaUsersCogSolid size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Usuarios
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/ajustes"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <IoSettings size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Ajustes
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              ) : (
+                <h1>Hola {roleUser}</h1>
+              )}
+                <ul>
+                  <li className="space-y-2 font-medium">
+                    <a
+                      onClick={cerrarSesion}
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                    >
+                      <RiLogoutCircleFill
+                        size={23}
+                        className="text-green-500"
+                      />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Cerrar Sesion
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+           
             </div>
           </aside>
 

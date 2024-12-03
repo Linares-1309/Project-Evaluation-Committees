@@ -21,7 +21,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
   const [telefonoProponente, setTelefonoProponente] = useState("");
 
   const [alerta, setAlerta] = useState({
-    msg: '',
+    msg: "",
     error: false,
   });
 
@@ -51,7 +51,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
   } = useMutation({
     mutationFn: updateProponent,
     onSuccess: (data) => {
-      onSuccessUpdate()
+      onSuccessUpdate();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -97,7 +97,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
       };
       mutate(data);
     } else if (textButton === "Actualizar") {
-      const id_proponente = proponentSelect.id_proponente;
+      const { id_proponente } = proponentSelect;
       const data = {
         id_proponente,
         nombreProponente,
@@ -121,13 +121,11 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
     setDataForm();
   }, [proponentSelect]);
 
-  
   return (
     <>
       <div className="flex justify-center">
         <div className="py-5 flex flex-col items-center space-y-4 w-full">
           {alerta?.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-
 
           <form
             className="w-full px-12 mx-auto flex flex-col items-center"
