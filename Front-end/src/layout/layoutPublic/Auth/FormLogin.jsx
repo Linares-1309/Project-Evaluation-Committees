@@ -6,19 +6,26 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "./../../../hooks/useAuth.jsx";
 import { FiUser } from "react-icons/fi";
 import { MdOutlinePassword } from "react-icons/md";
+import { jwtDecode } from "jwt-decode";
+import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 const Login = () => {
   const [Id_User, setId_User] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { setAuth, setRoleUser } = useAuth();
   // Usamos useMutation para hacer la mutación de login
   const { mutate, isLoading } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       // Si el login es exitoso, almacenamos el token
-      localStorage.setItem("token", data.token);
+      const token = data.token;
+      localStorage.setItem("token", token);
+      const decodedToken = jwtDecode(token);
+      setRoleUser(decodedToken.rol);
+
+      handleProfile();
 
       setAuth(data);
       setAlerta({
@@ -36,13 +43,17 @@ const Login = () => {
       localStorage.removeItem("token");
       localStorage.clear();
 
-      // Si ocurre un error, mostramos el mensaje de error
       setAlerta({
-        msg: error.message, // El mensaje es extraído del error lanzado
+        msg: error.message,
         error: true,
       });
     },
   });
+
+  const handleProfile = async () => {
+    const userProfile = await ClientAxios.get("/user/profile");
+    setAuth(userProfile.data)
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

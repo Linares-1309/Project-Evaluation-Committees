@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, createContext } from "react";
 import ClientAxios from "../config/AxiosConfig.jsx";
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -12,39 +12,51 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const autenticarUser = async () => {
+      setCargando(true)
       const token = localStorage.getItem("token");
-      const decode = jwtDecode(token)
-      setRoleUser(decode.rol)
 
       if (!token) {
+        setAuth({});
+        setRoleUser(null);
         setCargando(false);
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
 
       try {
+        const decodedToken = jwtDecode(token);
+        setRoleUser(decodedToken.rol); 
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
         const url = `/user/profile`;
         const { data } = await ClientAxios(url, config);
         setAuth(data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         localStorage.removeItem("token");
         setAuth({});
+        setRoleUser(null);
+      } finally {
+        setCargando(false); // Terminamos la carga
       }
-      setCargando(false);
     };
     autenticarUser();
   }, []);
+
+  if (cargando) {
+    return <div>Cargando...</div>;
+  }
 
   const cerrarSesion = () => {
     localStorage.clear();
     localStorage.removeItem("token");
     setAuth({});
+    setRoleUser("");
   };
   return (
     <AuthContext.Provider
@@ -54,6 +66,7 @@ const AuthProvider = ({ children }) => {
         cargando,
         cerrarSesion,
         roleUser,
+        setRoleUser
       }}
     >
       {children}

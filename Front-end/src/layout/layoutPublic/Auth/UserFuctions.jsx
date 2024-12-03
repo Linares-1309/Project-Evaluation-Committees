@@ -69,9 +69,12 @@ import ClientAxios from "../../../config/AxiosConfig";
 // };
 
 export const loginUser = async (credentials) => {
+
   try {
-    const { data } = await ClientAxios.post("/user/login", credentials);
-    return data;
+    const response = await ClientAxios.post("/user/login", credentials);
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
