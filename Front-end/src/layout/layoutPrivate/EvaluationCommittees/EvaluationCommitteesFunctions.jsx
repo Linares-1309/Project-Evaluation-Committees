@@ -2,8 +2,10 @@ import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllEvaluationCommittees = async () => {
   try {
-    const { data } = await ClientAxios("/");
-    return data;
+    const response = await ClientAxios("/evaluation-committees/");
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -11,8 +13,12 @@ export const getAllEvaluationCommittees = async () => {
 
 export const getEvaluationCommitte = async (id_comités_evaluación) => {
   try {
-    const { data } = await ClientAxios(`/${id_comités_evaluación}`);
-    return data;
+    const response = await ClientAxios(
+      `/evaluation-committees/${id_comités_evaluación}`
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -20,8 +26,13 @@ export const getEvaluationCommitte = async (id_comités_evaluación) => {
 
 export const newEvaluationCommitte = async (dataEvaluatioCommittees) => {
   try {
-    const { data } = await ClientAxios("/", dataEvaluatioCommittees);
-    return data;
+    const response = await ClientAxios.post(
+      "/evaluation-committees/",
+      dataEvaluatioCommittees
+    );
+    if (response.status === 201) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
@@ -29,20 +40,26 @@ export const newEvaluationCommitte = async (dataEvaluatioCommittees) => {
 
 export const updateEvaluationCommitte = async (dataEvaluatioCommittees) => {
   try {
-    const { data } = await ClientAxios.post(
+    const response = await ClientAxios.put(
       `/${dataEvaluatioCommittees.id_comités_evaluación}`,
-      dataEvaluatioCommittees,
-  
+      dataEvaluatioCommittees
     );
-    return data;
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
+
 export const deleteEvaluationCommitte = async (id_comités_evaluación) => {
   try {
-    const { data } = await ClientAxios(`/${id_comités_evaluación}`);
-    return data;
+    const response = await ClientAxios.delete(
+      `/evaluation-committees/${id_comités_evaluación}`
+    );
+    if (response.status  === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }

@@ -17,6 +17,7 @@ import CriteriaRoutes from "./routes/CriteriaRoutes.js";
 import ProponentRoutes from "./routes/ProponentRoutes.js";
 import IdeasRoutes from "./routes/IdeasRoutes.js";
 import EvaluationCommitteesRoutes from "./routes/EvaluationCommitteesRoutes.js";
+import RubricsRoutes from "./routes/RubricRoutes.js"
 
 // Se importan los modelos para realizar las relaciones entre tablas
 import UserModel from "./models/userModel.js";
@@ -25,6 +26,7 @@ import CriteriaModel from "./models/CriteriaModel.js";
 import ProponentModel from "./models/ProponentModel.js";
 import IdeasModel from "./models/IdeasModel.js";
 import EvaluationCommitteesModel from "./models/EvaluationCommitteesModel.js";
+import RubricModel from "./models/RublicModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,6 +45,7 @@ app.use("/api/criteria", CriteriaRoutes);
 app.use("/api/proponent", ProponentRoutes);
 app.use("/api/ideas", IdeasRoutes);
 app.use("/api/evaluation-committees", EvaluationCommitteesRoutes);
+app.use("/api/rubrics", RubricsRoutes);
 
 app.use(express.static(path.join(import.meta.url, "public")));
 
@@ -102,6 +105,15 @@ SetOfCriteriaModel.hasMany(CriteriaModel, {
 CriteriaModel.belongsTo(SetOfCriteriaModel, {
   foreignKey: "id_conjunto_criterio",
   as: "criterio",
+});
+// RELACION ENTRE CRITERIOS Y RUBRICAS
+CriteriaModel.hasMany(RubricModel, {
+  foreignKey: "id_criterio",
+  as: "criteria-for-rubric",
+});
+RubricModel.belongsTo(CriteriaModel, {
+  foreignKey: "id_criterio",
+  as: "criteria-for-rubric",
 });
 
 // RELACION ENTRE IDEAS Y PROPONENTES

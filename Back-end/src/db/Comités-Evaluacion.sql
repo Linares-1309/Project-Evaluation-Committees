@@ -18,37 +18,6 @@ USE `comites-evaluacion`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `calificaciones`
---
-
-DROP TABLE IF EXISTS `calificaciones`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `calificaciones` (
-  `Id_Calificaciones` int NOT NULL AUTO_INCREMENT,
-  `Id_User` int DEFAULT NULL,
-  `Id_Proyecto` int DEFAULT NULL,
-  `Calificacion` decimal(10,0) NOT NULL,
-  `Retroalimentacion` varchar(150) NOT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`Id_Calificaciones`),
-  KEY `Id_User_idx` (`Id_User`),
-  KEY `Id_Proyecto_idx` (`Id_Proyecto`),
-  CONSTRAINT `Id_Proyecto` FOREIGN KEY (`Id_Proyecto`) REFERENCES `proyectos` (`Id_Proyecto`),
-  CONSTRAINT `Id_User` FOREIGN KEY (`Id_User`) REFERENCES `user` (`Id_User`)
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `calificaciones`
---
-
-LOCK TABLES `calificaciones` WRITE;
-/*!40000 ALTER TABLE `calificaciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `calificaciones` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `comités-evaluación`
 --
 
@@ -60,12 +29,15 @@ CREATE TABLE `comités-evaluación` (
   `fec_comité_evaluación` date NOT NULL,
   `id_idea` int NOT NULL,
   `id_conjunto_criterio` int NOT NULL,
+  `Id_User` int NOT NULL,
   `create_time` timestamp NOT NULL,
   PRIMARY KEY (`id_comités_evaluación`),
   KEY `id_idea_idx` (`id_idea`) /*!80000 INVISIBLE */,
   KEY `id_conjunto_criterio_idx` (`id_conjunto_criterio`),
+  KEY `Id_User_idx` (`Id_User`),
   CONSTRAINT `fk_id_conjunto_criterio` FOREIGN KEY (`id_conjunto_criterio`) REFERENCES `conjunto_criterios` (`id_conjunto_criterio`),
-  CONSTRAINT `fk_id_idea` FOREIGN KEY (`id_idea`) REFERENCES `ideas` (`id_idea`)
+  CONSTRAINT `fk_id_idea` FOREIGN KEY (`id_idea`) REFERENCES `ideas` (`id_idea`),
+  CONSTRAINT `Id_User` FOREIGN KEY (`Id_User`) REFERENCES `user` (`Id_User`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,7 +62,7 @@ CREATE TABLE `conjunto_criterios` (
   `des_conjunto_criterio` varchar(80) NOT NULL,
   `create_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_conjunto_criterio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +71,7 @@ CREATE TABLE `conjunto_criterios` (
 
 LOCK TABLES `conjunto_criterios` WRITE;
 /*!40000 ALTER TABLE `conjunto_criterios` DISABLE KEYS */;
+INSERT INTO `conjunto_criterios` VALUES (32,'FORMULACIÓN DE LA IDEA','2024-11-28 15:51:02'),(39,'VIABILIDAD DE LA IDEA EN EL MERCADO','2024-11-28 18:37:56'),(40,'CAPACIDAD DE ACOMPAÑAMIENTO DEL TECNOPARQUE\n','2024-11-28 18:38:17'),(41,'CAPACIDAD DE EJECUCIÓN DEL PROPONENTE O  POSIBLE TALENTO','2024-11-28 18:38:27');
 /*!40000 ALTER TABLE `conjunto_criterios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,13 +84,13 @@ DROP TABLE IF EXISTS `criterios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `criterios` (
   `id_criterio` int NOT NULL AUTO_INCREMENT,
-  `des_criterio` varchar(45) NOT NULL,
+  `des_criterio` varchar(255) NOT NULL,
   `id_conjunto_criterio` int NOT NULL,
   `create_time` timestamp NOT NULL,
   PRIMARY KEY (`id_criterio`),
   KEY `id_conjunto_criterio_idx` (`id_conjunto_criterio`),
   CONSTRAINT `id_conjunto_criterio` FOREIGN KEY (`id_conjunto_criterio`) REFERENCES `conjunto_criterios` (`id_conjunto_criterio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,6 +99,7 @@ CREATE TABLE `criterios` (
 
 LOCK TABLES `criterios` WRITE;
 /*!40000 ALTER TABLE `criterios` DISABLE KEYS */;
+INSERT INTO `criterios` VALUES (42,'Descripción clara y concisa del problema, necesidad u oportunidad a atender con la idea.',32,'2024-11-28 16:32:46'),(43,'Suficiente conocimiento sobre otros resultados que dan solución al problema, necesidad u oportunidad.',32,'2024-11-28 16:34:34'),(44,'Los objetivos de la idea contribuyen a la solución del problema, necesidad u oportunidad.',32,'2024-11-28 16:42:03'),(45,'Los resultados propuestos corresponden a los objetivos.',32,'2024-11-28 16:42:16'),(46,'El alcance de la propuesta esta corresponde con los objetivos.',32,'2024-11-28 17:10:58');
 /*!40000 ALTER TABLE `criterios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,12 +113,15 @@ DROP TABLE IF EXISTS `ideas`;
 CREATE TABLE `ideas` (
   `id_idea` int NOT NULL AUTO_INCREMENT,
   `nom_idea` varchar(150) NOT NULL,
-  `estado_idea` enum('Convocado','No convocado') NOT NULL,
+  `estado_idea` enum('Convocado','No convocado') DEFAULT 'No convocado',
+  `des_idea` varchar(255) NOT NULL,
+  `cal_final` decimal(10,2) DEFAULT NULL,
   `id_proponente` int NOT NULL,
+  `create-time` timestamp NOT NULL,
   PRIMARY KEY (`id_idea`),
   KEY `id_proponente_idx` (`id_proponente`),
   CONSTRAINT `id_proponente` FOREIGN KEY (`id_proponente`) REFERENCES `proponentes` (`id_proponente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,6 +130,7 @@ CREATE TABLE `ideas` (
 
 LOCK TABLES `ideas` WRITE;
 /*!40000 ALTER TABLE `ideas` DISABLE KEYS */;
+INSERT INTO `ideas` VALUES (3,'Gomas de Colageno','No convocado','ss',0.00,28316532,'2024-12-02 13:58:48');
 /*!40000 ALTER TABLE `ideas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,35 +158,34 @@ CREATE TABLE `proponentes` (
 
 LOCK TABLES `proponentes` WRITE;
 /*!40000 ALTER TABLE `proponentes` DISABLE KEYS */;
+INSERT INTO `proponentes` VALUES (28316532,'Yazmin','Barragan','barraganramirezyazmin111@gmail.com','3102392251','2024-11-28 17:01:49'),(1107008520,'Juan David','Linares','juandavidlinares2005@gmail.com','3209455659','2024-11-28 16:43:33'),(1107009440,'Yahir Alberto','Linares','yahirlinares2018@gmail.com','3122554544','2024-11-28 17:13:55'),(1111121444,'Marlin Liseth ','Angulo Mantilla','marlinangulo2315@hotmail.com','3105727467','2024-12-02 13:43:54');
 /*!40000 ALTER TABLE `proponentes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `proyectos`
+-- Table structure for table `rubricas`
 --
 
-DROP TABLE IF EXISTS `proyectos`;
+DROP TABLE IF EXISTS `rubricas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `proyectos` (
-  `Id_Proyecto` int NOT NULL AUTO_INCREMENT,
-  `Img_Proyecto` varchar(70) DEFAULT 'Imagen del proyecto',
-  `Nom_Proyecto` varchar(80) NOT NULL DEFAULT 'Nombre del proyecto',
-  `Des_Proyecto` varchar(255) NOT NULL DEFAULT 'Descripcion del proyecto',
-  `Autor_Proyecto` varchar(150) NOT NULL DEFAULT 'Creador o creadores del proyecto',
-  `Cal_Proyecto` decimal(10,0) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`Id_Proyecto`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `rubricas` (
+  `id_rubricas` int NOT NULL,
+  `des_rubricas` varchar(255) NOT NULL,
+  `id_criterio` int DEFAULT NULL,
+  PRIMARY KEY (`id_rubricas`),
+  KEY `id_criterio_idx` (`id_criterio`),
+  CONSTRAINT `id_criterio` FOREIGN KEY (`id_criterio`) REFERENCES `criterios` (`id_criterio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `proyectos`
+-- Dumping data for table `rubricas`
 --
 
-LOCK TABLES `proyectos` WRITE;
-/*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `proyectos` ENABLE KEYS */;
+LOCK TABLES `rubricas` WRITE;
+/*!40000 ALTER TABLE `rubricas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rubricas` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -236,7 +213,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (28916532,'Yazmin Barragán','barraganRamirez1972@gmail.com','$2b$10$1zMHA/PzE34R1VtxmtfjlevVmuFToJX4Ea9PEfGfVW9e.mr3WFcre','Calificador','1icooqej022jqsbevur8','2024-11-15 20:37:19'),(110700850,'Juan Linares','juandavidlinares205@gmail.com','$2b$10$cotyfBlNKndM0MO37Lip3e9RmDAy4QZ9TKjf4Fphju0Em16SVJYlS','Admin',NULL,'2024-11-14 15:32:14'),(1107008520,'Juan Linares','juandavidlinares2005@gmail.com','$2b$10$awbyLsrmbgt.5MunZ/JyKOtnHJEUHdxssTtlYIu8JlNyRxMIM2OyO','Admin',NULL,'2024-11-14 15:28:24'),(1107009440,'Yahir Linares','yahirlinares2004@gmail.com','$2b$10$.PtKyoSLNQ67Z2jIOtgTqeQg2PRvfGn/vYAnuVmQU88KCp9drpdNq','Calificador',NULL,'2024-11-14 15:53:26');
+INSERT INTO `user` VALUES (28916532,'Yazmin Barragán','barraganRamirez1972@gmail.com','$2b$10$1zMHA/PzE34R1VtxmtfjlevVmuFToJX4Ea9PEfGfVW9e.mr3WFcre','Calificador','1icooqej022jqsbevur8','2024-11-15 20:37:19'),(55555555,'Carlos Jj','carlos@gmail.com','$2b$10$4JkBBCZwgUjJmyotjsoMB.wqcJda6o4MB.sUmmGrMnNi1ZMFm/8jK','Admin',NULL,'2024-12-02 17:01:21'),(110700850,'Juan Linares','juandavidlinares205@gmail.com','$2b$10$cotyfBlNKndM0MO37Lip3e9RmDAy4QZ9TKjf4Fphju0Em16SVJYlS','Admin',NULL,'2024-11-14 15:32:14'),(1107008520,'Juan Linares','juandavidlinares2005@gmail.com','$2b$10$e2EooVyC8OwYRascTJYAtOo3GThV2CSCgKkeQhEgAT.5LvMyBSdEa','Admin',NULL,'2024-11-14 15:28:24'),(1107008523,'Yahir Alberto','juan@gmail.com','$2b$10$GktElxHNw9gyqhB8sNHSz./9.jyvodcupgC18TXGd5lx4aKktrpMa','Calificador',NULL,'2024-12-02 20:13:00'),(1107009440,'Yahir Linares','yahirlinares2004@gmail.com','$2b$10$.PtKyoSLNQ67Z2jIOtgTqeQg2PRvfGn/vYAnuVmQU88KCp9drpdNq','Calificador',NULL,'2024-11-14 15:53:26');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -249,4 +226,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 10:46:15
+-- Dump completed on 2024-12-03 10:01:19
