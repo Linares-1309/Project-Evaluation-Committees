@@ -3,14 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions";
 import { getAllCriteria } from "../Criteria/CriteriaFunctions";
 import { getAllRubrics } from "../Rubrics/RubricsFunction";
-import Alerta from "./../../../components/Alerta";
+import Alerta from "../../../components/Alerta";
+import useAuth from "../../../hooks/useAuth";
 
-const RubricTableDynamic = () => {
+const TableEvaluationCommittes = () => {
   // const [conjuntosCriterios, setConjuntosCriterios] = useState([]);
   // const [criterios, setCriterios] = useState([]);
   // const [rubricas, setRubricas] = useState({});
 
   const [alerta, setAlerta] = useState({});
+  const { auth } = useAuth();
 
   // Obtener los criterios de evaluacion para pasarlos a la tabla
   const {
@@ -110,16 +112,6 @@ const RubricTableDynamic = () => {
 
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th>2. EVALUACIÓN DE VIABILIDAD DEL ACOMPAÑAMIENTO DE LA IDEA</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       <th className="border border-black bg-gray-200 select-none p-2">
         SERVICIO NACIONAL DE APRENDIZAJE SENA
       </th>
@@ -159,7 +151,7 @@ const RubricTableDynamic = () => {
 
       <tr className="flex justify-around bg-gray-200 border border-black">
         <th>NOMBRE EVALUADOR</th>
-        <th>Variable Pendiente</th>
+        <th className="uppercase">{auth?.user?.username || auth?.username}</th>
       </tr>
 
       <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
@@ -180,11 +172,12 @@ const RubricTableDynamic = () => {
         <th>Nombre de Quien Presenta la Idea</th>
         <th>Variable Pendiente</th>
       </tr>
-
+      {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
-        <th className="tracking-wider">2. EVALUACIÓN DE VIABILIDAD DEL ACOMPAÑAMIENTO DE LA IDEA</th>
+        <th className="tracking-wider">
+          2. EVALUACIÓN DE VIABILIDAD DEL ACOMPAÑAMIENTO DE LA IDEA
+        </th>
       </tr>
-
       <table
         className="table-auto w-full text-sm rtl:text-right text-center table table-responsive border-b border-black"
         id="tableData"
@@ -212,7 +205,7 @@ const RubricTableDynamic = () => {
                 criterio.id_conjunto_criterio === conjunto.id_conjunto_criterio
             );
             const numRows = criteriosFiltrados.length;
-
+            // Primera sección: criterios con rúbricas
             return (
               <>
                 {criteriosFiltrados.map((criterio, index) => {
@@ -220,6 +213,49 @@ const RubricTableDynamic = () => {
                     (rubric) => rubric.id_criterio === criterio.id_criterio
                   );
 
+                  if (rubricasFiltradas.length > 0) {
+                    return (
+                      <tr key={criterio.id_criterio}>
+                        {index === 0 && (
+                          <td
+                            rowSpan={numRows}
+                            className="align-middle border border-black p-2"
+                            style={{ width: "15%" }}
+                          >
+                            {conjunto.des_conjunto_criterio}
+                          </td>
+                        )}
+                        <td className="align-middle border border-black p-2">
+                          {criterio.des_criterio}
+                        </td>
+                        <td className="align-middle border border-black p-2">
+                          <ul className="m-0 pl-5">
+                            {rubricasFiltradas.map((rubrica) => (
+                              <li key={rubrica.id_rubricas}>
+                                {"- " + rubrica.des_rubricas}
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                        <td className="align-middle border border-black p-2">
+                          <select
+                            name=""
+                            id=""
+                            className="w-full bg-transparent placeholder:text-gray-800 text-sm border border-green-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-300 shadow-sm focus:shadow appearance-none cursor-pointer focus:ring-green-500 "
+                          >
+                            <option defaultValue={" "}>-</option>
+                            {Array.from({ length: 10 }, (_, index) => (
+                              <option key={index + 1} value={index + 1}>
+                                {index + 1}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                      </tr>
+                    );
+                  }
+
+                  // Segunda sección: criterios sin rúbricas
                   return (
                     <tr key={criterio.id_criterio}>
                       {index === 0 && (
@@ -233,31 +269,11 @@ const RubricTableDynamic = () => {
                       <td className="align-middle border border-black p-2">
                         {criterio.des_criterio}
                       </td>
-                      <td className="align-middle border border-black p-2">
-                        {rubricasFiltradas.length > 0 ? (
-                          <ul className="m-0 pl-5">
-                            {rubricasFiltradas.map((rubrica) => (
-                              <li key={rubrica.id_rubricas}>
-                                {rubrica.des_rubricas}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          "Sin rúbricas"
-                        )}
-                      </td>
-                      <td className="align-middle border border-black p-2">
-                        <select
-                          name=""
-                          id=""
-                          className="w-full bg-transparent placeholder:text-gray-800 text-sm border border-green-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-300 shadow-sm focus:shadow appearance-none cursor-pointer focus:ring-green-500 "
-                        >
-                          <option selected>-</option>
-                          {Array.from({ length: 10 }, (_, index) => (
-                            <option key={index + 1} value={index + 1}>
-                              {index + 1}
-                            </option>
-                          ))}
+                      <td className="border border-black p-2 text-center align-middle">
+                        <select className="w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 ">
+                          <option value="">-</option>
+                          <option value="yes">Sí</option>
+                          <option value="no">No</option>
                         </select>
                       </td>
                     </tr>
@@ -266,13 +282,35 @@ const RubricTableDynamic = () => {
               </>
             );
           })}
-          <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase">
-            Guardar
-          </button>
         </tbody>
       </table>
+      <table className="table-auto w-full  text-sm rtl:text-right text-center table table-responsive border-b border-black">
+        <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
+          <tr>
+            <th className="border border-black bg-gray-200 select-none p-2">
+              Observaciones del Evaluador
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="align-middle border border-black p-2">
+              <textarea
+                id="message"
+                rows="3"
+                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50
+                 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                placeholder="Escribe las observaciones..."
+              ></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
+        Guardar
+      </button>
     </>
   );
 };
 
-export default RubricTableDynamic;
+export default TableEvaluationCommittes;

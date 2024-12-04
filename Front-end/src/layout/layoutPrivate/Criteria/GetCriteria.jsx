@@ -11,6 +11,8 @@ const GetCriteria = ({ id_criterio, setCriteriaSelect }) => {
   });
 
   useEffect(() => {
+    console.log(data);
+    
     if (data) {
       setCriteriaSelect({
         id_criterio: data?.id_criterio,

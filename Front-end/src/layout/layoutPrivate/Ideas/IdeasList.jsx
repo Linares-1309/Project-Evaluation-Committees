@@ -1,15 +1,16 @@
-import { getAllIdeas } from "./IdeasFunctions.jsx";
 import { useState, useEffect } from "react";
-import Alerta from "../../../components/Alerta.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { MdOutlineNoteAdd } from "react-icons/md";
+
 import WriteTable from "../../../tables/DataTables.jsx";
 import ModalWindow from "../../../components/ModalDialog";
-
+import Alerta from "../../../components/Alerta.jsx";
 import GetIdea from "./GetIdea.jsx";
 import DeleteIdea from "./DeleteIdea.jsx";
 import PostIdeas from "./PostIdeas.jsx";
+import { getAllIdeas } from "./IdeasFunctions.jsx";
 
 const IdeasList = () => {
   const [alerta, setAlerta] = useState({});
@@ -79,13 +80,13 @@ const IdeasList = () => {
     "Nombre Proponente",
     "Acciones",
   ];
-  const ButtonsForOtherModules = (id_criterio) => [
+  const ButtonsForOtherModules = (id_idea) => [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
       title="Editar"
       onClick={() => [
-        handleEditClick(id_criterio),
+        handleEditClick(id_idea),
         toggleModal(),
         setTextButton("Actualizar"),
       ]}
@@ -94,14 +95,29 @@ const IdeasList = () => {
       Editar
     </button>,
     <button
-      className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
+      className="text-white bg-red-600 hover:bg-red-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="delete"
       title="Eliminar"
-      onClick={() => handleDeleteClick(id_criterio)}
+      onClick={() => handleDeleteClick(id_idea)}
     >
       <MdDelete className="mr-1" /> Eliminar
     </button>,
+    <button
+      className="text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+      key="get"
+      title="Editar"
+      onClick={() => [
+        handleEditClick(),
+      ]}
+    >
+      <MdOutlineNoteAdd className="mr-1" />
+      Comité
+    </button>,
   ];
+
+  const handleClickCommitte = async () => {
+    
+  }
 
   const ideas = data?.ideas || [];
   const formattedData = ideas.map((idea) => {

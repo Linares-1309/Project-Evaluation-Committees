@@ -18,6 +18,7 @@ import UsersList from "./layout/layoutPrivate/Users/UsersList.jsx";
 import Settings from "./layout/layoutPrivate/Settings/Settings.jsx";
 import UserProfile from "./layout/layoutPrivate/UserProfile/UserProfile.jsx";
 import SetOfCriteriaList from "./layout/layoutPrivate/SetOfCriteria/SetOfCriteriaList.jsx";
+import RubricsList from "./layout/layoutPrivate/Rubrics/RubricsList..jsx";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="criterios" element={<CriteriaList />} />
             <Route path="conjunto-criterios" element={<SetOfCriteriaList />} />
             <Route path="usuarios" element={<UsersList />} />
+            <Route path="rubricas" element={<RubricsList/>}/>
             <Route path="ajustes" element={<Settings />} />
             <Route path="perfil" element={<UserProfile />} />
           </Route>

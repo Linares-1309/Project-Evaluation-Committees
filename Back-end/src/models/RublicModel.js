@@ -16,7 +16,7 @@ const RubricModel = db.define(
       type: DataTypes.INTEGER,
       references: {
         model: CriteriaModel,
-        as: "criteria-for-rubric",
+        as: "criteria_for_rubric",
       },
     },
   },

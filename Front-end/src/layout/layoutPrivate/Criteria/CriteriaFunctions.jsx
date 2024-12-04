@@ -52,6 +52,7 @@ export const updateCriteria = async (dataCriteria) => {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
+
 export const deleteCriteria = async (id_criterio) => {
   try {
     const response = await ClientAxios.delete(`criteria/${id_criterio}`);

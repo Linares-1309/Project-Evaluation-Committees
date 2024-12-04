@@ -1,29 +1,27 @@
-import { getAllCriteria } from "./CriteriaFunctions.jsx";
+import { getAllRubrics } from "./RubricsFunction";
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-import WriteTable from "../../../tables/DataTables.jsx";
-import ModalWindow from "../../../components/ModalDialog.jsx";
-import Alerta from "../../../components/Alerta.jsx";
-import GetCriteria from "./GetCriteria.jsx";
-import DeleteCriteria from "./DeleteCriteria.jsx";
-import PostCriteria from "./PostCriteria.jsx";
+import WriteTable from "../../../tables/DataTables";
+import ModalWindow from "../../../components/ModalDialog";
+import Alerta from "../../../components/Alerta";
+import GetRubrics from "./GetRubrics";
+import PostRubrics from "./PostRubrics";
+import DeleteRubrics from "./DeleteRubrics";
 
-const CriteriaList = () => {
+const RubricsList = () => {
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
-
   const [isOpen, setIsOpen] = useState(false);
-
-  const [criteriaSelect, setCriteriaSelect] = useState({
+  const [rubricSelect, setRubricSelect] = useState({
+    id_rubricas: "",
+    des_rubricas: "",
     id_criterio: "",
-    des_criterio: "",
-    id_conjunto_criterio: "",
   });
 
   const toggleModal = () => {
@@ -32,18 +30,18 @@ const CriteriaList = () => {
 
   const queryClient = useQueryClient();
 
-  const handleEditClick = (id_conjunto_criterio) => {
-    setSelectedIdEdit(id_conjunto_criterio);
+  const handleEditClick = (id_rubricas) => {
+    setSelectedIdEdit(id_rubricas);
   };
 
-  const handleDeleteClick = (id_conjunto_criterio) => {
-    setSelectedIdDelete(id_conjunto_criterio);
+  const handleDeleteClick = (id_rubricas) => {
+    setSelectedIdDelete(id_rubricas);
   };
 
   // Realizamos la consulta
   const { data, error, isLoading, isError } = useQuery({
-    queryKey: ["criterios"],
-    queryFn: getAllCriteria,
+    queryKey: ["rubricas"],
+    queryFn: getAllRubrics,
   });
 
   // Usamos useEffect para manejar las actualizaciones de alerta
@@ -70,20 +68,16 @@ const CriteriaList = () => {
     queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
   };
 
-  const titleForm = ["Registrar Criterios de Evluación"];
-  const titles = [
-    "ID Criterio",
-    "Descripción",
-    "Conjunto de Criterios",
-    "Acciones",
-  ];
-  const ButtonsForOtherModules = (id_criterio) => [
+  const titleForm = ["Registrar Rubricas"];
+  const titles = ["ID Rubrica", "Descripción", "Criterios", "Acciones"];
+
+  const ButtonsForOtherModules = (id_rubricas) => [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
       title="Editar"
       onClick={() => [
-        handleEditClick(id_criterio),
+        handleEditClick(id_rubricas),
         toggleModal(),
         setTextButton("Actualizar"),
       ]}
@@ -95,39 +89,39 @@ const CriteriaList = () => {
       className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="delete"
       title="Eliminar"
-      onClick={() => handleDeleteClick(id_criterio)}
+      onClick={() => handleDeleteClick(id_rubricas)}
     >
       <MdDelete className="mr-1" /> Eliminar
     </button>,
   ];
-  const setCriteria = data?.Criteria || [];
 
-  const formattedData = setCriteria.map((criterios) => {
+  const Rubrics = data?.Rubrics || [];
+
+  const formattedData = Rubrics.map((rubricas) => {
     const rowData = [
-      criterios?.id_criterio,
-      criterios?.des_criterio,
-      criterios?.criterio?.des_conjunto_criterio,
+      rubricas?.id_rubricas,
+      rubricas?.des_rubricas,
+      rubricas?.criteria_for_rubric?.des_criterio,
     ];
-    rowData.push(ButtonsForOtherModules(criterios?.id_criterio));
+
+    rowData.push(ButtonsForOtherModules(rubricas?.id_rubricas));
 
     return rowData;
   });
-  
+
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
   return (
     <>
-      <h1 className="font-serif font-semibold uppercase text-2xl">
-        Criterios de Evaluación
-      </h1>
+      <h1 className="font-serif font-semibold uppercase text-2xl">Rubricas</h1>
       <ModalWindow
         toggleModal={toggleModal}
         isOpen={isOpen}
         form={
-          <PostCriteria
-            criteriaSelect={criteriaSelect}
+          <PostRubrics
+            rubricSelect={rubricSelect}
             textButton={textButton}
             onSuccessSave={refreshData}
           />
@@ -138,14 +132,14 @@ const CriteriaList = () => {
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (
-        <GetCriteria
-          id_criterio={selectedIdEdit}
-          setCriteriaSelect={setCriteriaSelect}
+        <GetRubrics
+          id_rubricas={selectedIdEdit}
+          setRubricSelect={setRubricSelect}
         />
       )}
       {selectedIdDelete && (
-        <DeleteCriteria
-          id_criterio={selectedIdDelete}
+        <DeleteRubrics
+          id_rubricas={selectedIdDelete}
           onSuccessDel={refreshData}
         />
       )}
@@ -153,4 +147,4 @@ const CriteriaList = () => {
   );
 };
 
-export default CriteriaList;
+export default RubricsList;

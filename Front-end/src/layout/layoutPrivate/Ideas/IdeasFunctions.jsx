@@ -23,8 +23,6 @@ export const getIdea = async (id_idea) => {
 };
 
 export const createNewIdea = async (dataideas) => {
-  console.log(dataideas);
-  
   try {
     const response = await ClientAxios.post("/ideas/", {
       nom_idea: dataideas?.nombreIdea,

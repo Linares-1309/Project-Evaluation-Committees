@@ -109,11 +109,11 @@ CriteriaModel.belongsTo(SetOfCriteriaModel, {
 // RELACION ENTRE CRITERIOS Y RUBRICAS
 CriteriaModel.hasMany(RubricModel, {
   foreignKey: "id_criterio",
-  as: "criteria-for-rubric",
+  as: "criteria_for_rubric",
 });
 RubricModel.belongsTo(CriteriaModel, {
   foreignKey: "id_criterio",
-  as: "criteria-for-rubric",
+  as: "criteria_for_rubric",
 });
 
 // RELACION ENTRE IDEAS Y PROPONENTES

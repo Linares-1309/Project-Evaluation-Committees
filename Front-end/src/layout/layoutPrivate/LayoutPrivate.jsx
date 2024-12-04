@@ -6,6 +6,7 @@ import {
   FaClipboardList,
   FaStar,
 } from "react-icons/fa";
+import { MdAttachment } from "react-icons/md";
 import { LiaUsersCogSolid } from "react-icons/lia";
 import { IoSettings } from "react-icons/io5";
 import { VscLightbulbAutofix } from "react-icons/vsc";
@@ -28,7 +29,7 @@ const LayoutPrivate = () => {
       </>
     );
   }
-  
+
   return (
     <>
       {auth?.user?.Id_User || auth?.Id_User ? (
@@ -147,11 +148,11 @@ const LayoutPrivate = () => {
           >
             <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between">
               {roleUser === "Admin" ? (
-                <ul className="space-y-2 font-medium select-none">
-                  <li>
+                <ul className="space-y-2 font-medium select-none mt-4">
+                  <li className="">
                     <Link
                       to="/admin"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
                     >
                       <FaHome size={23} className="text-green-500" />
 
@@ -160,8 +161,52 @@ const LayoutPrivate = () => {
                   </li>
                   <li>
                     <Link
+                      to="/admin/conjunto-criterios"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <FaClipboardList size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Conjunto Criterios
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/criterios"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <FaStar size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Criterios
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/rubricas"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <MdAttachment size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Rubricas
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/proponentes"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <FaUsers size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Proponentes
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       to="/admin/ideas"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
                     >
                       <VscLightbulbAutofix
                         size={23}
@@ -175,7 +220,7 @@ const LayoutPrivate = () => {
                   <li>
                     <Link
                       to="/admin/comites"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
                     >
                       <FaFileAlt size={23} className="text-green-500" />
                       <span className="flex-1 ms-3 whitespace-nowrap">
@@ -183,43 +228,11 @@ const LayoutPrivate = () => {
                       </span>
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/admin/proponentes"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                    >
-                      <FaUsers size={23} className="text-green-500" />
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Proponentes
-                      </span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/admin/criterios"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                    >
-                      <FaStar size={23} className="text-green-500" />
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Criterios
-                      </span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/admin/conjunto-criterios"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                    >
-                      <FaClipboardList size={23} className="text-green-500" />
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Conjunto Criterios
-                      </span>
-                    </Link>
-                  </li>
+
                   <li>
                     <Link
                       to="/admin/usuarios"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
                     >
                       <LiaUsersCogSolid size={23} className="text-green-500" />
                       <span className="flex-1 ms-3 whitespace-nowrap">
@@ -230,7 +243,7 @@ const LayoutPrivate = () => {
                   <li>
                     <Link
                       to="/admin/ajustes"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
                     >
                       <IoSettings size={23} className="text-green-500" />
                       <span className="flex-1 ms-3 whitespace-nowrap">
@@ -242,23 +255,19 @@ const LayoutPrivate = () => {
               ) : (
                 <h1>Hola {roleUser}</h1>
               )}
-                <ul>
-                  <li className="space-y-2 font-medium">
-                    <a
-                      onClick={cerrarSesion}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif"
-                    >
-                      <RiLogoutCircleFill
-                        size={23}
-                        className="text-green-500"
-                      />
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Cerrar Sesion
-                      </span>
-                    </a>
-                  </li>
-                </ul>
-           
+              <ul>
+                <li className="space-y-2 font-medium">
+                  <a
+                    onClick={cerrarSesion}
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                  >
+                    <RiLogoutCircleFill size={23} className="text-green-500" />
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Cerrar Sesion
+                    </span>
+                  </a>
+                </li>
+              </ul>
             </div>
           </aside>
 
