@@ -2,12 +2,25 @@
 import { getIdea } from "./IdeasFunctions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import useIdeas from "../../../hooks/useIdeas";
 
-const GetIdea = ({ id_idea, setIdeaSelect }) => {
+const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
+  const { setSeletedIdIdeas } = useIdeas();
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["idea-by-id", id_idea],
     queryFn: () => getIdea(id_idea),
     enabled: !!id_idea,
+  });
+
+  const {
+    data: dataForCommitte,
+    error: errorForCommitte,
+    isLoading: isLoadingForCommitte,
+    isError: isErrorForCommitte,
+  } = useQuery({
+    queryKey: ["idea-by-id-for-comitte", id_idea_for_committe],
+    queryFn: () => getIdea(id_idea_for_committe),
+    enabled: !!id_idea_for_committe,
   });
 
   useEffect(() => {
@@ -21,7 +34,20 @@ const GetIdea = ({ id_idea, setIdeaSelect }) => {
         id_proponente: data?.id_proponente,
       });
     }
-  }, [data, setIdeaSelect]);
+    if (dataForCommitte) {
+      setSeletedIdIdeas({
+        id_idea: dataForCommitte?.id_idea,
+        nom_idea: dataForCommitte?.nom_idea,
+        estado_idea: dataForCommitte?.estado_idea,
+        des_idea: dataForCommitte?.des_idea,
+        cal_final: dataForCommitte?.cal_final,
+        nom_proponente:
+          dataForCommitte?.proponente?.nombres_proponente +
+          " " +
+          dataForCommitte?.proponente?.apellidos_proponente,
+      });
+    }
+  }, [data, dataForCommitte, setIdeaSelect, setSeletedIdIdeas]);
 };
 
 export default GetIdea;

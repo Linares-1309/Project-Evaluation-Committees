@@ -1,18 +1,56 @@
-import { useState, useEffect } from "react";
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions";
 import { getAllCriteria } from "../Criteria/CriteriaFunctions";
 import { getAllRubrics } from "../Rubrics/RubricsFunction";
 import Alerta from "../../../components/Alerta";
 import useAuth from "../../../hooks/useAuth";
+import useIdeas from "../../../hooks/useIdeas";
+import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
+
+const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
 const TableEvaluationCommittes = () => {
-  // const [conjuntosCriterios, setConjuntosCriterios] = useState([]);
-  // const [criterios, setCriterios] = useState([]);
-  // const [rubricas, setRubricas] = useState({});
-
+  const { selectedIdIdea } = useIdeas();
+  const [idIdea, setIdIdea] = useState("");
+  const [fecComiteEvaluacion, setFecComiteEvaluacion] = useState("");
+  const [idUser, setIdUser] = useState("");
   const [alerta, setAlerta] = useState({});
   const { auth } = useAuth();
+  const navigate = useNavigate()
+
+  const loadDataFromLocalStorage = (key) => {
+    const encryptedData = localStorage.getItem(key);
+    if (!encryptedData) {
+      return null;
+    }
+    const bytes = CryptoJS.AES.decrypt(encryptedData, KEY_SECRET);
+    const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedData);
+  };
+  const idea = loadDataFromLocalStorage("dataIdea");
+
+  // Generamos la fecha actual
+  const hoy = new Date();
+  const dia = hoy.getDate();
+  const mes = hoy.getMonth() + 1;
+  const año = hoy.getFullYear();
+
+  const completeDate = `${dia}/${mes}/${año}`;
+
+  const setDtaCommittees = async () => {
+    setIdIdea(idea?.id_idea);
+    setFecComiteEvaluacion(completeDate);
+    setIdUser(auth?.user.Id_User);
+  };
+  useEffect(() => {
+    if (selectedIdIdea && selectedIdIdea.id_idea) {
+      setDtaCommittees();
+    }
+  }, [selectedIdIdea]);
 
   // Obtener los criterios de evaluacion para pasarlos a la tabla
   const {
@@ -38,7 +76,6 @@ const TableEvaluationCommittes = () => {
       });
     } else {
       setAlerta({});
-      // setCrearDataTable(true);
     }
   }, [isLoadingCriteria, isErrorCriteria, errorCriteria]);
 
@@ -104,23 +141,33 @@ const TableEvaluationCommittes = () => {
 
   const Rubrics = dataRubrics?.Rubrics || [];
 
-  // Generamos la fecha actual
-  const hoy = new Date();
-  const dia = hoy.getDate();
-  const mes = hoy.getMonth() + 1;
-  const año = hoy.getFullYear();
+  const handleClick = () => {
+    navigate("/admin/ideas")
+    localStorage.removeItem("dataIdea")
+  }
 
   return (
     <>
-      <th className="border border-black bg-gray-200 select-none p-2">
-        SERVICIO NACIONAL DE APRENDIZAJE SENA
-      </th>
-      <th className="border border-black bg-gray-200 select-none p-2">
-        SENNOVA
-      </th>
-      <th className="border border-black bg-gray-200 select-none p-2">
-        RED TECNOPARQUE TOLIMA
-      </th>
+      {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
+      <table>
+        <thead>
+          <tr>
+            <th className="border border-black bg-gray-200 select-none p-2">
+              SERVICIO NACIONAL DE APRENDIZAJE SENA
+            </th>
+          </tr>
+          <tr>
+            <th className="border border-black bg-gray-200 select-none p-2">
+              SENNOVA
+            </th>
+          </tr>
+          <tr>
+            <th className="border border-black bg-gray-200 select-none p-2">
+              RED TECNOPARQUE TOLIMA
+            </th>
+          </tr>
+        </thead>
+      </table>
       <table>
         <thead>
           <tr className="border border-black ">
@@ -137,7 +184,7 @@ const TableEvaluationCommittes = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-black px-4">Pendiente</td>
+                    <td className="border border-black px-4">{idea.id_idea}</td>
                     <td className="border border-black px-4">{dia}</td>
                     <td className="border border-black px-4">{mes}</td>
                     <td className="border border-black px-5">{año}</td>
@@ -148,36 +195,41 @@ const TableEvaluationCommittes = () => {
           </tr>
         </thead>
       </table>
+      <table>
+        <thead>
+          <tr className="flex justify-around bg-gray-200 border border-black">
+            <th>NOMBRE EVALUADOR</th>
+            <th className="uppercase">
+              {auth?.user?.username || auth?.username}
+            </th>
+          </tr>
 
-      <tr className="flex justify-around bg-gray-200 border border-black">
-        <th>NOMBRE EVALUADOR</th>
-        <th className="uppercase">{auth?.user?.username || auth?.username}</th>
-      </tr>
+          <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
+            <th className="tracking-wider">1. INFORMACION DE LA IDEA</th>
+          </tr>
 
-      <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
-        <th className="tracking-wider">1. INFORMACION DE LA IDEA</th>
-      </tr>
+          <tr className="flex justify-around bg-gray-200 border border-black my-1">
+            <th>Titulo de la Idea</th>
+            <th>{idea?.nom_idea}</th>
+          </tr>
 
-      <tr className="flex justify-around bg-gray-200 border border-black">
-        <th>Titulo de la Idea</th>
-        <th>Variable Pendiene</th>
-      </tr>
+          <tr className="flex justify-around bg-gray-200 border border-black my-1">
+            <th>Codigo de la Idea</th>
+            <th>{idea?.id_idea}</th>
+          </tr>
 
-      <tr className="flex justify-around bg-gray-200 border border-black">
-        <th>Codigo de la Idea</th>
-        <th>Variable Pendiente</th>
-      </tr>
+          <tr className="flex justify-around bg-gray-200 border border-black my-1">
+            <th>Nombre de Quien Presenta la Idea</th>
+            <th>{idea?.nom_proponente}</th>
+          </tr>
+          <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
+            <th className="tracking-wider">
+              2. EVALUACIÓN DE VIABILIDAD DEL ACOMPAÑAMIENTO DE LA IDEA
+            </th>
+          </tr>
+        </thead>
+      </table>
 
-      <tr className="flex justify-around bg-gray-200 border border-black">
-        <th>Nombre de Quien Presenta la Idea</th>
-        <th>Variable Pendiente</th>
-      </tr>
-      {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-      <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
-        <th className="tracking-wider">
-          2. EVALUACIÓN DE VIABILIDAD DEL ACOMPAÑAMIENTO DE LA IDEA
-        </th>
-      </tr>
       <table
         className="table-auto w-full text-sm rtl:text-right text-center table table-responsive border-b border-black"
         id="tableData"
@@ -205,7 +257,7 @@ const TableEvaluationCommittes = () => {
                 criterio.id_conjunto_criterio === conjunto.id_conjunto_criterio
             );
             const numRows = criteriosFiltrados.length;
-            // Primera sección: criterios con rúbricas
+
             return (
               <>
                 {criteriosFiltrados.map((criterio, index) => {
@@ -266,7 +318,7 @@ const TableEvaluationCommittes = () => {
                           {conjunto.des_conjunto_criterio}
                         </td>
                       )}
-                      <td className="align-middle border border-black p-2">
+                      <td  colSpan={2} className="align-middle border border-black p-2">
                         {criterio.des_criterio}
                       </td>
                       <td className="border border-black p-2 text-center align-middle">
@@ -305,10 +357,19 @@ const TableEvaluationCommittes = () => {
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td className=" flex justify-around">
+              <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
+                Guardar
+              </button>
+              <button onClick={handleClick} className="bg-red-600 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
+                Regresar
+              </button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
-      <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
-        Guardar
-      </button>
     </>
   );
 };

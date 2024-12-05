@@ -93,7 +93,7 @@ export const newEvaluationCommitte = async (req, res) => {
     } else {
       return res
         .status(400)
-        .json({ msg: "Ocurrio un error al crear ell comité de evaluación!" });
+        .json({ msg: "Ocurrio un error al crear el comité de evaluación!" });
     }
   } catch (error) {
     logger.error(`Ocurrio un error al registrar el comité de evaluación`);

@@ -11,11 +11,13 @@ import GetIdea from "./GetIdea.jsx";
 import DeleteIdea from "./DeleteIdea.jsx";
 import PostIdeas from "./PostIdeas.jsx";
 import { getAllIdeas } from "./IdeasFunctions.jsx";
+// import { useNavigate } from "react-router-dom";
 
 const IdeasList = () => {
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
+  const [selectedIdCommitte, setSelectedIdCommitte] = useState(null);
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +29,7 @@ const IdeasList = () => {
     cal_final: "",
     id_proponente: "",
   });
+  // const navigate = useNavigate();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -40,6 +43,10 @@ const IdeasList = () => {
 
   const handleDeleteClick = (id_idea) => {
     setSelectedIdDelete(id_idea);
+  };
+
+  const handleClickCommitte = async (id_idea) => {
+    setSelectedIdCommitte(id_idea);
   };
 
   //  Consumo a Axios
@@ -106,18 +113,12 @@ const IdeasList = () => {
       className="text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
       title="Editar"
-      onClick={() => [
-        handleEditClick(),
-      ]}
+      onClick={() => [handleClickCommitte(id_idea)]}
     >
       <MdOutlineNoteAdd className="mr-1" />
       Comité
     </button>,
   ];
-
-  const handleClickCommitte = async () => {
-    
-  }
 
   const ideas = data?.ideas || [];
   const formattedData = ideas.map((idea) => {
@@ -127,7 +128,9 @@ const IdeasList = () => {
       idea?.estado_idea,
       idea?.des_idea,
       idea?.cal_final,
-      idea?.proponente?.nombres_proponente +" "+ idea?.proponente?.apellidos_proponente,
+      idea?.proponente?.nombres_proponente +
+        " " +
+        idea?.proponente?.apellidos_proponente,
     ];
     rowData.push(ButtonsForOtherModules(idea?.id_idea));
     return rowData;
@@ -157,9 +160,14 @@ const IdeasList = () => {
       />
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
-      {selectedIdEdit && (
-        <GetIdea id_idea={selectedIdEdit} setIdeaSelect={setIdeaSelect} />
-      )}
+      {selectedIdEdit ||
+        (selectedIdCommitte && (
+          <GetIdea
+            id_idea={selectedIdEdit}
+            id_idea_for_committe={selectedIdCommitte}
+            setIdeaSelect={setIdeaSelect}
+          />
+        ))}
       {selectedIdDelete && (
         <DeleteIdea id_idea={selectedIdDelete} onSuccessDel={refreshData} />
       )}
