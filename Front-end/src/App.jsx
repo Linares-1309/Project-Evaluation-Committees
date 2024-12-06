@@ -42,9 +42,9 @@ function App() {
             <Route path="/admin/" element={<LayoutPrivate />}>
               <Route index element={<Home />} />
               <Route path="ideas" element={<IdeasList />} />
-              <Route path="comites" element={<EvaluationCommitteesList />}>
-                <Route path="table" element={<TableEvaluationCommittes />} />
-              </Route>
+              <Route path="comites" element={<EvaluationCommitteesList />}/>
+              <Route path="comites/table" element={<TableEvaluationCommittes />} />
+        
               <Route path="proponentes" element={<ProponentsList />} />
               <Route path="criterios" element={<CriteriaList />} />
               <Route

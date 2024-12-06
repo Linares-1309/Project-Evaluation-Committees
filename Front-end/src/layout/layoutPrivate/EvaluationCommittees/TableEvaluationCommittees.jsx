@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CryptoJS from "crypto-js";
 
 import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions.jsx";
@@ -11,7 +11,6 @@ import { getAllCriteria } from "../Criteria/CriteriaFunctions";
 import { getAllRubrics } from "../Rubrics/RubricsFunction";
 import Alerta from "../../../components/Alerta";
 import useAuth from "../../../hooks/useAuth";
-import useIdeas from "../../../hooks/useIdeas";
 
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
@@ -25,6 +24,10 @@ const TableEvaluationCommittes = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+  const refreshData = () => {
+    queryClient.invalidateQueries("ideas");
+  };
   const { mutate, isError, isLoading } = useMutation({
     mutationFn: newEvaluationCommitte,
     onSuccess: (data) => {
@@ -32,6 +35,7 @@ const TableEvaluationCommittes = () => {
         msg: data.msg,
         error: false,
       });
+      refreshData();
     },
     onError: (error) => {
       setAlerta({
@@ -78,8 +82,6 @@ const TableEvaluationCommittes = () => {
   const dia = hoy.getDate();
   const mes = hoy.getMonth() + 1;
   const año = hoy.getFullYear();
-
-  const completeDate = `${dia}/${mes}/${año}`;
 
   const setDtaCommittees = async () => {
     setIdIdea(idea?.id_idea);
@@ -427,10 +429,14 @@ const TableEvaluationCommittes = () => {
                 {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
               </div>
               <td className=" flex justify-around">
-                <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
+                <button
+                  type="submit"
+                  className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
+                >
                   Guardar
                 </button>
                 <button
+                  type="button"
                   onClick={handleClick}
                   className="bg-red-600 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
                 >

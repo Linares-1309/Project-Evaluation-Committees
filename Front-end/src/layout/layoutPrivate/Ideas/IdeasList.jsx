@@ -87,7 +87,7 @@ const IdeasList = () => {
     "Nombre Proponente",
     "Acciones",
   ];
-  const ButtonsForOtherModules = (id_idea) => [
+  const ButtonsForOtherModules = (id_idea, estado_idea) => [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
@@ -110,10 +110,15 @@ const IdeasList = () => {
       <MdDelete className="mr-1" /> Eliminar
     </button>,
     <button
-      className="text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+      className={
+        estado_idea === "Convocado"
+          ? `text-black bg-green-50 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2 cursor-not-allowed`
+          : `text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2`
+      }
       key="get"
-      title="Editar"
+      title="Comite Evaluación"
       onClick={() => [handleClickCommitte(id_idea)]}
+      disabled={estado_idea === "Convocado"}
     >
       <MdOutlineNoteAdd className="mr-1" />
       Comité
@@ -132,7 +137,7 @@ const IdeasList = () => {
         " " +
         idea?.proponente?.apellidos_proponente,
     ];
-    rowData.push(ButtonsForOtherModules(idea?.id_idea));
+    rowData.push(ButtonsForOtherModules(idea?.id_idea, idea?.estado_idea));
     return rowData;
   });
 

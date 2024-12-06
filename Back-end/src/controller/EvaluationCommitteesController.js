@@ -28,7 +28,9 @@ export const getAllEvaluationCommittees = async (req, res) => {
       ],
     });
     if (evaluationCommittees) {
-      return res.status(200).json(evaluationCommittees);
+      return res
+        .status(200)
+        .json({ evaluationCommittees: evaluationCommittees });
     } else {
       return res
         .status(404)
@@ -97,6 +99,15 @@ export const newEvaluationCommitte = async (req, res) => {
       id_idea: idIdea,
       Id_User: idUser,
     });
+   const updateIdea = await IdeasModel.findOne({
+      where: { id_idea: idIdea}
+    })
+
+    if (updateIdea) {
+      updateIdea.estado_idea = "Convocado"
+    }
+    updateIdea.save()
+
     const criterios = await CriteriaModel.findAll({
       attributes: ["id_criterio"],
     });
@@ -126,7 +137,9 @@ export const newEvaluationCommitte = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    logger.error(`Ocurrio un error al registrar el comité de evaluación ${error}`);
+    logger.error(
+      `Ocurrio un error al registrar el comité de evaluación ${error}`
+    );
     return res
       .status(500)
       .json({ msg: "Ocurrio un error al registrar el comité de evaluaión!" });

@@ -17,7 +17,8 @@ import CriteriaRoutes from "./routes/CriteriaRoutes.js";
 import ProponentRoutes from "./routes/ProponentRoutes.js";
 import IdeasRoutes from "./routes/IdeasRoutes.js";
 import EvaluationCommitteesRoutes from "./routes/EvaluationCommitteesRoutes.js";
-import RubricsRoutes from "./routes/RubricRoutes.js"
+import RubricsRoutes from "./routes/RubricRoutes.js";
+import CommitteeCriteriaRoutes from "./routes/CommitteCriteriaRoutes.js";
 
 // Se importan los modelos para realizar las relaciones entre tablas
 import UserModel from "./models/userModel.js";
@@ -27,6 +28,7 @@ import ProponentModel from "./models/ProponentModel.js";
 import IdeasModel from "./models/IdeasModel.js";
 import EvaluationCommitteesModel from "./models/EvaluationCommitteesModel.js";
 import RubricModel from "./models/RublicModel.js";
+import CommitteesCriteriaModel from "./models/CommitteCriteriaModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +47,7 @@ app.use("/api/criteria", CriteriaRoutes);
 app.use("/api/proponent", ProponentRoutes);
 app.use("/api/ideas", IdeasRoutes);
 app.use("/api/evaluation-committees", EvaluationCommitteesRoutes);
+app.use("/api/committe-criterias", CommitteeCriteriaRoutes);
 app.use("/api/rubrics", RubricsRoutes);
 
 app.use(express.static(path.join(import.meta.url, "public")));
@@ -77,15 +80,25 @@ EvaluationCommitteesModel.belongsTo(UserModel, {
   as: "user",
 });
 
-// RELACION ENTRE CONJUNTO DE CRITERIOS Y COMITE DE EVALUACION
-// SetOfCriteriaModel.hasMany(EvaluationCommitteesModel, {
-//   foreignKey: "id_conjunto_criterio",
-//   as: "conjunto-criterio",
-// });
-// EvaluationCommitteesModel.belongsTo(SetOfCriteriaModel, {
-//   foreignKey: "id_conjunto_criterio",
-//   as: "conjunto-criterio",
-// });
+// RELACION ENTRE COMITE-CRITERIOS Y COMITE DE EVALUACION
+CommitteesCriteriaModel.belongsTo(EvaluationCommitteesModel, {
+  foreignKey: "id_comites_evaluación",
+  as: "comite-criterios",
+});
+EvaluationCommitteesModel.hasMany(CommitteesCriteriaModel, {
+  foreignKey: "id_comites_evaluación",
+  as: "comite-criterios",
+});
+
+// RELACION ENTRE COMITE CRITERIOS Y CRITERIOS
+CommitteesCriteriaModel.belongsTo(CriteriaModel, {
+  foreignKey: "id_criterio",
+  as: "criteria-committees",
+});
+CriteriaModel.hasMany(CommitteesCriteriaModel, {
+  foreignKey: "id_criterio",
+  as: "criteria-committees",
+});
 
 // RELACION ENTRE IDEAS Y COMITES DE EVALUACION
 IdeasModel.hasMany(EvaluationCommitteesModel, {
@@ -125,5 +138,3 @@ IdeasModel.belongsTo(ProponentModel, {
   foreignKey: "id_proponente",
   as: "proponente",
 });
-
-// export {  UserModel };
