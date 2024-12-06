@@ -1,26 +1,66 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import CryptoJS from "crypto-js";
+
+import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions.jsx";
+import { newEvaluationCommitte } from "./EvaluationCommitteesFunctions.jsx";
 import { getAllCriteria } from "../Criteria/CriteriaFunctions";
 import { getAllRubrics } from "../Rubrics/RubricsFunction";
 import Alerta from "../../../components/Alerta";
 import useAuth from "../../../hooks/useAuth";
 import useIdeas from "../../../hooks/useIdeas";
-import CryptoJS from "crypto-js";
-import { useNavigate } from "react-router-dom";
 
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
 const TableEvaluationCommittes = () => {
-  const { selectedIdIdea } = useIdeas();
   const [idIdea, setIdIdea] = useState("");
   const [fecComiteEvaluacion, setFecComiteEvaluacion] = useState("");
   const [idUser, setIdUser] = useState("");
   const [alerta, setAlerta] = useState({});
+  const [selectedValues, setSelectedValues] = useState({});
+  const [obsComite, setObsComite] = useState("");
   const { auth } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const { mutate, isError, isLoading } = useMutation({
+    mutationFn: newEvaluationCommitte,
+    onSuccess: (data) => {
+      setAlerta({
+        msg: data.msg,
+        error: false,
+      });
+    },
+    onError: (error) => {
+      setAlerta({
+        msg: error.message,
+        error: true,
+      });
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(e);
+
+    const data = {
+      idIdea,
+      fecComiteEvaluacion,
+      idUser,
+      selectedValues,
+      obsComite,
+    };
+    mutate(data);
+  };
+  // Manejar el cambio de los selects
+  const handleChange = (criterioId, value) => {
+    setSelectedValues((prevState) => ({
+      ...prevState,
+      [criterioId]: value,
+    }));
+  };
 
   const loadDataFromLocalStorage = (key) => {
     const encryptedData = localStorage.getItem(key);
@@ -43,14 +83,12 @@ const TableEvaluationCommittes = () => {
 
   const setDtaCommittees = async () => {
     setIdIdea(idea?.id_idea);
-    setFecComiteEvaluacion(completeDate);
+    setFecComiteEvaluacion(Date.now());
     setIdUser(auth?.user.Id_User);
   };
   useEffect(() => {
-    if (selectedIdIdea && selectedIdIdea.id_idea) {
-      setDtaCommittees();
-    }
-  }, [selectedIdIdea]);
+    setDtaCommittees();
+  }, []);
 
   // Obtener los criterios de evaluacion para pasarlos a la tabla
   const {
@@ -142,13 +180,17 @@ const TableEvaluationCommittes = () => {
   const Rubrics = dataRubrics?.Rubrics || [];
 
   const handleClick = () => {
-    navigate("/admin/ideas")
-    localStorage.removeItem("dataIdea")
-  }
+    navigate("/admin/ideas");
+    localStorage.removeItem("dataIdea");
+  };
+
+  const handleSubmit2 = () => {
+    console.log("Valores seleccionados:", selectedValues);
+    console.log("Observaciones", obsComite);
+  };
 
   return (
     <>
-      {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       <table>
         <thead>
           <tr>
@@ -203,7 +245,6 @@ const TableEvaluationCommittes = () => {
               {auth?.user?.username || auth?.username}
             </th>
           </tr>
-
           <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
             <th className="tracking-wider">1. INFORMACION DE LA IDEA</th>
           </tr>
@@ -229,147 +270,178 @@ const TableEvaluationCommittes = () => {
           </tr>
         </thead>
       </table>
+      <form action="" onSubmit={handleSubmit}>
+        <table
+          className="table-auto w-full text-sm rtl:text-right text-center table table-responsive border-b border-black"
+          id="tableData"
+        >
+          <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
+            <tr>
+              <th className="border border-black bg-gray-200 select-none p-2">
+                Conjunto de Criterio
+              </th>
+              <th className="border border-black bg-gray-200 select-none p-2">
+                Criterio
+              </th>
+              <th className="border border-black bg-gray-200 select-none p-2">
+                Rúbrica
+              </th>
+              <th className="border border-black bg-gray-200 select-none p-2">
+                Evaluador
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {SetOfCriteria.map((conjunto) => {
+              const criteriosFiltrados = criterios.filter(
+                (criterio) =>
+                  criterio.id_conjunto_criterio ===
+                  conjunto.id_conjunto_criterio
+              );
+              const numRows = criteriosFiltrados.length;
 
-      <table
-        className="table-auto w-full text-sm rtl:text-right text-center table table-responsive border-b border-black"
-        id="tableData"
-      >
-        <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
-          <tr>
-            <th className="border border-black bg-gray-200 select-none p-2">
-              Conjunto de Criterio
-            </th>
-            <th className="border border-black bg-gray-200 select-none p-2">
-              Criterio
-            </th>
-            <th className="border border-black bg-gray-200 select-none p-2">
-              Rúbrica
-            </th>
-            <th className="border border-black bg-gray-200 select-none p-2">
-              Evaluador
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {SetOfCriteria.map((conjunto) => {
-            const criteriosFiltrados = criterios.filter(
-              (criterio) =>
-                criterio.id_conjunto_criterio === conjunto.id_conjunto_criterio
-            );
-            const numRows = criteriosFiltrados.length;
+              return (
+                <>
+                  {criteriosFiltrados.map((criterio, index) => {
+                    const rubricasFiltradas = Rubrics.filter(
+                      (rubric) => rubric.id_criterio === criterio.id_criterio
+                    );
 
-            return (
-              <>
-                {criteriosFiltrados.map((criterio, index) => {
-                  const rubricasFiltradas = Rubrics.filter(
-                    (rubric) => rubric.id_criterio === criterio.id_criterio
-                  );
+                    if (rubricasFiltradas.length > 0) {
+                      return (
+                        <tr key={criterio.id_criterio}>
+                          {index === 0 && (
+                            <td
+                              rowSpan={numRows}
+                              className="align-middle border border-black p-2"
+                              style={{ width: "22%" }}
+                            >
+                              {conjunto.des_conjunto_criterio}
+                            </td>
+                          )}
+                          <td className="align-middle border border-black p-2">
+                            {criterio.des_criterio}
+                          </td>
+                          <td className="align-middle border border-black p-2">
+                            <ul className="m-0 pl-5">
+                              {rubricasFiltradas.map((rubrica) => (
+                                <li key={rubrica.id_rubricas}>
+                                  {"- " + rubrica.des_rubricas}
+                                </li>
+                              ))}
+                            </ul>
+                          </td>
+                          <td className="align-middle border border-black p-2">
+                            <select
+                              name=""
+                              id=""
+                              className="w-full bg-transparent placeholder:text-gray-800 text-sm border border-green-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-300 shadow-sm focus:shadow appearance-none cursor-pointer focus:ring-green-500 "
+                              onChange={(e) =>
+                                handleChange(
+                                  criterio.id_criterio,
+                                  e?.target?.value
+                                )
+                              }
+                              value={selectedValues[criterio.id_criterio] || ""}
+                            >
+                              <option defaultValue={" "}>-</option>
+                              {Array.from({ length: 10 }, (_, index) => (
+                                <option key={index + 1} value={index + 1}>
+                                  {index + 1}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        </tr>
+                      );
+                    }
 
-                  if (rubricasFiltradas.length > 0) {
+                    // Segunda sección: criterios sin rúbricas
                     return (
                       <tr key={criterio.id_criterio}>
                         {index === 0 && (
                           <td
                             rowSpan={numRows}
                             className="align-middle border border-black p-2"
-                            style={{ width: "15%" }}
                           >
                             {conjunto.des_conjunto_criterio}
                           </td>
                         )}
-                        <td className="align-middle border border-black p-2">
+                        <td
+                          colSpan={2}
+                          className="align-middle border border-black p-2"
+                        >
                           {criterio.des_criterio}
                         </td>
-                        <td className="align-middle border border-black p-2">
-                          <ul className="m-0 pl-5">
-                            {rubricasFiltradas.map((rubrica) => (
-                              <li key={rubrica.id_rubricas}>
-                                {"- " + rubrica.des_rubricas}
-                              </li>
-                            ))}
-                          </ul>
-                        </td>
-                        <td className="align-middle border border-black p-2">
+                        <td className="border border-black p-2 text-center align-middle">
                           <select
-                            name=""
-                            id=""
-                            className="w-full bg-transparent placeholder:text-gray-800 text-sm border border-green-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-300 shadow-sm focus:shadow appearance-none cursor-pointer focus:ring-green-500 "
+                            className="w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 "
+                            onChange={(e) =>
+                              handleChange(
+                                criterio.id_criterio,
+                                e?.target?.value
+                              )
+                            }
+                            value={selectedValues[criterio.id_criterio] || ""}
                           >
-                            <option defaultValue={" "}>-</option>
-                            {Array.from({ length: 10 }, (_, index) => (
-                              <option key={index + 1} value={index + 1}>
-                                {index + 1}
-                              </option>
-                            ))}
+                            <option value="">-</option>
+                            <option value="Si">Sí</option>
+                            <option value="No">No</option>
                           </select>
                         </td>
                       </tr>
                     );
-                  }
-
-                  // Segunda sección: criterios sin rúbricas
-                  return (
-                    <tr key={criterio.id_criterio}>
-                      {index === 0 && (
-                        <td
-                          rowSpan={numRows}
-                          className="align-middle border border-black p-2"
-                        >
-                          {conjunto.des_conjunto_criterio}
-                        </td>
-                      )}
-                      <td  colSpan={2} className="align-middle border border-black p-2">
-                        {criterio.des_criterio}
-                      </td>
-                      <td className="border border-black p-2 text-center align-middle">
-                        <select className="w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 ">
-                          <option value="">-</option>
-                          <option value="yes">Sí</option>
-                          <option value="no">No</option>
-                        </select>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </>
-            );
-          })}
-        </tbody>
-      </table>
-      <table className="table-auto w-full  text-sm rtl:text-right text-center table table-responsive border-b border-black">
-        <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
-          <tr>
-            <th className="border border-black bg-gray-200 select-none p-2">
-              Observaciones del Evaluador
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="align-middle border border-black p-2">
-              <textarea
-                id="message"
-                rows="3"
-                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50
+                  })}
+                </>
+              );
+            })}
+          </tbody>
+        </table>
+        <table className="table-auto w-full  text-sm rtl:text-right text-center table table-responsive border-b border-black">
+          <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
+            <tr>
+              <th className="border border-black bg-gray-200 select-none p-2">
+                Observaciones del Evaluador
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="align-middle border border-black p-2">
+                <textarea
+                  id="message"
+                  rows="3"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50
                  focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                placeholder="Escribe las observaciones..."
-              ></textarea>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className=" flex justify-around">
-              <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
-                Guardar
-              </button>
-              <button onClick={handleClick} className="bg-red-600 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
-                Regresar
-              </button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+                  placeholder="Escribe las observaciones..."
+                  onChange={(e) => setObsComite(e?.target?.value)}
+                  value={obsComite}
+                ></textarea>
+              </td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr className="border border-black">
+              <div className="m-4">
+                {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
+              </div>
+              <td className=" flex justify-around">
+                <button className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36">
+                  Guardar
+                </button>
+                <button
+                  onClick={handleClick}
+                  className="bg-red-600 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
+                >
+                  Regresar
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+      <button onClick={handleSubmit2}>Enviar</button>
     </>
   );
 };

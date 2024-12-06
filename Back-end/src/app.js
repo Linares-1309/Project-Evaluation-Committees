@@ -78,14 +78,14 @@ EvaluationCommitteesModel.belongsTo(UserModel, {
 });
 
 // RELACION ENTRE CONJUNTO DE CRITERIOS Y COMITE DE EVALUACION
-SetOfCriteriaModel.hasMany(EvaluationCommitteesModel, {
-  foreignKey: "id_conjunto_criterio",
-  as: "conjunto-criterio",
-});
-EvaluationCommitteesModel.belongsTo(SetOfCriteriaModel, {
-  foreignKey: "id_conjunto_criterio",
-  as: "conjunto-criterio",
-});
+// SetOfCriteriaModel.hasMany(EvaluationCommitteesModel, {
+//   foreignKey: "id_conjunto_criterio",
+//   as: "conjunto-criterio",
+// });
+// EvaluationCommitteesModel.belongsTo(SetOfCriteriaModel, {
+//   foreignKey: "id_conjunto_criterio",
+//   as: "conjunto-criterio",
+// });
 
 // RELACION ENTRE IDEAS Y COMITES DE EVALUACION
 IdeasModel.hasMany(EvaluationCommitteesModel, {
