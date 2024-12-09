@@ -186,11 +186,6 @@ const TableEvaluationCommittes = () => {
     localStorage.removeItem("dataIdea");
   };
 
-  const handleSubmit2 = () => {
-    console.log("Valores seleccionados:", selectedValues);
-    console.log("Observaciones", obsComite);
-  };
-
   return (
     <>
       <table>
@@ -447,7 +442,6 @@ const TableEvaluationCommittes = () => {
           </tfoot>
         </table>
       </form>
-      <button onClick={handleSubmit2}>Enviar</button>
     </>
   );
 };

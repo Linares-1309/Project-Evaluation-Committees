@@ -16,7 +16,7 @@ function WriteTable({ titles, data }) {
       let table = new DataTable("#TableDinamic", {
         responsive: true,
         lengthChange: false,
-        pageLength: 5,
+        pageLength: 10,
         columnDefs: [
           {
             targets: -1,
@@ -62,7 +62,7 @@ function WriteTable({ titles, data }) {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-xs">
                   {data.map((row, rowIndex) => (
                     <tr key={rowIndex} className="border-b border-black">
                       {/* Mapeo de celdas (todas excepto la última) */}

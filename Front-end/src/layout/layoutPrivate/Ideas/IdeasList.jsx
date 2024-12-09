@@ -11,7 +11,6 @@ import GetIdea from "./GetIdea.jsx";
 import DeleteIdea from "./DeleteIdea.jsx";
 import PostIdeas from "./PostIdeas.jsx";
 import { getAllIdeas } from "./IdeasFunctions.jsx";
-// import { useNavigate } from "react-router-dom";
 
 const IdeasList = () => {
   const [alerta, setAlerta] = useState({});
@@ -29,7 +28,6 @@ const IdeasList = () => {
     cal_final: "",
     id_proponente: "",
   });
-  // const navigate = useNavigate();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);

@@ -15,14 +15,14 @@ const CommitteesCriteriaModel = db.define(
       type: DataTypes.INTEGER,
       references: {
         model: EvaluationCommitteesModel,
-        as: "comite-criterios",
+        as: "comite_criterios",
       },
     },
     id_criterio: {
       type: DataTypes.INTEGER,
       references: {
         model: CriteriaModel,
-        as: "criteria-committees",
+        as: "criteria_committees",
       },
     },
     cal_comité_criterios: {

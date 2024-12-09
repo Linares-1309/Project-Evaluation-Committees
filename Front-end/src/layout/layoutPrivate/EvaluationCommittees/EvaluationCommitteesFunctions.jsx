@@ -33,6 +33,18 @@ export const getEvaluationCommitte = async (id_comités_evaluación) => {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
+export const getCommitteCriteria = async (id_comites_evaluacion) => {
+  try {
+    const response = await ClientAxios(
+      `/committe-criterias/${id_comites_evaluacion}`
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+};
 
 export const newEvaluationCommitte = async (dataEvaluatioCommittees) => {
   try {

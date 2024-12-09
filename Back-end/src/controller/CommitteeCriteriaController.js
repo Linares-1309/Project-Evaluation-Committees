@@ -9,11 +9,11 @@ import SetOfCriteriaModel from "../models/SetOfCriteriaModel.js";
 
 export const getAllCommitteCriteria = async (req, res) => {
   try {
-    const CommitteeCriteria = await CommitteesCriteriaModel.findAll({
+    const CommitteeCriterias = await CommitteesCriteriaModel.findAll({
       include: [
         {
           model: EvaluationCommitteesModel,
-          as: "comite-criterios",
+          as: "comite_criterios",
           include: [
             {
               model: IdeasModel,
@@ -34,7 +34,7 @@ export const getAllCommitteCriteria = async (req, res) => {
         },
         {
           model: CriteriaModel,
-          as: "criteria-committees",
+          as: "criteria_committees",
           include: [
             {
               model: SetOfCriteriaModel,
@@ -44,8 +44,8 @@ export const getAllCommitteCriteria = async (req, res) => {
         },
       ],
     });
-    if (CommitteeCriteria) {
-      return res.status(200).json({ CommitteeCriteria: CommitteeCriteria });
+    if (CommitteeCriterias) {
+      return res.status(200).json({ CommitteeCriterias: CommitteeCriterias });
     } else {
       return res.status(404).json({ msg: "No se encontraron registros!" });
     }
@@ -60,15 +60,15 @@ export const getAllCommitteCriteria = async (req, res) => {
 };
 
 export const getCommitteCriteria = async (req, res) => {
-  const { id_comité_criterios } = req.params;
+  const { id_comites_evaluacion } = req.params;
   try {
-    const CommitteeCriteria = await CommitteesCriteriaModel.findByPk(
-      id_comité_criterios,
+    const CommitteeCriteria = await CommitteesCriteriaModel.findAll(
       {
+        where: { id_comites_evaluación: id_comites_evaluacion},
         include: [
           {
             model: EvaluationCommitteesModel,
-            as: "comite-criterios",
+            as: "comite_criterios",
             include: [
               {
                 model: IdeasModel,
@@ -89,7 +89,7 @@ export const getCommitteCriteria = async (req, res) => {
           },
           {
             model: CriteriaModel,
-            as: "criteria-committees",
+            as: "criteria_committees",
             include: [
               {
                 model: SetOfCriteriaModel,
@@ -101,7 +101,7 @@ export const getCommitteCriteria = async (req, res) => {
       }
     );
     if (CommitteeCriteria) {
-      return res.status(200).json(CommitteeCriteria);
+      return res.status(200).json({ CommitteeCriteria: CommitteeCriteria });
     } else {
       return res.status(404).json({ msg: "No se encontro el registro!" });
     }
