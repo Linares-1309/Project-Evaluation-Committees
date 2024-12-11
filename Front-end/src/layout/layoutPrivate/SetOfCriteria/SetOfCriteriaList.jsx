@@ -67,7 +67,7 @@ const SetOfCriteriaList = () => {
   };
 
   const titleForm = ["Registrar Conjunto de Criterios de Evluación"];
-  const titles = ["ID Conjunto Criterios", "Descripción", "Acciones"];
+  const titles = ["ID", "Descripción", "Acciones"];
   const ButtonsForOtherModules = (id_conjunto_criterio) => [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"

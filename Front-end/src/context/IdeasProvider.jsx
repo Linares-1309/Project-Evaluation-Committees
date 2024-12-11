@@ -34,11 +34,14 @@ const IdeasProvider = ({ children }) => {
       saveToLocalStorage("dataIdea", selectedIdIdea);
       navigate("/admin/comites/table");
     }
-    if (selectedCommitte && selectedCommitte?.id_comites_evaluación) {
+    if (selectedCommitte && selectedCommitte?.id_comites_evaluacion) {
       saveToLocalStorage("dataCommitte", selectedCommitte);
-      navigate("/admin/comites/table");
+        navigate("/admin/comites/table");
     }
   }, [selectedIdIdea, selectedCommitte]);
+  // const nav = () => {
+
+  // }
 
   if (cargando) {
     return (

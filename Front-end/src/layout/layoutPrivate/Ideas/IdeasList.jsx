@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { MdOutlineNoteAdd } from "react-icons/md";
+import { TbPencilCode } from "react-icons/tb";
 
 import WriteTable from "../../../tables/DataTables.jsx";
 import ModalWindow from "../../../components/ModalDialog";
@@ -77,7 +77,7 @@ const IdeasList = () => {
 
   const titleForm = ["Registrar Ideas"];
   const titles = [
-    "ID Idea",
+    "ID",
     "Nombre Idea",
     "Estado",
     "Descripción",
@@ -118,7 +118,7 @@ const IdeasList = () => {
       onClick={() => [handleClickCommitte(id_idea)]}
       disabled={estado_idea === "Convocado"}
     >
-      <MdOutlineNoteAdd className="mr-1" />
+      <TbPencilCode className="mr-1" />
       Comité
     </button>,
   ];

@@ -29,6 +29,9 @@ const TableEvaluationCommittes = () => {
   const [selectedValues, setSelectedValues] = useState({});
   const [obsComite, setObsComite] = useState("");
 
+  const [committee, setCommittee] = useState(null);
+  const [idea, setIdea] = useState(null);
+
   const [viewState, setViewState] = useState(false);
 
   const queryClient = useQueryClient();
@@ -54,20 +57,91 @@ const TableEvaluationCommittes = () => {
     },
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Obtener las rubricas para poder mostrar en la tabla
+  const {
+    data: dataRubrics,
+    isLoading: iSLoadingRubrics,
+    error: errorRubrics,
+    isError: isErrorRubrics,
+  } = useQuery({
+    queryKey: ["rubrics-for-committees"],
+    queryFn: getAllRubrics,
+  });
 
-    const data = {
-      idComite,
-      codigoIdea,
-      fecha,
-      evaluador: auth?.user?.Id_User,
-      selectedValues,
-      obsComite,
-    };
-    mutate(data);
-    handleGoBack();
-  };
+  useEffect(() => {
+    if (iSLoadingRubrics) {
+      setAlerta({
+        msg: "Cargando...",
+        error: false,
+      });
+    } else if (isErrorRubrics) {
+      setAlerta({
+        msg: errorRubrics?.message || "Hubo un error",
+        error: true,
+      });
+    } else {
+      setAlerta({});
+    }
+  }, [iSLoadingRubrics, isErrorRubrics, errorRubrics]);
+
+  // Obtener los criterios de evaluacion para pasarlos a la tabla
+  const {
+    data: dataCriteria,
+    error: errorCriteria,
+    isLoading: isLoadingCriteria,
+    isError: isErrorCriteria,
+  } = useQuery({
+    queryKey: ["criterios-for-committees"],
+    queryFn: getAllCriteria,
+  });
+
+  useEffect(() => {
+    if (isLoadingCriteria) {
+      setAlerta({
+        msg: "Cargando...",
+        error: false,
+      });
+    } else if (isErrorCriteria) {
+      setAlerta({
+        msg: errorCriteria?.message || "Hubo un error",
+        error: true,
+      });
+    } else {
+      setAlerta({});
+    }
+  }, [isLoadingCriteria, isErrorCriteria, errorCriteria]);
+
+  // Obtener lo conjuntos de criterios de evaluacion para pasarlos a la tabla junto con el criterio correspondiente
+  const {
+    data: dataSetOfCriteria,
+    isLoading: isLoadingSetOfCriteria,
+    error: errorSetOfCriteria,
+    isError: isErrorSetOfCriteria,
+  } = useQuery({
+    queryKey: ["set-of-criteria-for-committees"],
+    queryFn: getAllSetOfCriteria,
+  });
+
+  useEffect(() => {
+    if (isLoadingSetOfCriteria) {
+      setAlerta({
+        msg: "Cargando...",
+        error: false,
+      });
+    } else if (isErrorSetOfCriteria) {
+      setAlerta({
+        msg: errorSetOfCriteria?.message || "Hubo un error",
+        error: true,
+      });
+    } else {
+      setAlerta({});
+    }
+  }, [isLoadingSetOfCriteria, isErrorSetOfCriteria, errorSetOfCriteria]);
+
+  const criterios = dataCriteria?.Criteria || [];
+  const SetOfCriteria = dataSetOfCriteria?.setOfCriteria || [];
+  const Rubrics = dataRubrics?.Rubrics || [];
+
   // Manejar el cambio de los selects
   const handleChange = (criterioId, value) => {
     setSelectedValues((prevState) => ({
@@ -79,20 +153,32 @@ const TableEvaluationCommittes = () => {
   const loadDataFromLocalStorage = (key) => {
     const encryptedData = localStorage.getItem(key);
     if (!encryptedData) {
-      navigate("/admin");
       return null;
     }
     const bytes = CryptoJS.AES.decrypt(encryptedData, KEY_SECRET);
     const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
     return JSON.parse(decryptedData);
   };
-  const idea = loadDataFromLocalStorage("dataIdea");
+  useEffect(() => {
+    const idea = loadDataFromLocalStorage("dataIdea");
+    const committee = loadDataFromLocalStorage("dataCommitte");
+    if (!idea || !committee) {
+      navigate("/admin/comites/moto");
+    } else {
+      setCommittee(committee);
+      setIdea(idea);
+    }
+  }, [navigate]);
+  useEffect(() => {
+    if (committee) {
+      setDataTable();
+    }
+  }, [committee]);
 
-  const committee = useMemo(() => loadDataFromLocalStorage("dataCommitte"), []);
-
+  // Se envia la información del comite ya creado anteriormente a la tabla
   const setDataTable = () => {
+    if (!committee) return;
     const fechaArray = committee?.fec_comité_evaluación.split("-");
-
     setFecha(fechaArray);
     setIdcomite(committee?.id_comites_evaluación);
     setEvaluador(committee?.user?.username);
@@ -105,7 +191,21 @@ const TableEvaluationCommittes = () => {
     );
     setViewState(true);
   };
-  //
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      idComite,
+      codigoIdea,
+      fecha,
+      evaluador: auth?.user?.Id_User,
+      selectedValues,
+      obsComite,
+    };
+    mutate(data);
+    handleGoBack();
+  };
+
   useEffect(() => {
     if (committee && committee.comite_criterios) {
       const SetDataForTable = async () => {
@@ -171,101 +271,14 @@ const TableEvaluationCommittes = () => {
     setDtaCommittees();
   }, []);
 
-  // Obtener los criterios de evaluacion para pasarlos a la tabla
-  const {
-    data: dataCriteria,
-    error: errorCriteria,
-    isLoading: isLoadingCriteria,
-    isError: isErrorCriteria,
-  } = useQuery({
-    queryKey: ["criterios-for-committees"],
-    queryFn: getAllCriteria,
-  });
-
-  useEffect(() => {
-    if (isLoadingCriteria) {
-      setAlerta({
-        msg: "Cargando...",
-        error: false,
-      });
-    } else if (isErrorCriteria) {
-      setAlerta({
-        msg: errorCriteria?.message || "Hubo un error",
-        error: true,
-      });
-    } else {
-      setAlerta({});
-    }
-  }, [isLoadingCriteria, isErrorCriteria, errorCriteria]);
-
-  const criterios = dataCriteria?.Criteria || [];
-
-  // Obtener lo conjuntos de criterios de evaluacion para pasarlos a la tabla junto con el criterio correspondiente
-  const {
-    data: dataSetOfCriteria,
-    isLoading: isLoadingSetOfCriteria,
-    error: errorSetOfCriteria,
-    isError: isErrorSetOfCriteria,
-  } = useQuery({
-    queryKey: ["set-of-criteria-for-committees"],
-    queryFn: getAllSetOfCriteria,
-  });
-
-  useEffect(() => {
-    if (isLoadingSetOfCriteria) {
-      setAlerta({
-        msg: "Cargando...",
-        error: false,
-      });
-    } else if (isErrorSetOfCriteria) {
-      setAlerta({
-        msg: errorSetOfCriteria?.message || "Hubo un error",
-        error: true,
-      });
-    } else {
-      setAlerta({});
-    }
-  }, [isLoadingSetOfCriteria, isErrorSetOfCriteria, errorSetOfCriteria]);
-
-  const SetOfCriteria = dataSetOfCriteria?.setOfCriteria || [];
-
-  // Obtener las rubricas para poder mostrar en la tabla
-  const {
-    data: dataRubrics,
-    isLoading: iSLoadingRubrics,
-    error: errorRubrics,
-    isError: isErrorRubrics,
-  } = useQuery({
-    queryKey: ["rubrics-for-committees"],
-    queryFn: getAllRubrics,
-  });
-
-  useEffect(() => {
-    if (iSLoadingRubrics) {
-      setAlerta({
-        msg: "Cargando...",
-        error: false,
-      });
-    } else if (isErrorRubrics) {
-      setAlerta({
-        msg: errorRubrics?.message || "Hubo un error",
-        error: true,
-      });
-    } else {
-      setAlerta({});
-    }
-  }, [iSLoadingRubrics, isErrorRubrics, errorRubrics]);
-
-  const Rubrics = dataRubrics?.Rubrics || [];
-
   const handleGoBack = () => {
     clearDataForTable();
     setViewState(false);
     const timer = setTimeout(() => {
       navigate("/admin/ideas");
+      localStorage.removeItem("dataIdea");
+      localStorage.removeItem("dataCommitte");
     }, 2000);
-    localStorage.removeItem("dataIdea");
-    localStorage.removeItem("dataCommitte");
     return () => clearTimeout(timer);
   };
 

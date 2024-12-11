@@ -51,7 +51,7 @@ const EvaluationCommitteesList = () => {
     }
   }, [isLoading, isError, error]);
   const titles = [
-    "ID",
+    "Codigo",
     "Fecha Comite",
     "Nombre Calificador",
     "Nombre Idea",
@@ -63,10 +63,9 @@ const EvaluationCommitteesList = () => {
   ];
   const navigateToCommittee = (id_comites_evaluación) => {
     setSelectedIdGet(id_comites_evaluación);
-
     // Obtener la data usando el ID, luego pasarla a la tabla del comité
+      // navigate("/admin/comites/table");
 
-    // navigate("/admin/comites/table")
   };
   const ButtonsForOtherModules = (id_comites_evaluacion) => [
     <button

@@ -72,7 +72,7 @@ const CriteriaList = () => {
 
   const titleForm = ["Registrar Criterios de Evluación"];
   const titles = [
-    "ID Criterio",
+    "ID",
     "Descripción",
     "Conjunto de Criterios",
     "Acciones",

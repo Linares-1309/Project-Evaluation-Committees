@@ -2,15 +2,23 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
+import { Server } from "socket.io";
+import http from "http";
+import { fileURLToPath } from "url";
+
+// Variables necesarias para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 
-// Base de datos para verificar la conexion
+// Base de datos para verificar la conexión
 import db from "./db/db.js";
 
 // Logger para el manejo de errores
 import { logger } from "./middleware/logMiddleware.js";
 
-//Rutas de los controladores
+// Rutas de los controladores
 import UserRouter from "./routes/userRoutes.js";
 import SetOfCriteriaRoutes from "./routes/SetOfCriteriaRoutes.js";
 import CriteriaRoutes from "./routes/CriteriaRoutes.js";
@@ -18,9 +26,9 @@ import ProponentRoutes from "./routes/ProponentRoutes.js";
 import IdeasRoutes from "./routes/IdeasRoutes.js";
 import EvaluationCommitteesRoutes from "./routes/EvaluationCommitteesRoutes.js";
 import RubricsRoutes from "./routes/RubricRoutes.js";
+import routerC from "./routes/CommitteCriteriaRoutes.js";
 
-
-// Se importan los modelos para realizar las relaciones entre tablas
+// Modelos para las relaciones
 import UserModel from "./models/userModel.js";
 import SetOfCriteriaModel from "./models/SetOfCriteriaModel.js";
 import CriteriaModel from "./models/CriteriaModel.js";
@@ -29,19 +37,41 @@ import IdeasModel from "./models/IdeasModel.js";
 import EvaluationCommitteesModel from "./models/EvaluationCommitteesModel.js";
 import RubricModel from "./models/RublicModel.js";
 import CommitteesCriteriaModel from "./models/CommitteCriteriaModel.js";
-import routerC from "./routes/CommitteCriteriaRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(cors());
+// Crear el servidor HTTP
+const server = http.createServer(app);
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
+// Inicializar Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Permitir conexiones desde cualquier origen
+  },
 });
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Configura los eventos de Socket.IO
+io.on("connection", (socket) => {
+  console.log("Cliente conectado:", socket.id);
+
+  // Escucha el evento 'send-token'
+  socket.on("send-token", (token) => {
+    console.log("Token recibido:", token);
+    // Aquí puedes procesar el token, por ejemplo, verificarlo o almacenarlo
+  });
+
+  // Detecta cuando un cliente se desconecta
+  socket.on("disconnect", () => {
+    console.log("Cliente desconectado:", socket.id);
+  });
+});
+
+// Rutas de la API
 app.use("/api/user", UserRouter);
 app.use("/api/set-of-criteria", SetOfCriteriaRoutes);
 app.use("/api/criteria", CriteriaRoutes);
@@ -51,27 +81,29 @@ app.use("/api/evaluation-committees", EvaluationCommitteesRoutes);
 app.use("/api/rubrics", RubricsRoutes);
 app.use("/api/committe-criterias", routerC);
 
-app.use(express.static(path.join(import.meta.url, "public")));
+// Rutas estáticas
+app.use(
+  "/public/uploads/",
+  express.static(path.join(__dirname, "public/uploads"))
+);
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-app.use("/public/uploads/", express.static("public/uploads"));
-app.use("/assets", express.static("public/assets"));
-
-try {
-  await db.authenticate().then(() => {
-    console.log("Conexion a la db exitosa");
-  });
-} catch (error) {
-  console.log(`Error de conexion a la bd ${error}`);
-  logger.error(`Error de conexion a la bd  ${error}`);
-}
-
-app.listen(PORT, () => {
-  console.log(`Server running on: http://localhost:${PORT}`);
+// Manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
-// RELACIONES ESTRE TABLAS
+// Conexión a la base de datos
+try {
+  await db.authenticate();
+  console.log("Conexión a la base de datos exitosa");
+} catch (error) {
+  console.error(`Error de conexión a la base de datos: ${error}`);
+  logger.error(`Error de conexión a la base de datos: ${error}`);
+}
 
-// RELACION ENTRE USUARIOS Y COMITES DE EVALUACION
+// Relación entre tablas (Sequelize)
 UserModel.hasMany(EvaluationCommitteesModel, {
   foreignKey: "Id_User",
   as: "user",
@@ -81,7 +113,6 @@ EvaluationCommitteesModel.belongsTo(UserModel, {
   as: "user",
 });
 
-// RELACION ENTRE COMITE-CRITERIOS Y COMITE DE EVALUACION
 CommitteesCriteriaModel.belongsTo(EvaluationCommitteesModel, {
   foreignKey: "id_comites_evaluacion",
   as: "comite_criterios",
@@ -91,7 +122,6 @@ EvaluationCommitteesModel.hasMany(CommitteesCriteriaModel, {
   as: "comite_criterios",
 });
 
-// RELACION ENTRE COMITE CRITERIOS Y CRITERIOS
 CommitteesCriteriaModel.belongsTo(CriteriaModel, {
   foreignKey: "id_criterio",
   as: "criteria_committees",
@@ -101,7 +131,6 @@ CriteriaModel.hasMany(CommitteesCriteriaModel, {
   as: "criteria_committees",
 });
 
-// RELACION ENTRE IDEAS Y COMITES DE EVALUACION
 IdeasModel.hasMany(EvaluationCommitteesModel, {
   foreignKey: "id_idea",
   as: "ideas",
@@ -111,7 +140,6 @@ EvaluationCommitteesModel.belongsTo(IdeasModel, {
   as: "ideas",
 });
 
-// RELACION ENTRE CRITERIOS Y CONJUNTO DE CRITERIOS
 SetOfCriteriaModel.hasMany(CriteriaModel, {
   foreignKey: "id_conjunto_criterio",
   as: "criterio",
@@ -120,7 +148,7 @@ CriteriaModel.belongsTo(SetOfCriteriaModel, {
   foreignKey: "id_conjunto_criterio",
   as: "criterio",
 });
-// RELACION ENTRE CRITERIOS Y RUBRICAS
+
 CriteriaModel.hasMany(RubricModel, {
   foreignKey: "id_criterio",
   as: "criteria_for_rubric",
@@ -130,7 +158,6 @@ RubricModel.belongsTo(CriteriaModel, {
   as: "criteria_for_rubric",
 });
 
-// RELACION ENTRE IDEAS Y PROPONENTES
 ProponentModel.hasMany(IdeasModel, {
   foreignKey: "id_proponente",
   as: "proponente",
@@ -138,4 +165,9 @@ ProponentModel.hasMany(IdeasModel, {
 IdeasModel.belongsTo(ProponentModel, {
   foreignKey: "id_proponente",
   as: "proponente",
+});
+
+// Iniciar el servidor
+server.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
