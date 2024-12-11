@@ -4,14 +4,14 @@ import IdeasModel from "./IdeasModel.js";
 import UserModel from "./userModel.js";
 
 const EvaluationCommitteesModel = db.define(
-  "comités-evaluación",
+  "comites-evaluacion",
   {
-    id_comites_evaluación: {
-      type: DataTypes.NUMBER,
+    id_comites_evaluacion: {
+      type: DataTypes.STRING(20),
       primaryKey: true,
       autoIncrement: true,
     },
-    fec_comité_evaluación: { type: DataTypes.DATE },
+    fec_comite_evaluacion: { type: DataTypes.DATE },
     Obs_Comite: { type: DataTypes.STRING(255) },
     id_idea: {
       type: DataTypes.INTEGER,
@@ -36,3 +36,6 @@ const EvaluationCommitteesModel = db.define(
   }
 );
 export default EvaluationCommitteesModel;
+
+
+// NECESITO GENERAR UN CODIGO DE 15 CARACTERES SEPARADO CADA 5 POR UN (-) DEBE TENER LETRAR Y NUMEROS EJEMPLO: J56GH-5FTJ6-FT3H9 DEBE SER ALEATORIO CADA VEZ QUESE EJECUTE DEBE SALIR UNO DIFERENTE

@@ -19,7 +19,7 @@ router
   .post(checkAuthWithRol(["Admin"]), newEvaluationCommitte);
 
 router
-  .route("/:id_comités_evaluación")
+  .route("/:id_comites_evaluacion")
   .get(checkAuthWithRol(["Admin"]), getEvaluationCommitte)
   .put(checkAuthWithRol(["Admin"]), updateEvaluationCommitte)
   .delete(checkAuthWithRol(["Admin"]), deleteEvaluationCommitte);

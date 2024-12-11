@@ -47,13 +47,13 @@ function WriteTable({ titles, data }) {
       <div className="relative overflow-x-auto container ">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full">
-            <div className="overflow-hidden">
+            <div className="overflow-x-auto shadow-md rounded-xl bg-clip-border p-5 border-2">
               <table
-                className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table table-responsive border-b border-black"
+                className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table table-responsive border-black"
                 id="TableDinamic"
                 ref={tableRef}
               >
-                <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
+                <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border border-slate-100">
                   <tr>
                     {titles.map((title, index) => (
                       <th scope="col" key={index}>
@@ -64,7 +64,10 @@ function WriteTable({ titles, data }) {
                 </thead>
                 <tbody className="text-xs">
                   {data.map((row, rowIndex) => (
-                    <tr key={rowIndex} className="border-b border-black">
+                    <tr
+                      key={rowIndex}
+                      className="border-b border-slate-100 hover:bg-slate-50"
+                    >
                       {/* Mapeo de celdas (todas excepto la última) */}
                       {row.slice(0, -1).map((cell, cellIndex) => (
                         <td key={cellIndex}>{cell}</td>

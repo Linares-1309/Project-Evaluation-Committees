@@ -83,11 +83,11 @@ EvaluationCommitteesModel.belongsTo(UserModel, {
 
 // RELACION ENTRE COMITE-CRITERIOS Y COMITE DE EVALUACION
 CommitteesCriteriaModel.belongsTo(EvaluationCommitteesModel, {
-  foreignKey: "id_comites_evaluación",
+  foreignKey: "id_comites_evaluacion",
   as: "comite_criterios",
 });
 EvaluationCommitteesModel.hasMany(CommitteesCriteriaModel, {
-  foreignKey: "id_comites_evaluación",
+  foreignKey: "id_comites_evaluacion",
   as: "comite_criterios",
 });
 

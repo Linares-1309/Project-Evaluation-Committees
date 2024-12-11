@@ -19,7 +19,7 @@ function ModalWindow({
             toggleModal();
           }
         }}
-        className="text-lg font-serif text-white bg-green-500 font-semibold rounded-md hover:bg-green-600 py-1.5 w-40 flex items-center px-3"
+        className="text-lg font-serif text-white bg-green-500 font-semibold rounded-md hover:bg-green-600 py-1.5 w-40 flex items-center px-3 mb-4"
         type="button"
       >
         <FaPlusCircle className="mx-1" />

@@ -4,15 +4,15 @@ import EvaluationCommitteesModel from "./EvaluationCommitteesModel.js";
 import CriteriaModel from "./CriteriaModel.js";
 
 const CommitteesCriteriaModel = db.define(
-  "comité-criterios",
+  "comite-criterios",
   {
-    id_comité_criterios: {
+    id_comite_criterios: {
       type: DataTypes.NUMBER,
       primaryKey: true,
       autoIncrement: true,
     },
-    id_comites_evaluación: {
-      type: DataTypes.INTEGER,
+    id_comites_evaluacion: {
+      type: DataTypes.STRING(20),
       references: {
         model: EvaluationCommitteesModel,
         as: "comite_criterios",
@@ -25,7 +25,7 @@ const CommitteesCriteriaModel = db.define(
         as: "criteria_committees",
       },
     },
-    cal_comité_criterios: {
+    cal_comite_criterios: {
       type: DataTypes.STRING(5),
     },
   },

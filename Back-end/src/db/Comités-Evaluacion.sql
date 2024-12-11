@@ -18,51 +18,51 @@ USE `comites-evaluacion`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `comité-criterios`
+-- Table structure for table `comite-criterios`
 --
 
-DROP TABLE IF EXISTS `comité-criterios`;
+DROP TABLE IF EXISTS `comite-criterios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comité-criterios` (
-  `id_comité_criterios` int NOT NULL AUTO_INCREMENT,
-  `id_comites_evaluación` int NOT NULL,
+CREATE TABLE `comite-criterios` (
+  `id_comite_criterios` int NOT NULL AUTO_INCREMENT,
+  `id_comites_evaluacion` int NOT NULL,
   `id_criterio` int NOT NULL,
-  `cal_comité_criterios` varchar(5) NOT NULL,
+  `cal_comite_criterios` varchar(5) NOT NULL,
   `create-time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id_comité_criterios`),
+  PRIMARY KEY (`id_comite_criterios`),
   KEY `id_criterio_idx` (`id_criterio`),
-  KEY `id_comites_evaluación_idx` (`id_comites_evaluación`),
-  CONSTRAINT `fk_id_comites_evaluación` FOREIGN KEY (`id_comites_evaluación`) REFERENCES `comités-evaluación` (`id_comites_evaluación`),
+  KEY `id_comites_evaluación_idx` (`id_comites_evaluacion`),
+  CONSTRAINT `fk_id_comites_evaluación` FOREIGN KEY (`id_comites_evaluacion`) REFERENCES `comites-evaluacion` (`id_comites_evaluacion`),
   CONSTRAINT `fk_id_criterio` FOREIGN KEY (`id_criterio`) REFERENCES `criterios` (`id_criterio`)
 ) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comité-criterios`
+-- Dumping data for table `comite-criterios`
 --
 
-LOCK TABLES `comité-criterios` WRITE;
-/*!40000 ALTER TABLE `comité-criterios` DISABLE KEYS */;
-INSERT INTO `comité-criterios` VALUES (65,54,58,'1','2024-12-06 19:52:40'),(66,54,59,'1','2024-12-06 19:52:40'),(67,54,60,'10','2024-12-06 19:52:40'),(68,54,61,'8','2024-12-06 19:52:40'),(69,54,62,'9','2024-12-06 19:52:40'),(70,54,63,'9','2024-12-06 19:52:40'),(71,54,64,'1','2024-12-06 19:52:40'),(72,54,65,'3','2024-12-06 19:52:40'),(73,54,66,'3','2024-12-06 19:52:40'),(74,54,67,'2','2024-12-06 19:52:40'),(75,54,68,'Si','2024-12-06 19:52:40'),(76,54,69,'Si','2024-12-06 19:52:40'),(77,54,70,'Si','2024-12-06 19:52:40'),(78,54,71,'Si','2024-12-06 19:52:40'),(79,54,72,'Si','2024-12-06 19:52:40'),(80,54,73,'Si','2024-12-06 19:52:40'),(81,55,58,'1','2024-12-06 19:55:36'),(82,55,59,'2','2024-12-06 19:55:36'),(83,55,60,'10','2024-12-06 19:55:36'),(84,55,61,'10','2024-12-06 19:55:36'),(85,55,62,'9','2024-12-06 19:55:36'),(86,55,63,'8','2024-12-06 19:55:36'),(87,55,64,'8','2024-12-06 19:55:36'),(88,55,65,'9','2024-12-06 19:55:36'),(89,55,66,'7','2024-12-06 19:55:36'),(90,55,67,'7','2024-12-06 19:55:36'),(91,55,68,'Si','2024-12-06 19:55:36'),(92,55,69,'Si','2024-12-06 19:55:36'),(93,55,70,'Si','2024-12-06 19:55:36'),(94,55,71,'Si','2024-12-06 19:55:36'),(95,55,72,'Si','2024-12-06 19:55:36'),(96,55,73,'Si','2024-12-06 19:55:36'),(97,56,58,'2','2024-12-06 20:05:11'),(98,56,59,'10','2024-12-06 20:05:11'),(99,56,60,'9','2024-12-06 20:05:11'),(100,56,61,'8','2024-12-06 20:05:11'),(101,56,62,'9','2024-12-06 20:05:11'),(102,56,63,'7','2024-12-06 20:05:11'),(103,56,64,'8','2024-12-06 20:05:11'),(104,56,65,'8','2024-12-06 20:05:11'),(105,56,66,'10','2024-12-06 20:05:11'),(106,56,67,'9','2024-12-06 20:05:11'),(107,56,68,'Si','2024-12-06 20:05:11'),(108,56,69,'Si','2024-12-06 20:05:11'),(109,56,70,'Si','2024-12-06 20:05:11'),(110,56,71,'Si','2024-12-06 20:05:11'),(111,56,72,'Si','2024-12-06 20:05:11'),(112,56,73,'Si','2024-12-06 20:05:11'),(113,57,58,'10','2024-12-09 17:25:18'),(114,57,59,'9','2024-12-09 17:25:18'),(115,57,60,'8','2024-12-09 17:25:18'),(116,57,61,'7','2024-12-09 17:25:18'),(117,57,62,'6','2024-12-09 17:25:18'),(118,57,63,'5','2024-12-09 17:25:18'),(119,57,64,'4','2024-12-09 17:25:18'),(120,57,65,'3','2024-12-09 17:25:18'),(121,57,66,'2','2024-12-09 17:25:18'),(122,57,67,'1','2024-12-09 17:25:18'),(123,57,68,'No','2024-12-09 17:25:18'),(124,57,69,'No','2024-12-09 17:25:18'),(125,57,70,'No','2024-12-09 17:25:18'),(126,57,71,'Si','2024-12-09 17:25:18'),(127,57,72,'Si','2024-12-09 17:25:18'),(128,57,73,'Si','2024-12-09 17:25:18');
-/*!40000 ALTER TABLE `comité-criterios` ENABLE KEYS */;
+LOCK TABLES `comite-criterios` WRITE;
+/*!40000 ALTER TABLE `comite-criterios` DISABLE KEYS */;
+INSERT INTO `comite-criterios` VALUES (65,54,58,'1','2024-12-06 19:52:40'),(66,54,59,'1','2024-12-06 19:52:40'),(67,54,60,'10','2024-12-06 19:52:40'),(68,54,61,'8','2024-12-06 19:52:40'),(69,54,62,'9','2024-12-06 19:52:40'),(70,54,63,'9','2024-12-06 19:52:40'),(71,54,64,'1','2024-12-06 19:52:40'),(72,54,65,'3','2024-12-06 19:52:40'),(73,54,66,'3','2024-12-06 19:52:40'),(74,54,67,'2','2024-12-06 19:52:40'),(75,54,68,'Si','2024-12-06 19:52:40'),(76,54,69,'Si','2024-12-06 19:52:40'),(77,54,70,'Si','2024-12-06 19:52:40'),(78,54,71,'Si','2024-12-06 19:52:40'),(79,54,72,'Si','2024-12-06 19:52:40'),(80,54,73,'Si','2024-12-06 19:52:40'),(81,55,58,'1','2024-12-06 19:55:36'),(82,55,59,'2','2024-12-06 19:55:36'),(83,55,60,'10','2024-12-06 19:55:36'),(84,55,61,'10','2024-12-06 19:55:36'),(85,55,62,'9','2024-12-06 19:55:36'),(86,55,63,'8','2024-12-06 19:55:36'),(87,55,64,'8','2024-12-06 19:55:36'),(88,55,65,'9','2024-12-06 19:55:36'),(89,55,66,'7','2024-12-06 19:55:36'),(90,55,67,'7','2024-12-06 19:55:36'),(91,55,68,'Si','2024-12-06 19:55:36'),(92,55,69,'Si','2024-12-06 19:55:36'),(93,55,70,'Si','2024-12-06 19:55:36'),(94,55,71,'Si','2024-12-06 19:55:36'),(95,55,72,'Si','2024-12-06 19:55:36'),(96,55,73,'Si','2024-12-06 19:55:36'),(97,56,58,'2','2024-12-06 20:05:11'),(98,56,59,'10','2024-12-06 20:05:11'),(99,56,60,'9','2024-12-06 20:05:11'),(100,56,61,'8','2024-12-06 20:05:11'),(101,56,62,'9','2024-12-06 20:05:11'),(102,56,63,'7','2024-12-06 20:05:11'),(103,56,64,'8','2024-12-06 20:05:11'),(104,56,65,'8','2024-12-06 20:05:11'),(105,56,66,'10','2024-12-06 20:05:11'),(106,56,67,'9','2024-12-06 20:05:11'),(107,56,68,'Si','2024-12-06 20:05:11'),(108,56,69,'Si','2024-12-06 20:05:11'),(109,56,70,'Si','2024-12-06 20:05:11'),(110,56,71,'Si','2024-12-06 20:05:11'),(111,56,72,'Si','2024-12-06 20:05:11'),(112,56,73,'Si','2024-12-06 20:05:11'),(113,57,58,'10','2024-12-09 17:25:18'),(114,57,59,'9','2024-12-09 17:25:18'),(115,57,60,'8','2024-12-09 17:25:18'),(116,57,61,'7','2024-12-09 17:25:18'),(117,57,62,'6','2024-12-09 17:25:18'),(118,57,63,'5','2024-12-09 17:25:18'),(119,57,64,'4','2024-12-09 17:25:18'),(120,57,65,'3','2024-12-09 17:25:18'),(121,57,66,'2','2024-12-09 17:25:18'),(122,57,67,'1','2024-12-09 17:25:18'),(123,57,68,'No','2024-12-09 17:25:18'),(124,57,69,'No','2024-12-09 17:25:18'),(125,57,70,'No','2024-12-09 17:25:18'),(126,57,71,'Si','2024-12-09 17:25:18'),(127,57,72,'Si','2024-12-09 17:25:18'),(128,57,73,'Si','2024-12-09 17:25:18');
+/*!40000 ALTER TABLE `comite-criterios` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `comités-evaluación`
+-- Table structure for table `comites-evaluacion`
 --
 
-DROP TABLE IF EXISTS `comités-evaluación`;
+DROP TABLE IF EXISTS `comites-evaluacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comités-evaluación` (
-  `id_comites_evaluación` int NOT NULL AUTO_INCREMENT,
-  `fec_comité_evaluación` date NOT NULL,
+CREATE TABLE `comites-evaluacion` (
+  `id_comites_evaluacion` int NOT NULL AUTO_INCREMENT,
+  `fec_comite_evaluacion` date NOT NULL,
   `Obs_Comite` varchar(255) NOT NULL,
   `id_idea` int NOT NULL,
   `Id_User` int NOT NULL,
   `create_time` timestamp NOT NULL,
-  PRIMARY KEY (`id_comites_evaluación`),
+  PRIMARY KEY (`id_comites_evaluacion`),
   KEY `id_idea_idx` (`id_idea`) /*!80000 INVISIBLE */,
   KEY `Id_User_idx` (`Id_User`),
   CONSTRAINT `fk_id_idea` FOREIGN KEY (`id_idea`) REFERENCES `ideas` (`id_idea`),
@@ -71,13 +71,13 @@ CREATE TABLE `comités-evaluación` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comités-evaluación`
+-- Dumping data for table `comites-evaluacion`
 --
 
-LOCK TABLES `comités-evaluación` WRITE;
-/*!40000 ALTER TABLE `comités-evaluación` DISABLE KEYS */;
-INSERT INTO `comités-evaluación` VALUES (54,'2024-12-06','lalalala',3,1107008520,'2024-12-06 19:52:40'),(55,'2024-12-06','lalalallalalal',4,1107008520,'2024-12-06 19:55:36'),(56,'2024-12-06','ffff',3,1107008520,'2024-12-06 20:05:11'),(57,'2024-12-09','Muy bien ',5,1107008520,'2024-12-09 17:25:18');
-/*!40000 ALTER TABLE `comités-evaluación` ENABLE KEYS */;
+LOCK TABLES `comites-evaluacion` WRITE;
+/*!40000 ALTER TABLE `comites-evaluacion` DISABLE KEYS */;
+INSERT INTO `comites-evaluacion` VALUES (54,'2024-12-06','lalalala',3,1107008520,'2024-12-06 19:52:40'),(55,'2024-12-06','lalalallalalal',4,1107008520,'2024-12-06 19:55:36'),(56,'2024-12-06','ffff',3,1107008520,'2024-12-06 20:05:11'),(57,'2024-12-09','Muy bien ',5,1107008520,'2024-12-09 17:25:18');
+/*!40000 ALTER TABLE `comites-evaluacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -258,4 +258,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-09 14:47:27
+-- Dump completed on 2024-12-10 11:58:31

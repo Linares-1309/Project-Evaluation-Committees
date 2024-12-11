@@ -28,7 +28,7 @@ export const getAllCommitteCriteria = async (req, res) => {
             {
               model: UserModel,
               as: "user",
-              attributes: { exclude: ["password", "token", "userType"] },
+              attributes: { exclude: ["password", "token", "userType", "email"] },
             },
           ],
         },
@@ -61,10 +61,12 @@ export const getAllCommitteCriteria = async (req, res) => {
 
 export const getCommitteCriteria = async (req, res) => {
   const { id_comites_evaluacion } = req.params;
+  console.log(req.params);
+  
   try {
     const CommitteeCriteria = await CommitteesCriteriaModel.findAll(
       {
-        where: { id_comites_evaluación: id_comites_evaluacion},
+        where: { id_comites_evaluacion: id_comites_evaluacion},
         include: [
           {
             model: EvaluationCommitteesModel,
@@ -83,7 +85,7 @@ export const getCommitteCriteria = async (req, res) => {
               {
                 model: UserModel,
                 as: "user",
-                attributes: { exclude: ["password", "token", "userType"] },
+                attributes: { exclude: ["password", "token", "userType", "email"] },
               },
             ],
           },

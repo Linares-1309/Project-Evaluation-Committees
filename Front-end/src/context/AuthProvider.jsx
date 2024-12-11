@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
         const { data } = await ClientAxios(url, config);
         setAuth(data);
       } catch (error) {
-        console.error(error);
+        console.error(error.respoonse.data.msg);
         localStorage.removeItem("token");
         setAuth({});
         setRoleUser(null);

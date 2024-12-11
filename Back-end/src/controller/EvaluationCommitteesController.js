@@ -38,7 +38,7 @@ export const getAllEvaluationCommittees = async (req, res) => {
     }
   } catch (error) {
     logger.error(
-      `Ocurrio un error al obtener los comités de e  valuación! ${error}`
+      `Ocurrio un error al obtener los comités de evaluación! ${error}`
     );
     console.log(error);
 
@@ -49,10 +49,10 @@ export const getAllEvaluationCommittees = async (req, res) => {
 };
 
 export const getEvaluationCommitte = async (req, res) => {
-  const { id_comités_evaluación } = req.params;
+  const { id_comites_evaluacion } = req.params;
   try {
     const EvaluationCommitte = await EvaluationCommitteesModel.findByPk(
-      id_comités_evaluación,
+      id_comites_evaluacion,
       {
         include: [
           {
@@ -66,15 +66,27 @@ export const getEvaluationCommitte = async (req, res) => {
             ],
           },
           {
+            model: CommitteesCriteriaModel,
+            as: "comite_criterios",
+          },
+          {
             model: UserModel,
             as: "user",
-            attributes: { exclude: ["password", "token", "userType"] },
+            attributes: {
+              exclude: [
+                "password",
+                "token",
+                "userType",
+                "email",
+                "create_time",
+              ],
+            },
           },
         ],
       }
     );
     if (EvaluationCommitte) {
-      return res.status(200).json(EvaluationCommitte);
+      return res.status(200).json({ EvaluationCommitte: EvaluationCommitte });
     } else {
       return res
         .status(404)
@@ -90,23 +102,26 @@ export const getEvaluationCommitte = async (req, res) => {
   }
 };
 export const newEvaluationCommitte = async (req, res) => {
-  const { idIdea, fecComiteEvaluacion, idUser, obsComite, selectedValues } =
+  const { idComite, codigoIdea, fecha, evaluador, obsComite, selectedValues } =
     req.body;
+    console.log(req.body);
+    
   try {
     const evaluationCommitte = await EvaluationCommitteesModel.create({
-      fec_comité_evaluación: fecComiteEvaluacion,
+      id_comites_evaluacion: idComite,
+      id_idea: codigoIdea,
+      fec_comite_evaluacion: fecha,
+      Id_User: evaluador,
       Obs_Comite: obsComite,
-      id_idea: idIdea,
-      Id_User: idUser,
     });
-   const updateIdea = await IdeasModel.findOne({
-      where: { id_idea: idIdea}
-    })
+    const updateIdea = await IdeasModel.findOne({
+      where: { id_idea: codigoIdea },
+    });
 
     if (updateIdea) {
-      updateIdea.estado_idea = "Convocado"
+      updateIdea.estado_idea = "Convocado";
     }
-    updateIdea.save()
+    updateIdea.save();
 
     const criterios = await CriteriaModel.findAll({
       attributes: ["id_criterio"],
@@ -117,9 +132,9 @@ export const newEvaluationCommitte = async (req, res) => {
     const asociaciones = Object.entries(selectedValues)
       .filter(([idCriterio]) => idsValids.includes(parseInt(idCriterio)))
       .map(([idCriterio, calificacion]) => ({
-        id_comites_evaluación: evaluationCommitte.id_comites_evaluación,
+        id_comites_evaluacion: evaluationCommitte.id_comites_evaluacion,
         id_criterio: parseInt(idCriterio),
-        cal_comité_criterios: calificacion,
+        cal_comite_criterios: calificacion,
       }));
 
     if (asociaciones.length > 0) {
@@ -147,17 +162,18 @@ export const newEvaluationCommitte = async (req, res) => {
 };
 
 export const updateEvaluationCommitte = async (req, res) => {
-  const { id_comités_evaluación } = req.params;
-  const { fec_comité_evaluación, id_idea, Id_User } = req.body;
+  const { id_comites_evaluacion } = req.params;
+  const { fecha, codigoIdea, evaluador } = req.body;
+
   try {
     const update = await EvaluationCommitteesModel.update(
       {
-        fec_comité_evaluación,
-        id_idea,
-        Id_User,
+        fecha,
+        codigoIdea,
+        evaluador,
       },
       {
-        where: id_comités_evaluación,
+        where: id_comites_evaluacion,
       }
     );
     if (update === 0) {
@@ -178,10 +194,10 @@ export const updateEvaluationCommitte = async (req, res) => {
 };
 
 export const deleteEvaluationCommitte = async (req, res) => {
-  const { id_comités_evaluación } = req.params;
+  const { id_comités_evaluacion } = req.params;
   try {
     const deleteEvaluationCommitte = EvaluationCommitteesModel.findOne({
-      where: id_comités_evaluación,
+      where: id_comités_evaluacion,
     });
     if (deleteEvaluationCommitte) {
       await deleteEvaluationCommitte.destroy();

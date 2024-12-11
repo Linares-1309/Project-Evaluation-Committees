@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CryptoJS from "crypto-js";
@@ -15,24 +15,33 @@ import useAuth from "../../../hooks/useAuth";
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
 const TableEvaluationCommittes = () => {
-  const [idIdea, setIdIdea] = useState("");
-  const [fecComiteEvaluacion, setFecComiteEvaluacion] = useState("");
-  const [idUser, setIdUser] = useState("");
   const [alerta, setAlerta] = useState({});
-  const [selectedValues, setSelectedValues] = useState({});
-  const [obsComite, setObsComite] = useState("");
   const { auth } = useAuth();
   const navigate = useNavigate();
 
+  // State para la tabla de los comite
+  const [idComite, setIdcomite] = useState("");
+  const [fecha, setFecha] = useState([]);
+  const [evaluador, setEvaluador] = useState("");
+  const [tituloIdea, setTituloIdea] = useState("");
+  const [codigoIdea, setCodigoIdea] = useState("");
+  const [proponente, setProponente] = useState("");
+  const [selectedValues, setSelectedValues] = useState({});
+  const [obsComite, setObsComite] = useState("");
+
+  const [viewState, setViewState] = useState(false);
+
   const queryClient = useQueryClient();
+
   const refreshData = () => {
     queryClient.invalidateQueries("ideas");
   };
+
   const { mutate, isError, isLoading } = useMutation({
     mutationFn: newEvaluationCommitte,
     onSuccess: (data) => {
       setAlerta({
-        msg: data.msg,
+        msg: data.msg + " " + "Redireccionando....",
         error: false,
       });
       refreshData();
@@ -47,16 +56,17 @@ const TableEvaluationCommittes = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
 
     const data = {
-      idIdea,
-      fecComiteEvaluacion,
-      idUser,
+      idComite,
+      codigoIdea,
+      fecha,
+      evaluador: auth?.user?.Id_User,
       selectedValues,
       obsComite,
     };
     mutate(data);
+    handleGoBack();
   };
   // Manejar el cambio de los selects
   const handleChange = (criterioId, value) => {
@@ -69,6 +79,7 @@ const TableEvaluationCommittes = () => {
   const loadDataFromLocalStorage = (key) => {
     const encryptedData = localStorage.getItem(key);
     if (!encryptedData) {
+      navigate("/admin");
       return null;
     }
     const bytes = CryptoJS.AES.decrypt(encryptedData, KEY_SECRET);
@@ -77,16 +88,84 @@ const TableEvaluationCommittes = () => {
   };
   const idea = loadDataFromLocalStorage("dataIdea");
 
+  const committee = useMemo(() => loadDataFromLocalStorage("dataCommitte"), []);
+
+  const setDataTable = () => {
+    const fechaArray = committee?.fec_comité_evaluación.split("-");
+
+    setFecha(fechaArray);
+    setIdcomite(committee?.id_comites_evaluación);
+    setEvaluador(committee?.user?.username);
+    setTituloIdea(committee?.ideas?.nom_idea);
+    setCodigoIdea(committee?.ideas?.id_idea);
+    setProponente(
+      committee?.ideas?.proponente?.nombres_proponente +
+        " " +
+        committee?.ideas?.proponente?.apellidos_proponente
+    );
+    setViewState(true);
+  };
+  //
+  useEffect(() => {
+    if (committee && committee.comite_criterios) {
+      const SetDataForTable = async () => {
+        try {
+          const values = committee.comite_criterios.reduce((acc, item) => {
+            acc[item.id_criterio] = item.cal_comité_criterios;
+            return acc;
+          }, {});
+          setSelectedValues((prev) => {
+            const isEqual = JSON.stringify(prev) === JSON.stringify(values);
+            return isEqual ? prev : values;
+          });
+          setObsComite(committee?.Obs_Comite);
+        } catch (error) {
+          console.error(`OCURRIO UN ERROR: ${error}`);
+        }
+      };
+      SetDataForTable();
+      setDataTable();
+    }
+  }, [committee]);
+
   // Generamos la fecha actual
   const hoy = new Date();
   const dia = hoy.getDate();
   const mes = hoy.getMonth() + 1;
   const año = hoy.getFullYear();
 
+  const generateRandomIdCommittee = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+
+    for (let i = 0; i < 15; i++) {
+      if (i > 0 && i % 5 === 0) {
+        code += "-";
+      }
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters[randomIndex];
+    }
+
+    return code;
+  };
+
+  const clearDataForTable = async () => {
+    setIdcomite("");
+    setFecha("");
+    setEvaluador("");
+    setTituloIdea("");
+    setCodigoIdea("");
+    setProponente("");
+    setSelectedValues({});
+    setObsComite("");
+  };
   const setDtaCommittees = async () => {
-    setIdIdea(idea?.id_idea);
-    setFecComiteEvaluacion(Date.now());
-    setIdUser(auth?.user.Id_User);
+    setIdcomite(generateRandomIdCommittee());
+    setFecha([año, mes, dia]);
+    setEvaluador(auth?.user.username);
+    setTituloIdea(idea?.nom_idea);
+    setCodigoIdea(idea?.id_idea);
+    setProponente(idea?.nom_proponente);
   };
   useEffect(() => {
     setDtaCommittees();
@@ -145,7 +224,6 @@ const TableEvaluationCommittes = () => {
       });
     } else {
       setAlerta({});
-      // setCrearDataTable(true);
     }
   }, [isLoadingSetOfCriteria, isErrorSetOfCriteria, errorSetOfCriteria]);
 
@@ -175,16 +253,36 @@ const TableEvaluationCommittes = () => {
       });
     } else {
       setAlerta({});
-      // setCrearDataTable(true);
     }
   }, [iSLoadingRubrics, isErrorRubrics, errorRubrics]);
 
   const Rubrics = dataRubrics?.Rubrics || [];
 
-  const handleClick = () => {
-    navigate("/admin/ideas");
+  const handleGoBack = () => {
+    clearDataForTable();
+    setViewState(false);
+    const timer = setTimeout(() => {
+      navigate("/admin/ideas");
+    }, 2000);
     localStorage.removeItem("dataIdea");
+    localStorage.removeItem("dataCommitte");
+    return () => clearTimeout(timer);
   };
+
+  useEffect(() => {
+    return () => {
+      // Limpiar estados cuando el componente se desmonte
+      setFecha([]);
+      setIdcomite("");
+      setEvaluador("");
+      setTituloIdea("");
+      setCodigoIdea("");
+      setProponente("");
+      setViewState(false);
+      setSelectedValues({});
+      setObsComite("");
+    };
+  }, []);
 
   return (
     <>
@@ -215,18 +313,28 @@ const TableEvaluationCommittes = () => {
               <table>
                 <thead>
                   <tr className="bg-gray-200">
-                    <th className="border border-black px-4">Comite No.</th>
-                    <th className="border border-black px-4">Día</th>
-                    <th className="border border-black px-4">Mes</th>
-                    <th className="border border-black px-5">Año</th>
+                    <th className="border border-black px-4 text-xs">
+                      Comite No.
+                    </th>
+                    <th className="border border-black px-4 text-xs">Día</th>
+                    <th className="border border-black px-4 text-xs">Mes</th>
+                    <th className="border border-black px-5 text-xs">Año</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-black px-4">{idea.id_idea}</td>
-                    <td className="border border-black px-4">{dia}</td>
-                    <td className="border border-black px-4">{mes}</td>
-                    <td className="border border-black px-5">{año}</td>
+                    <td className="border border-black px-4 text-xs">
+                      {idComite}
+                    </td>
+                    <td className="border border-black px-4 text-xs">
+                      {fecha[2]}
+                    </td>
+                    <td className="border border-black px-4 text-xs">
+                      {fecha[1]}
+                    </td>
+                    <td className="border border-black px-5 text-xs">
+                      {fecha[0]}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -238,9 +346,7 @@ const TableEvaluationCommittes = () => {
         <thead>
           <tr className="flex justify-around bg-gray-200 border border-black">
             <th>NOMBRE EVALUADOR</th>
-            <th className="uppercase">
-              {auth?.user?.username || auth?.username}
-            </th>
+            <th className="uppercase">{evaluador}</th>
           </tr>
           <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
             <th className="tracking-wider">1. INFORMACION DE LA IDEA</th>
@@ -248,17 +354,17 @@ const TableEvaluationCommittes = () => {
 
           <tr className="flex justify-around bg-gray-200 border border-black my-1">
             <th>Titulo de la Idea</th>
-            <th>{idea?.nom_idea}</th>
+            <th>{tituloIdea}</th>
           </tr>
 
           <tr className="flex justify-around bg-gray-200 border border-black my-1">
             <th>Codigo de la Idea</th>
-            <th>{idea?.id_idea}</th>
+            <th>{codigoIdea}</th>
           </tr>
 
           <tr className="flex justify-around bg-gray-200 border border-black my-1">
             <th>Nombre de Quien Presenta la Idea</th>
-            <th>{idea?.nom_proponente}</th>
+            <th>{proponente}</th>
           </tr>
           <tr className="flex justify-center border border-black bg-gray-200 my-1 py-1">
             <th className="tracking-wider">
@@ -424,15 +530,24 @@ const TableEvaluationCommittes = () => {
                 {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
               </div>
               <td className=" flex justify-around">
-                <button
-                  type="submit"
-                  className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
-                >
-                  Guardar
-                </button>
+                {viewState ? (
+                  " "
+                ) : (
+                  <button
+                    type="submit"
+                    className={
+                      viewState
+                        ? `bg-green-400 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36 cursor-not-allowed`
+                        : `bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36`
+                    }
+                    disabled={viewState}
+                  >
+                    Guardar
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={handleClick}
+                  onClick={handleGoBack}
                   className="bg-red-600 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
                 >
                   Regresar

@@ -12,7 +12,7 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["Comite-Criterios", id_comité_criterios],
     queryFn: () => getCommitteCriteria(id_comité_criterios),
-    enabled: !!id_comité_criterios
+    enabled: !!id_comité_criterios,
   });
 
   // Usamos useEffect para manejar las actualizaciones de alerta
@@ -36,12 +36,10 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
   const titles = ["ID", "Descripción del Criterio", "Calificación"];
   const CommitteeCriteria = data?.CommitteeCriteria || [];
   const formattedData = CommitteeCriteria.map((comite_criterio) => {
-    console.log(comite_criterio);
-    
     const rowData = [
-      comite_criterio?.id_comité_criterios,
+      comite_criterio?.id_comite_criterios,
       comite_criterio?.criteria_committees?.des_criterio,
-      comite_criterio?.cal_comité_criterios,
+      comite_criterio?.cal_comite_criterios,
     ];
     return rowData;
   });
@@ -72,9 +70,11 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
                   <span className="sr-only">Cerrar Modal</span>
                 </button>
               </div>
-              {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
               <div className="p-4 md:p-5 space-y-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg max-h-[50vh]">
+                  {alerta.msg && (
+                    <Alerta alerta={alerta} setAlerta={setAlerta} />
+                  )}
                   <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>

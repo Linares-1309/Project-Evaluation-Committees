@@ -69,7 +69,7 @@ const RubricsList = () => {
   };
 
   const titleForm = ["Registrar Rubricas"];
-  const titles = ["ID Rubrica", "Descripción", "Criterios", "Acciones"];
+  const titles = ["ID", "Descripción", "Criterios", "Acciones"];
 
   const ButtonsForOtherModules = (id_rubricas) => [
     <button

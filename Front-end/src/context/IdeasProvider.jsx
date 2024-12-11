@@ -19,6 +19,7 @@ const IdeasProvider = ({ children }) => {
     cal_final: "",
     nom_proponente: "",
   });
+  const [selectedCommitte, setSeletedCommittee] = useState({});
 
   const saveToLocalStorage = (key, value) => {
     const encryptedData = CryptoJS.AES.encrypt(
@@ -31,10 +32,13 @@ const IdeasProvider = ({ children }) => {
   useEffect(() => {
     if (selectedIdIdea && selectedIdIdea.id_idea) {
       saveToLocalStorage("dataIdea", selectedIdIdea);
-
       navigate("/admin/comites/table");
     }
-  }, [selectedIdIdea]);
+    if (selectedCommitte && selectedCommitte?.id_comites_evaluación) {
+      saveToLocalStorage("dataCommitte", selectedCommitte);
+      navigate("/admin/comites/table");
+    }
+  }, [selectedIdIdea, selectedCommitte]);
 
   if (cargando) {
     return (
@@ -62,6 +66,7 @@ const IdeasProvider = ({ children }) => {
         setSeletedIdIdeas,
         cargando,
         setCargando,
+        setSeletedCommittee,
       }}
     >
       {children}

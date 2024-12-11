@@ -112,7 +112,6 @@ const CriteriaList = () => {
 
     return rowData;
   });
-  console.log(formattedData);
   
   const updateTextButton = (text) => {
     setTextButton(text);
