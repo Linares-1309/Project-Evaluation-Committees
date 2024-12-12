@@ -110,7 +110,7 @@ const SetOfCriteriaList = () => {
 
   return (
     <>
-      <h1 className="font-serif font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
         Conjunto de Criterios
       </h1>
       <ModalDialog

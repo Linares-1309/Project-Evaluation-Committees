@@ -115,7 +115,7 @@ const RubricsList = () => {
 
   return (
     <>
-      <h1 className="font-serif font-semibold uppercase text-2xl">Rubricas</h1>
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">Rubricas</h1>
       <ModalWindow
         toggleModal={toggleModal}
         isOpen={isOpen}

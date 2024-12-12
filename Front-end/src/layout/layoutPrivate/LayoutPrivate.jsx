@@ -68,7 +68,7 @@ const LayoutPrivate = () => {
                     />
                   </Link>
                 </div>
-                <Link to="/admin/perfil" className="flex items-center mr-5">
+                <Link to="/admin/ajustes" className="flex items-center mr-5">
                   <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">
                     {auth?.user?.username || auth?.username}
                   </h3>
@@ -87,7 +87,7 @@ const LayoutPrivate = () => {
                         />
                       </button>
                     </div>
-                    {/* <div
+                    <div
                       className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                       id="dropdown-user"
                     >
@@ -134,7 +134,7 @@ const LayoutPrivate = () => {
                           </a>
                         </li>
                       </ul>
-                    </div> */}
+                    </div> 
                   </div>
                 </Link>
               </div>
@@ -143,10 +143,10 @@ const LayoutPrivate = () => {
 
           <aside
             id="logo-sidebar"
-            className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+            className=" fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
             aria-label="Sidebar"
           >
-            <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between shadow-xl">
+            <div className=" h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col justify-between shadow-xl">
               {roleUser === "Admin" ? (
                 <ul className="space-y-2 font-medium select-none mt-4">
                   <li className="">
@@ -271,8 +271,8 @@ const LayoutPrivate = () => {
             </div>
           </aside>
 
-          <div className="p-4 sm:ml-64">
-            <div className="p-10 border-2 border-gray-200 h-auto border-dashed rounded-lg dark:border-gray-700 mt-14 ">
+          <div className="p-4 sm:ml-64 bg-slate-100 h-screen">
+            <div className="p-10 bg-slate-100 rounded-lg dark:border-gray-700 mt-14 ">
               <div className="grid grid-cols-1 gap-0.5 mb-4 text-center">
                 <Outlet />
               </div>

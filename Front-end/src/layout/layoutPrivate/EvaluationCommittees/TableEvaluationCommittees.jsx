@@ -162,7 +162,6 @@ const TableEvaluationCommittes = () => {
   useEffect(() => {
     const idea = loadDataFromLocalStorage("dataIdea");
     const committee = loadDataFromLocalStorage("dataCommitte");
-    console.log("idea de LocalStorage" + idea.value);
 
     if (committee || idea) {
       setCommittee(committee);

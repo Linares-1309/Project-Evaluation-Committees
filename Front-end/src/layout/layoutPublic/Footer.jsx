@@ -6,7 +6,7 @@ import { IoLogoYoutube } from "react-icons/io";
 const Footer = () => {
   return (
     <>
-      <footer className="bg-green-500 w-full h-auto lg:flex lg:flex-row lg:space-x-10 lg:mt-3 sm:flex sm:flex-col sm:space-y-4 p-5">
+      <footer className="bg-green-500 w-full h-auto lg:flex lg:flex-row lg:space-x-10 sm:flex sm:flex-col sm:space-y-4 p-5">
         <div className="bg-white lg:h-auto lg:w-1/3 py-3 px-7 rounded-xl m-auto flex justify-center flex-col sm:w-3/4 sm:mx-5 sm:my-3 mb-8">
           <h4 className="font-black font-serif text-center sm:text-left">
             Servicio Nacional de Aprendizaje -{" "}
