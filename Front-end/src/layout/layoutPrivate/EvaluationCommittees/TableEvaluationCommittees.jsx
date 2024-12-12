@@ -162,8 +162,7 @@ const TableEvaluationCommittes = () => {
   useEffect(() => {
     const idea = loadDataFromLocalStorage("dataIdea");
     const committee = loadDataFromLocalStorage("dataCommitte");
-    console.log(committee);
-    console.log(idea);
+    console.log("idea de LocalStorage" + idea.value);
 
     if (committee || idea) {
       setCommittee(committee);
@@ -172,6 +171,7 @@ const TableEvaluationCommittes = () => {
       navigate("/admin/comites");
     }
   }, [navigate]);
+
   useEffect(() => {
     if (committee) {
       sendTableInformationCommitte();
@@ -193,6 +193,20 @@ const TableEvaluationCommittes = () => {
         committee?.ideas?.proponente?.apellidos_proponente
     );
     setViewState(true);
+  };
+  useEffect(() => {
+    if (idea) {
+      setDtaCommittees();
+    }
+  }, [idea]);
+
+  const setDtaCommittees = async () => {
+    setIdcomite(generateRandomIdCommittee());
+    setFecha([año, mes, dia]);
+    setEvaluador(auth?.user.username);
+    setTituloIdea(idea?.nom_idea);
+    setCodigoIdea(idea?.id_idea);
+    setProponente(idea?.nom_proponente);
   };
 
   const handleSubmit = (e) => {
@@ -264,17 +278,6 @@ const TableEvaluationCommittes = () => {
     setSelectedValues({});
     setObsComite("");
   };
-  const setDtaCommittees = async () => {
-    setIdcomite(generateRandomIdCommittee());
-    setFecha([año, mes, dia]);
-    setEvaluador(auth?.user.username);
-    setTituloIdea(idea?.nom_idea);
-    setCodigoIdea(idea?.id_idea);
-    setProponente(idea?.nom_proponente);
-  };
-  useEffect(() => {
-    setDtaCommittees();
-  }, []);
 
   const handleGoBack = () => {
     clearDataForTable();
