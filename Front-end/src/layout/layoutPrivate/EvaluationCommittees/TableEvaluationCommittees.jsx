@@ -162,25 +162,28 @@ const TableEvaluationCommittes = () => {
   useEffect(() => {
     const idea = loadDataFromLocalStorage("dataIdea");
     const committee = loadDataFromLocalStorage("dataCommitte");
-    if (!idea || !committee) {
-      navigate("/admin/comites/moto");
-    } else {
+    console.log(committee);
+    console.log(idea);
+
+    if (committee || idea) {
       setCommittee(committee);
       setIdea(idea);
+    } else {
+      navigate("/admin/comites");
     }
   }, [navigate]);
   useEffect(() => {
     if (committee) {
-      setDataTable();
+      sendTableInformationCommitte();
     }
   }, [committee]);
 
-  // Se envia la información del comite ya creado anteriormente a la tabla
-  const setDataTable = () => {
+  // Se envia la información del comite ya creado anteriormente a la tabla, ecepto la info de los select
+  const sendTableInformationCommitte = () => {
     if (!committee) return;
-    const fechaArray = committee?.fec_comité_evaluación.split("-");
+    const fechaArray = committee?.fec_comite_evaluacion.split("-");
     setFecha(fechaArray);
-    setIdcomite(committee?.id_comites_evaluación);
+    setIdcomite(committee?.id_comites_evaluacion);
     setEvaluador(committee?.user?.username);
     setTituloIdea(committee?.ideas?.nom_idea);
     setCodigoIdea(committee?.ideas?.id_idea);
@@ -206,14 +209,16 @@ const TableEvaluationCommittes = () => {
     handleGoBack();
   };
 
+  // Enviamos la informacion de los select
   useEffect(() => {
-    if (committee && committee.comite_criterios) {
+    if (committee && committee?.comite_criterios) {
       const SetDataForTable = async () => {
         try {
           const values = committee.comite_criterios.reduce((acc, item) => {
-            acc[item.id_criterio] = item.cal_comité_criterios;
+            acc[item.id_criterio] = item.cal_comite_criterios;
             return acc;
           }, {});
+          console.log(values);
           setSelectedValues((prev) => {
             const isEqual = JSON.stringify(prev) === JSON.stringify(values);
             return isEqual ? prev : values;
@@ -224,7 +229,7 @@ const TableEvaluationCommittes = () => {
         }
       };
       SetDataForTable();
-      setDataTable();
+      sendTableInformationCommitte();
     }
   }, [committee]);
 
@@ -459,6 +464,7 @@ const TableEvaluationCommittes = () => {
                                 )
                               }
                               value={selectedValues[criterio.id_criterio] || ""}
+                              disabled={viewState}
                             >
                               <option defaultValue={" "}>-</option>
                               {Array.from({ length: 10 }, (_, index) => (
@@ -499,6 +505,7 @@ const TableEvaluationCommittes = () => {
                               )
                             }
                             value={selectedValues[criterio.id_criterio] || ""}
+                            disabled={viewState}
                           >
                             <option value="">-</option>
                             <option value="Si">Sí</option>
@@ -528,10 +535,11 @@ const TableEvaluationCommittes = () => {
                   id="message"
                   rows="3"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50
-                 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500 select-none"
                   placeholder="Escribe las observaciones..."
                   onChange={(e) => setObsComite(e?.target?.value)}
                   value={obsComite}
+                  disabled={viewState}
                 ></textarea>
               </td>
             </tr>

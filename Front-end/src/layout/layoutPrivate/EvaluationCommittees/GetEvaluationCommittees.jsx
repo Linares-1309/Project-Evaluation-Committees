@@ -13,9 +13,7 @@ const GetEvaluationCommittees = ({ setCommitteeSelect, id_comite }) => {
   });
 
   useEffect(() => {
-    if (data) {
-      console.log(data.EvaluationCommitte);
-      
+    if (data) {      
       setSeletedCommittee(data.EvaluationCommitte)
     }
   });
