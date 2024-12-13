@@ -113,7 +113,7 @@ const UsersList = () => {
       user?.email,
       user?.userType,
     ];
-    rowData.push(ButtonsForOtherModules(user?.id_criterio));
+    rowData.push(ButtonsForOtherModules(user?.Id_User));
 
     return rowData;
   });
@@ -146,7 +146,7 @@ const UsersList = () => {
         <GetUser Id_User={selectedIdEdit} setUserSelect={setUserSelect} />
       )}
       {selectedIdDelete && (
-        <DeleteUser Id_User={selectedIdDelete} onSuccessDel={refreshData} />
+        <DeleteUser Id_User={selectedIdDelete} onSuccessDel={refreshData} setSelectedIdDelete={setSelectedIdDelete}/>
       )}
     </>
   );

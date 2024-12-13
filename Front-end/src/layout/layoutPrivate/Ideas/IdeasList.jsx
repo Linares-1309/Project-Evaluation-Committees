@@ -172,7 +172,11 @@ const IdeasList = () => {
           />
         ))}
       {selectedIdDelete && (
-        <DeleteIdea id_idea={selectedIdDelete} onSuccessDel={refreshData} />
+        <DeleteIdea
+          id_idea={selectedIdDelete}
+          onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
+        />
       )}
     </>
   );

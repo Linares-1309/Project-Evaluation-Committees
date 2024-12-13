@@ -32,7 +32,7 @@ router.get("/", checkAuthWithRol(["Admin"]), getAllUsers);
 // Ruta para obtener el perfil del usuario (privada)
 router.route("/profile").get(checkAuth(), profileUser)
 router
-  .route("/get/:Id_User")
+  .route("/:Id_User")
   .get(checkAuthWithRol(["Admin"]), getUser)
   .delete(checkAuthWithRol(["Admin"]), deleteUser)
   .put(checkAuth(), updateUser);

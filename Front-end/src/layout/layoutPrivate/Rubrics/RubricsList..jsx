@@ -141,6 +141,7 @@ const RubricsList = () => {
         <DeleteRubrics
           id_rubricas={selectedIdDelete}
           onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
         />
       )}
     </>

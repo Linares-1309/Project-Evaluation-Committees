@@ -141,7 +141,7 @@ export const deleteProponent = async (req, res) => {
   const { id_proponente } = req.params;
   try {
     const deletedProponent = await ProponentModel.findOne({
-      where: id_proponente,
+      where: { id_proponente },
     });
     if (!deletedProponent) {
       return res

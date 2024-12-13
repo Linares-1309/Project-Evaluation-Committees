@@ -147,6 +147,7 @@ const CriteriaList = () => {
         <DeleteCriteria
           id_criterio={selectedIdDelete}
           onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
         />
       )}
     </>

@@ -53,6 +53,8 @@ export const getUser = async (req, res) => {
 // Funcion para eliminar usuarios
 export const deleteUser = async (req, res) => {
   const { Id_User } = req.params;
+  console.log(Id_User);
+  
   try {
     const deleted = await UserModel.destroy({
       where: { Id_User: Id_User },

@@ -144,6 +144,8 @@ export const deleteRubric = async (req, res) => {
     const deletedRubric = await RubricModel.findOne({
       where: { id_rubricas: id_rubricas },
     });
+    console.log(deleteRubric);
+    
     if (!deletedRubric) {
       return res
         .status(404)

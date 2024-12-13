@@ -139,6 +139,7 @@ const SetOfCriteriaList = () => {
         <DeleteSetOfCriteria
           id_conjunto_criterio={selectedIdDelete}
           onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
         />
       )}
     </>

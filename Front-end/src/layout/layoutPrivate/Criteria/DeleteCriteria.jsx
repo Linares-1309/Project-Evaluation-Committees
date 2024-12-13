@@ -1,13 +1,17 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { deleteCriteria } from "./CriteriaFunctions.jsx";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
-  const { mutateAsync: deleteCriteriaById, isLoading: isDeleting } = useMutation(
-    {
+const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
+  // UseRef para evitar múltiples ejecuciones
+  const isProcessing = useRef(false);
+
+  const { mutateAsync: deleteCriteriaById, isLoading: isDeleting } =
+    useMutation({
       mutationFn: deleteCriteria,
       onSuccess: () => {
         onSuccessDel();
@@ -17,6 +21,9 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
           icon: "success",
           confirmButtonColor: "#39a900",
           confirmButtonText: "Ok",
+        }).then(() => {
+          setSelectedIdDelete(null); // Restablece el estado después del éxito
+          isProcessing.current = false; // Libera el bloqueo
         });
       },
       onError: () => {
@@ -26,15 +33,38 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
           icon: "error",
           confirmButtonColor: "#39a900",
           confirmButtonText: "Ok",
+        }).then(() => {
+          setSelectedIdDelete(null); // Restablece el estado después del éxito
+          isProcessing.current = false; // Libera el bloqueo
         });
       },
-    }
-  );
+    });
+
+  // Confirmar eliminación
+  const confirmDelete = () => {
+    Swal.fire({
+      title: "¿Estás seguro de que quieres eliminar este registro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+      } else {
+        handleCancel();
+      }
+    });
+  };
+
   const handleDelete = async () => {
     try {
       await deleteCriteriaById(id_criterio); // Realizar la eliminación
     } catch (error) {
       console.error(error);
+      isProcessing.current = false;
     }
   };
 
@@ -45,29 +75,21 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel }) => {
       icon: "info",
       confirmButtonColor: "#39a900",
       confirmButtonText: "Ok",
+    }).then(() => {
+      setSelectedIdDelete(null); // Restablece el estado después de cancelar
+      isProcessing.current = false; // Libera el bloqueo
     });
   };
 
   // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
-    if (id_criterio) {
-      Swal.fire({
-        title: "¿Estás seguro de que quieres eliminar este registro?",
-        text: "¡No podrás revertir esto!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, borrar!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          handleDelete(); // Ejecutar la eliminación si el usuario confirma
-        } else {
-          handleCancel(); // Cancelar la eliminación si el usuario no confirma
-        }
-      });
+    if (id_criterio && !isProcessing.current) {
+      isProcessing.current = true; // Bloquea múltiples ejecuciones
+      confirmDelete();
     }
   }, [id_criterio]); // Solo ejecutar cuando `id_criterio` esté disponible
+
+  return null;
 };
 
 export default DeleteCriteria;

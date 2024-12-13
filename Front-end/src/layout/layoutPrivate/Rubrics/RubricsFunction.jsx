@@ -57,7 +57,7 @@ export const updateRubrics = async (dataRubrics) => {
 
 export const deleteRubric = async (rubrics) => {
   try {
-    const response = await ClientAxios.delete(`criteria/${rubrics}`);
+    const response = await ClientAxios.delete(`rubrics/${rubrics}`);
     if (response.status === 200) {
       return response.data;
     }

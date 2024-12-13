@@ -154,6 +154,7 @@ const ProponentsList = () => {
         <DeleteProponents
           id_proponente={selectedIdDelete}
           onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
         />
       )}
     </>

@@ -3,9 +3,12 @@
 import { deleteIdea } from "./IdeasFunctions";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const DeleteIdea = ({ id_idea, onSuccessDel }) => {
+const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
+  // UseRef para evitar múltiples ejecuciones
+  const isProcessing = useRef(false);
+
   const { mutateAsync: deleteIdeaById, isLoading: isDeleting } = useMutation({
     mutationFn: deleteIdea,
     onSuccess: () => {
@@ -16,6 +19,9 @@ const DeleteIdea = ({ id_idea, onSuccessDel }) => {
         icon: "success",
         confirmButtonColor: "#39a900",
         confirmButtonText: "Ok",
+      }).then(() => {
+        setSelectedIdDelete(null); // Restablece el estado después del éxito
+        isProcessing.current = false; // Libera el bloqueo
       });
     },
     onError: () => {
@@ -25,15 +31,38 @@ const DeleteIdea = ({ id_idea, onSuccessDel }) => {
         icon: "error",
         confirmButtonColor: "#39a900",
         confirmButtonText: "Ok",
+      }).then(() => {
+        setSelectedIdDelete(null); // Restablece el estado después del éxito
+        isProcessing.current = false; // Libera el bloqueo
       });
     },
   });
+
+  // Confirmar eliminación
+  const confirmDelete = () => {
+    Swal.fire({
+      title: "¿Estás seguro de que quieres eliminar este registro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+      } else {
+        handleCancel();
+      }
+    });
+  };
 
   const handleDelete = async () => {
     try {
       await deleteIdeaById(id_idea); // Realizar la eliminación
     } catch (error) {
       console.error(error);
+      isProcessing.current = false;
     }
   };
 
@@ -44,27 +73,17 @@ const DeleteIdea = ({ id_idea, onSuccessDel }) => {
       icon: "info",
       confirmButtonColor: "#39a900",
       confirmButtonText: "Ok",
+    }).then(() => {
+      setSelectedIdDelete(null); // Restablece el estado después del éxito
+      isProcessing.current = false; // Libera el bloqueo
     });
   };
 
   // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
-    if (id_idea) {
-      Swal.fire({
-        title: "¿Estás seguro de que quieres eliminar este registro?",
-        text: "¡No podrás revertir esto!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, borrar!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          handleDelete(); // Ejecutar la eliminación si el usuario confirma
-        } else {
-          handleCancel(); // Cancelar la eliminación si el usuario no confirma
-        }
-      });
+    if (id_idea && !isProcessing.current) {
+      isProcessing.current = true; // Bloquea múltiples ejecuciones
+      confirmDelete();
     }
   }, [id_idea]); // Solo ejecutar cuando `id_idea` esté disponible
 };

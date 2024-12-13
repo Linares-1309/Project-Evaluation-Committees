@@ -16,7 +16,6 @@ import ProponentsList from "./layout/layoutPrivate/Proponents/ProponentsList.jsx
 import CriteriaList from "./layout/layoutPrivate/Criteria/CriteriaList.jsx";
 import UsersList from "./layout/layoutPrivate/Users/UsersList.jsx";
 import Settings from "./layout/layoutPrivate/Settings/Settings.jsx";
-import UserProfile from "./layout/layoutPrivate/UserProfile/UserProfile.jsx";
 import SetOfCriteriaList from "./layout/layoutPrivate/SetOfCriteria/SetOfCriteriaList.jsx";
 import RubricsList from "./layout/layoutPrivate/Rubrics/RubricsList..jsx";
 import { IdeasProvider } from "./context/IdeasProvider.jsx";
@@ -54,7 +53,6 @@ function App() {
               <Route path="usuarios" element={<UsersList />} />
               <Route path="rubricas" element={<RubricsList />} />
               <Route path="ajustes" element={<Settings />} />
-              <Route path="perfil" element={<UserProfile />} />
             </Route>
             {/* <Route path="*" element={<div>Hola no puedes acceder por que eres calificador</div>} /> */}
             {/* RUTAS DE CALIFICADOR */}

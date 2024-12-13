@@ -152,7 +152,7 @@ const Settings = () => {
                 <form action="#">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="rounded-full h-14 w-14">
-                      <img src="/public/user.png" alt="User" />
+                      <img src="/user.png" alt="User" />
                     </div>
                     <div>
                       <span className="mb-1.5 text-black dark:text-white">
@@ -193,7 +193,7 @@ const Settings = () => {
                   </div>
 
                   <div className="flex justify-end ">
-                    <button className="px-5 py-2 rounded-2xl bg-green-500 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-green-400 transition-colors duration-200 mt-3 text-xs">
+                    <button className="px-5 py-2 rounded-2xl bg-green-500 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-green-400 transition-colors duration-400 mt-3 text-xs">
                       Guardar
                     </button>
                   </div>
