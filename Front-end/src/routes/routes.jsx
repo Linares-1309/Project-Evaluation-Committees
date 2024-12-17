@@ -15,7 +15,7 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <Home />,  // Ruta por defecto en / (home)
+        element: <Home />,
       },
       {
         path: 'contact',
@@ -38,11 +38,10 @@ export const routes = [
   {
     path: '/admin',
     element: <LayoutPrivate />,
-    // Aquí puedes agregar rutas privadas si las tienes
   },
 ];
 
 // Crear el enrutador
 export const router = createRouter({
-  routes,  // Usamos las rutas definidas anteriormente
+  routes, 
 });

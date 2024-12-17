@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
-const IdeasContext = createContext();
+const Context = createContext();
 
-const IdeasProvider = ({ children }) => {
+const Provider = ({ children }) => {
   const navigate = useNavigate();
   const [cargando, setCargando] = useState(false);
   const [selectedIdIdea, setSeletedIdIdeas] = useState({
@@ -36,12 +36,9 @@ const IdeasProvider = ({ children }) => {
     }
     if (selectedCommitte && selectedCommitte?.id_comites_evaluacion) {
       saveToLocalStorage("dataCommitte", selectedCommitte);
-        navigate("/admin/comites/table");
+      navigate("/admin/comites/table");
     }
   }, [selectedIdIdea, selectedCommitte]);
-  // const nav = () => {
-
-  // }
 
   if (cargando) {
     return (
@@ -56,14 +53,14 @@ const IdeasProvider = ({ children }) => {
             wrapperClass=""
             colors={["#306cce", "#72a1ed"]}
           />
-          <h1 className="text-2xl font-serif font-semibold">Loading...</h1>
+          <h1 className="text-2xl font-VampiroOne font-semibold">Loading...</h1>
         </div>
       </>
     );
   }
 
   return (
-    <IdeasContext.Provider
+    <Context.Provider
       value={{
         selectedIdIdea,
         setSeletedIdIdeas,
@@ -73,9 +70,9 @@ const IdeasProvider = ({ children }) => {
       }}
     >
       {children}
-    </IdeasContext.Provider>
+    </Context.Provider>
   );
 };
 
-export { IdeasProvider };
-export default IdeasContext;
+export { Provider };
+export default Context;

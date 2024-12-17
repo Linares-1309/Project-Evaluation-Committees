@@ -15,12 +15,12 @@ const router = express.Router();
 //Area Privada
 router
   .route("/")
-  .get(checkAuthWithRol(["Admin"]), getAllIdeas)
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getAllIdeas)
   .post(checkAuthWithRol(["Admin"]), createNewIdea);
 
 router
   .route("/:id_idea")
-  .get(checkAuthWithRol(["Admin"]), getIdea)
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getIdea)
   .put(checkAuthWithRol(["Admin"]), updateIdea)
   .delete(checkAuthWithRol(["Admin"]), deleteIdea);
 

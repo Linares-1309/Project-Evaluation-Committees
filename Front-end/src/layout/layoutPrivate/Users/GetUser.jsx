@@ -1,20 +1,23 @@
 import { getUser } from "./UsersFunctions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import useProvider from "../../../hooks/useProvider";
 
-const GetUser = ({ Id_User, setUserSelect }) => {
+const GetUser = () => {
+  const { setUserSelect, selectedIdEdit } = useProvider()
+
   const { data } = useQuery({
-    queryKey: ["user-by-id", Id_User],
-    queryFn: () => getUser(Id_User),
-    enabled: !!Id_User,
+    queryKey: ["user-by-id", selectedIdEdit],
+    queryFn: () => getUser(selectedIdEdit),
+    enabled: !!selectedIdEdit,
   });
   useEffect(() => {
     if (data) {
       setUserSelect({
-        Id_User: data?.Id_User,
-        username: data?.username,
-        email: data?.email,
-        userType: data?.userType,
+        Id_User: data?.user?.Id_User,
+        username: data?.user?.username,
+        email: data?.user?.email,
+        userType: data?.user?.userType,
       });
     }
   }, [data, setUserSelect]);

@@ -34,11 +34,11 @@ export const getUser = async (req, res) => {
   const { Id_User } = req.params;
   try {
     const user = await UserModel.findOne({
-      where: { userType: "Calificador", Id_User: Id_User },
+      where: { Id_User: Id_User },
       attributes: { exclude: ["password", "token", "create_time"] },
     });
     if (user) {
-      return res.status(200).json(user);
+      return res.status(200).json({ user: user });
     } else {
       return res.status(404).json({ msg: "El usuario no ha sido encontrado!" });
     }
@@ -54,7 +54,7 @@ export const getUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const { Id_User } = req.params;
   console.log(Id_User);
-  
+
   try {
     const deleted = await UserModel.destroy({
       where: { Id_User: Id_User },
@@ -76,11 +76,15 @@ export const deleteUser = async (req, res) => {
 
 // Funcion para actualizar username
 export const updateUser = async (req, res) => {
-  const { username } = req.body;
+  const { fullName, username, phoneNumber, email, userBiography } = req.body;
   try {
     const [updateUser] = await UserModel.update(
       {
-        username: username,
+        fullName,
+        username,
+        phoneNumber,
+        email,
+        userBiography,
       },
       {
         where: { Id_User: req.params.Id_User },
@@ -93,7 +97,7 @@ export const updateUser = async (req, res) => {
     } else {
       return res
         .status(200)
-        .json({ msg: "Usuario actualizado satisfactoriamente!" });
+        .json({ msg: "Sus datos han sido actualizados satisfactoriamente!" });
     }
   } catch (error) {
     logger.error(`Ocurrio un error al actualizar el usuario: ${error}`);
@@ -118,7 +122,7 @@ export const login = async (req, res) => {
       return;
     }
     // Comprobar si la contraseña es correcta
-    if ((await user.verifyPassword(password))) {
+    if (await user.verifyPassword(password)) {
       const userString = user.Id_User.toString();
       const Id_UserHash = Buffer.from(userString).toString("base64");
       // Si la contraseña es correcta se retorna los datos del usuario logeado
@@ -163,8 +167,7 @@ export const createUser = async (req, res) => {
     const emailRegex = /(gmail\.com|hotmail\.com|sena\.com)/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
-        msg:
-          "El correo electrónico debe terminar en @gmail.com o @hotmail.com",
+        msg: "El correo electrónico debe terminar en @gmail.com o @hotmail.com",
       });
     }
 

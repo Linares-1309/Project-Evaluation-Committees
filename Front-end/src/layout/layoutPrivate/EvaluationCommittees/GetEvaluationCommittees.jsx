@@ -2,10 +2,10 @@
 import { getEvaluationCommitte } from "./EvaluationCommitteesFunctions.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import useIdeas from "../../../hooks/useIdeas.jsx";
+import useProvider from "../../../hooks/useProvider.jsx";
 
 const GetEvaluationCommittees = ({ setCommitteeSelect, id_comite }) => {
-  const { setSeletedCommittee } = useIdeas();
+  const { setSeletedCommittee } = useProvider();
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["committe-for-table", id_comite],
     queryFn: () => getEvaluationCommitte(id_comite),

@@ -87,15 +87,16 @@ export const updateUser = async (datos) => {
       },
     };
 
-    const response = await ClientAxios.update(
-      `/user/${datos.Id_User}`,
-      { username: datos.username },
+    const response = await ClientAxios.put(
+      `/user/${datos.Id_User}`, datos,
       config
     );
     if (response.status === 200) {
       return response.data;
     }
   } catch (error) {
+    console.log(error);
+    
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };

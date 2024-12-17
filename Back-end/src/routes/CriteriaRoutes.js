@@ -15,7 +15,7 @@ const router = express.Router();
 //Area Privada
 router
   .route("/")
-  .get(checkAuthWithRol(["Admin"]), getAllCriteria)
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getAllCriteria)
   .post(checkAuthWithRol(["Admin"]), createCriteria);
 
 router

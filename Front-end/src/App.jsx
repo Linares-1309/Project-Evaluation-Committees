@@ -18,15 +18,16 @@ import UsersList from "./layout/layoutPrivate/Users/UsersList.jsx";
 import Settings from "./layout/layoutPrivate/Settings/Settings.jsx";
 import SetOfCriteriaList from "./layout/layoutPrivate/SetOfCriteria/SetOfCriteriaList.jsx";
 import RubricsList from "./layout/layoutPrivate/Rubrics/RubricsList..jsx";
-import { IdeasProvider } from "./context/IdeasProvider.jsx";
+import { Provider } from "./context/Provider.jsx";
 
 function App() {
   return (
+    // Necesito manejar un perfil de usuario, ya la parte del backend esta lista, en el front saco el rol de usuario del jwt, pero quiero que me digas como manejar las vistas dependiendo del rol del usuario
     <>
       <BrowserRouter
         future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
-        <IdeasProvider>
+        <Provider>
           <Routes>
             {/* RUTAS PUBLICAS, NO REQUIEREN VALIDACION DE TOKEN */}
             <Route path="/" element={<LayoutPublic />}>
@@ -57,7 +58,7 @@ function App() {
             {/* <Route path="*" element={<div>Hola no puedes acceder por que eres calificador</div>} /> */}
             {/* RUTAS DE CALIFICADOR */}
           </Routes>
-        </IdeasProvider>
+        </Provider>
       </BrowserRouter>
     </>
   );

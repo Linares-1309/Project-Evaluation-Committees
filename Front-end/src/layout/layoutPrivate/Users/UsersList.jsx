@@ -2,12 +2,12 @@ import { getAllUsers } from "./UsersFunctions";
 import { useState, useEffect } from "react";
 import Alerta from "../../../components/Alerta";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaEdit } from "react-icons/fa";
+// import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import WriteTable from "../../../tables/DataTables";
 import ModalWindow from "../../../components/ModalDialog";
 
-import GetUser from "./GetUser";
+// import GetUser from "./GetUser";
 import DeleteUser from "./DeleteUser";
 import PostUser from "./PostUser";
 
@@ -15,17 +15,10 @@ const UsersList = () => {
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
-  const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [userSelect, setUserSelect] = useState({
-    Id_User: "",
-    username: "",
-    email: "",
-    userType: "",
-  });
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -33,9 +26,9 @@ const UsersList = () => {
 
   const queryClient = useQueryClient();
 
-  const handleEditClick = (Id_User) => {
-    setSelectedIdEdit(Id_User);
-  };
+  // const handleEditClick = (Id_User) => {
+  //   setSelectedIdEdit(Id_User);
+  // };
 
   const handleDeleteClick = (Id_User) => {
     setSelectedIdDelete(Id_User);
@@ -76,24 +69,12 @@ const UsersList = () => {
     "Documento",
     "Nombre de Usuario",
     "Correo",
+    "Telefono",
     "Tipo de Usuario",
     "Acciones",
   ];
 
   const ButtonsForOtherModules = (Id_User) => [
-    <button
-      className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="get"
-      title="Editar"
-      onClick={() => [
-        handleEditClick(Id_User),
-        toggleModal(),
-        setTextButton("Actualizar"),
-      ]}
-    >
-      <FaEdit className="mr-1" />
-      Editar
-    </button>,
     <button
       className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="delete"
@@ -109,8 +90,9 @@ const UsersList = () => {
   const formattedData = users.map((user) => {
     const rowData = [
       user?.Id_User,
-      user?.username,
+      user?.fullName,
       user?.email,
+      user?.phoneNumber,
       user?.userType,
     ];
     rowData.push(ButtonsForOtherModules(user?.Id_User));
@@ -132,7 +114,7 @@ const UsersList = () => {
         isOpen={isOpen}
         form={
           <PostUser
-            userSelect={userSelect}
+            // userSelect={userSelect}
             textButton={textButton}
             onSuccessSave={refreshData}
           />
@@ -142,9 +124,9 @@ const UsersList = () => {
       />
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
-      {selectedIdEdit && (
+      {/* {selectedIdEdit && (
         <GetUser Id_User={selectedIdEdit} setUserSelect={setUserSelect} />
-      )}
+      )} */}
       {selectedIdDelete && (
         <DeleteUser Id_User={selectedIdDelete} onSuccessDel={refreshData} setSelectedIdDelete={setSelectedIdDelete}/>
       )}

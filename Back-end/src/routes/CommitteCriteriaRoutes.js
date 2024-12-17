@@ -10,6 +10,10 @@ const routerC = express.Router();
 
 routerC.route("/").get(checkAuthWithRol(["Admin"]), getAllCommitteCriteria);
 
-routerC.get("/:id_comites_evaluacion", checkAuthWithRol(["Admin"]), getCommitteCriteria)
+routerC.get(
+  "/:id_comites_evaluacion",
+  checkAuthWithRol(["Admin"]),
+  getCommitteCriteria
+);
 
 export default routerC;

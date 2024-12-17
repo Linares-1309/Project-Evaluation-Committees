@@ -1,18 +1,92 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { BsPersonFill } from "react-icons/bs";
 import {
   MdOutlinePhone,
   MdEmail,
   MdDriveFileRenameOutline,
 } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
 import { FaUpload } from "react-icons/fa6";
 import { TfiWrite } from "react-icons/tfi";
+import useAuth from "../../../hooks/useAuth";
+import GetUser from "../Users/GetUser";
+import { updateUser } from "../Users/UsersFunctions";
+import Alerta from "../../../components/Alerta";
+import { useEffect, useState } from "react";
+const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
 const Settings = () => {
+  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [userBiography, setUserBiography] = useState("");
+  const [userPotho, setUserPotho] = useState("");
+
+  const [alerta, setAlerta] = useState({});
+
+  const { auth } = useAuth();
+
+  const setDataUserForm = () => {
+    setFullName(auth?.user?.fullName);
+    setUserName(auth?.user?.username);
+    setPhoneNumber(auth?.user?.phoneNumber);
+    setEmail(auth?.user?.email);
+    setUserBiography(auth?.user?.userBiography);
+    setUserPotho(auth?.user?.userPotho);
+  };
+  // Actualizar el usuario
+  const { mutate } = useMutation({
+    mutationFn: updateUser,
+    onSuccess: (data) => {
+      setAlerta({
+        msg: data.msg,
+        error: false,
+      });
+    },
+    onError: (error) => {
+      setAlerta({
+        msg: error.message,
+        error: true,
+      });
+    },
+  });
+
+  useEffect(() => {
+    setDataUserForm();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      fullName === auth?.user?.fullName &&
+      userName === auth?.user?.username &&
+      phoneNumber === auth?.user?.phoneNumber &&
+      email === auth?.user?.email &&
+      userBiography === auth?.user?.userBiography
+    ) {
+      setAlerta({
+        msg: "Los datos no han cambiado!",
+        error: true,
+      });
+      return;
+    }
+    const data = {
+      Id_User: auth?.user?.Id_User,
+      fullName,
+      username: userName,
+      phoneNumber,
+      email,
+      userBiography,
+    };
+    mutate(data);
+  };
+
   return (
     <>
       <div className="mx-auto max-w-270">
-        <h1 className="mb-5 text-2xl font-semibold text-black text-start">
-          Ajustes
+        <h1 className="mb-5 text-2xl font-semibold text-black text-start font-RobotoSlab">
+          Ajustes de <span className="text-green-500">Cuenta</span>
         </h1>
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
@@ -23,7 +97,10 @@ const Settings = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form onSubmit={handleSubmit}>
+                  {alerta.msg && (
+                    <Alerta alerta={alerta} setAlerta={setAlerta} />
+                  )}
                   <div className="flex flex-col gap-6 mb-4 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
@@ -42,6 +119,8 @@ const Settings = () => {
                           name="fullName"
                           id="fullName"
                           placeholder="Ingrese su Nombre..."
+                          value={fullName}
+                          onChange={(e) => setFullName(e?.target?.value)}
                         />
                       </div>
                     </div>
@@ -63,6 +142,8 @@ const Settings = () => {
                           name="phoneNumber"
                           id="phoneNumber"
                           placeholder="Ingrese su Numero..."
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e?.target?.value)}
                         />
                       </div>
                     </div>
@@ -85,6 +166,8 @@ const Settings = () => {
                         name="emailAddress"
                         id="emailAddress"
                         placeholder="correo@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e?.target?.value)}
                       />
                     </div>
                   </div>
@@ -106,6 +189,8 @@ const Settings = () => {
                         name="Username"
                         id="Username"
                         placeholder="Ingresa un Nombre de Usuario..."
+                        value={userName}
+                        onChange={(e) => setUserName(e?.target?.value)}
                       />
                     </div>
                   </div>
@@ -123,11 +208,13 @@ const Settings = () => {
                       </span>
 
                       <textarea
-                        className="w-full py-2 pr-5 text-black border rounded bg-gray-50 focus:border-green-500 focus-visible:outline-none ps-8 focus:ring-1 focus:ring-green-500"
+                        className="w-full py-2 pr-9 text-black border rounded bg-gray-50 focus:border-green-500 focus-visible:outline-none ps-9 focus:ring-1 focus:ring-green-500 text-sm"
                         name="bio"
                         id="bio"
                         rows={5}
                         placeholder="Aquí puedes escribir tu biorafía..."
+                        value={userBiography}
+                        onChange={(e) => setUserBiography(e?.target?.value)}
                       ></textarea>
                     </div>
                   </div>
@@ -152,17 +239,27 @@ const Settings = () => {
                 <form action="#">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="rounded-full h-14 w-14">
-                      <img src="/user.png" alt="User" />
+                      <img
+                        width="80px"
+                        src={`${URI_FOTOS}${userPotho}`}
+                        alt="No Foto"
+                      />
                     </div>
                     <div>
                       <span className="mb-1.5 text-black dark:text-white">
                         Editar Foto
                       </span>
                       <span className="flex gap-2.5">
-                        <button type="button" className="text-sm text-red-600 hover:underline">
+                        <button
+                          type="button"
+                          className="text-sm text-red-600 hover:underline"
+                        >
                           Borrar
                         </button>
-                        <button type="button" className="text-sm text-blue-600 hover:underline">
+                        <button
+                          type="button"
+                          className="text-sm text-blue-600 hover:underline"
+                        >
                           Actualizar
                         </button>
                       </span>
@@ -177,6 +274,7 @@ const Settings = () => {
                       type="file"
                       accept="image/*"
                       className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
+                      onChange={(e) => setUserPotho(e.target.files[0])}
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span>
@@ -203,6 +301,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      <GetUser />
     </>
   );
 };

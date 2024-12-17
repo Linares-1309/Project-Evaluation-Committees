@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 // Variables necesarias para ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log(__dirname);
 
 dotenv.config();
 
@@ -81,11 +82,16 @@ app.use("/api/evaluation-committees", EvaluationCommitteesRoutes);
 app.use("/api/rubrics", RubricsRoutes);
 app.use("/api/committe-criterias", routerC);
 
-// Rutas estáticas
-app.use(
-  "/public/uploads/",
-  express.static(path.join(__dirname, "public/uploads"))
-);
+// Navegar hacia arriba desde src para encontrar public
+const publicDir = path.resolve(__dirname, "../public");
+
+// Servir la carpeta "public"
+app.use(express.static(publicDir));
+
+// Ruta específica para "uploads"
+app.use("/public/uploads", express.static(path.join(publicDir, "uploads")));
+
+// Ruta específica para "assets"
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 // Manejo de errores

@@ -1,21 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createUser, updateUser } from "./UsersFunctions";
 import Alerta from "../../../components/Alerta";
 import { GoNumber } from "react-icons/go";
-import {
-  MdDriveFileRenameOutline,
-  MdEmail,
-  MdOutlinePassword,
-} from "react-icons/md";
+import { MdEmail, MdOutlinePassword } from "react-icons/md";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { BsFillSendFill } from "react-icons/bs";
 
-const PostUser = ({ userSelect, textButton, onSuccessUpdate }) => {
+const PostUser = ({ textButton, onSuccessUpdate }) => {
   const [idUser, setIdUser] = useState("");
-  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -74,7 +68,7 @@ const PostUser = ({ userSelect, textButton, onSuccessUpdate }) => {
         msg: "Las contraseñas no coinciden!",
         error: true,
       });
-      return
+      return;
     }
     if (!idUser || idUser.length < 8) {
       setAlerta({
@@ -84,7 +78,7 @@ const PostUser = ({ userSelect, textButton, onSuccessUpdate }) => {
       return;
     }
 
-    if (!userName || !email || !userType || !password) {
+    if (!email || !userType || !password) {
       setAlerta({
         msg: "Los campos son obligatorios!",
         error: true,
@@ -94,33 +88,21 @@ const PostUser = ({ userSelect, textButton, onSuccessUpdate }) => {
     if (textButton === "Enviar") {
       const data = {
         idUser,
-        userName,
         email,
         password,
         userType,
       };
       mutate(data);
     } else if (textButton === "Actualizar") {
-      const { idUser } = userSelect;
+      // const { idUser } = userSelect;
       const data = {
         idUser,
-        userName,
         email,
         userType,
       };
       mutateUpdate(data);
     }
   };
-  const setDataForm = () => {
-    setIdUser(userSelect?.Id_User),
-      setUserName(userSelect?.username),
-      setEmail(userSelect?.email),
-      setUserType(userSelect?.userType);
-  };
-
-  useEffect(() => {
-    setDataForm();
-  }, [userSelect]);
 
   return (
     <>
@@ -157,31 +139,6 @@ const PostUser = ({ userSelect, textButton, onSuccessUpdate }) => {
                   value={idUser}
                   onChange={(e) => setIdUser(e?.target?.value)}
                   autoFocus
-                />
-              </div>
-            </div>
-            <div className="mb-3 w-full">
-              <label
-                htmlFor="name"
-                className="block text-base font-medium text-gray-700 select-none text-start mb-1"
-              >
-                Nombres:
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                  <MdDriveFileRenameOutline
-                    size={18}
-                    className="text-gray-600"
-                  />
-                </div>
-                <input
-                  type="text"
-                  id="name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Ingresa Nombres y Apellidos..."
-                  required
-                  value={userName}
-                  onChange={(e) => setUserName(e?.target?.value)}
                 />
               </div>
             </div>

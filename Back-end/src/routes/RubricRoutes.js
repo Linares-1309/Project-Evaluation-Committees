@@ -9,7 +9,7 @@ const router = express.Router();
 //Area Privada
 router
   .route("/")
-  .get(checkAuthWithRol(["Admin"]), getAllRubrics)
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getAllRubrics)
   .post(checkAuthWithRol(["Admin"]), createRubrica);
 
 router

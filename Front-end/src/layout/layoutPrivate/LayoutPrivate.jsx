@@ -13,6 +13,7 @@ import { VscLightbulbAutofix } from "react-icons/vsc";
 import { RiLogoutCircleFill } from "react-icons/ri";
 
 import { Link, Navigate, Outlet } from "react-router-dom";
+const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
 const LayoutPrivate = () => {
   const { auth, cargando, cerrarSesion, roleUser } = useAuth();
@@ -76,13 +77,13 @@ const LayoutPrivate = () => {
                     <div>
                       <button
                         type="button"
-                        className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                        className="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 border-2 "
                         aria-expanded="false"
                       >
-                        <span className="sr-only">Open user menu</span>
+                        <span className="sr-only">Open Menu</span>
                         <img
-                          className="w-10 h-10 rounded-full"
-                          src="/user.png"
+                          className="w-12 h-12 rounded-full"
+                          src={`${URI_FOTOS}${auth?.user?.userPotho}`}
                           alt="user photo"
                         />
                       </button>
@@ -134,7 +135,7 @@ const LayoutPrivate = () => {
                           </a>
                         </li>
                       </ul>
-                    </div> 
+                    </div>
                   </div>
                 </Link>
               </div>
@@ -253,7 +254,43 @@ const LayoutPrivate = () => {
                   </li>
                 </ul>
               ) : (
-                <h1>Hola {roleUser}</h1>
+                <ul className="space-y-2 font-medium select-none mt-4">
+                  <li>
+                    <Link
+                      to="/admin"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <FaHome size={23} className="text-green-500" />
+
+                      <span className="ms-3">Inicio</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/ideas"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <VscLightbulbAutofix
+                        size={23}
+                        className="text-green-500"
+                      />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Ideas
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/ajustes"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group font-serif focus:ring-1 focus:outline-none focus:ring-green-400"
+                    >
+                      <IoSettings size={23} className="text-green-500" />
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Ajustes
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
               )}
               <ul>
                 <li className="space-y-2 font-medium">
@@ -271,7 +308,7 @@ const LayoutPrivate = () => {
             </div>
           </aside>
 
-          <div className="p-4 sm:ml-64 bg-slate-100 h-screen">
+          <div className="p-4 sm:ml-64 bg-slate-100 min-h-screen">
             <div className="p-10 bg-slate-100 rounded-lg dark:border-gray-700 mt-14 ">
               <div className="grid grid-cols-1 gap-0.5 mb-4 text-center">
                 <Outlet />
@@ -282,6 +319,7 @@ const LayoutPrivate = () => {
           </div>
         </>
       ) : (
+        // Necesitp aplicar ese bg-slate pero solo se aplica a una parte de la pantalla, necesito que ocupe todo el alto disponible
         <Navigate to="/" />
       )}
     </>

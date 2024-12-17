@@ -2,10 +2,11 @@
 import { getIdea } from "./IdeasFunctions";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import useIdeas from "../../../hooks/useIdeas";
+import useProvider from "../../../hooks/useProvider";
+
 
 const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
-  const { setSeletedIdIdeas } = useIdeas();
+  const { setSeletedIdIdeas } = useProvider();
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["idea-by-id", id_idea],
     queryFn: () => getIdea(id_idea),
