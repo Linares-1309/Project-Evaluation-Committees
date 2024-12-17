@@ -9,6 +9,7 @@ import GetSetOfCriteria from "./getSetOfCriteria.jsx";
 import DeleteSetOfCriteria from "./DeleteSetOfCriteria.jsx";
 import ModalDialog from "../../../components/ModalDialog.jsx";
 import PostSetOfCriteria from "./PostSetOfCriteria.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 
 const SetOfCriteriaList = () => {
   const [alerta, setAlerta] = useState({});
@@ -17,11 +18,13 @@ const SetOfCriteriaList = () => {
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [textButton, setTextButton] = useState("Enviar");
+  const { roleUser } = useAuth();
 
   const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({
     id_conjunto_criterio: "",
     des_conjunto_criterio: "",
   });
+  const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -68,29 +71,34 @@ const SetOfCriteriaList = () => {
 
   const titleForm = ["Registrar Conjunto de Criterios de Evluación"];
   const titles = ["ID", "Descripción", "Acciones"];
-  const ButtonsForOtherModules = (id_conjunto_criterio) => [
-    <button
-      className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="get"
-      title="Editar"
-      onClick={() => [
-        handleEditClick(id_conjunto_criterio),
-        toggleModal(),
-        setTextButton("Actualizar"),
-      ]}
-    >
-      <FaEdit className="mr-1" />
-      Editar
-    </button>,
-    <button
-      className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="delete"
-      title="Eliminar"
-      onClick={() => handleDeleteClick(id_conjunto_criterio)}
-    >
-      <MdDelete className="mr-1" /> Eliminar
-    </button>,
-  ];
+
+  const ButtonsForOtherModules = (id_conjunto_criterio) => {
+    return isAdmin
+      ? [
+          <button
+            className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="get"
+            title="Editar"
+            onClick={() => [
+              handleEditClick(id_conjunto_criterio),
+              toggleModal(),
+              setTextButton("Actualizar"),
+            ]}
+          >
+            <FaEdit className="mr-1" />
+            Editar
+          </button>,
+          <button
+            className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="delete"
+            title="Eliminar"
+            onClick={() => handleDeleteClick(id_conjunto_criterio)}
+          >
+            <MdDelete className="mr-1" /> Eliminar
+          </button>,
+        ]
+      : ["Sin acceso a acciones"];
+  };
 
   const setOfCriteria = data?.setOfCriteria || [];
 
@@ -110,22 +118,24 @@ const SetOfCriteriaList = () => {
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
         Conjunto de Criterios
       </h1>
-      <ModalDialog
-        toggleModal={toggleModal}
-        isOpen={isOpen}
-        form={
-          <PostSetOfCriteria
-            onSuccessSave={refreshData}
-            setOfCriteriaSelect={setOfCriteriaSelect}
-            textButton={textButton}
-          />
-        }
-        titleForm={titleForm}
-        updateTextButton={updateTextButton}
-      />
+      {isAdmin && (
+        <ModalDialog
+          toggleModal={toggleModal}
+          isOpen={isOpen}
+          form={
+            <PostSetOfCriteria
+              onSuccessSave={refreshData}
+              setOfCriteriaSelect={setOfCriteriaSelect}
+              textButton={textButton}
+            />
+          }
+          titleForm={titleForm}
+          updateTextButton={updateTextButton}
+        />
+      )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
 

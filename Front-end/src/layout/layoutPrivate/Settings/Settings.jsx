@@ -1,18 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+// Iconos de componente
 import { BsPersonFill } from "react-icons/bs";
 import {
   MdOutlinePhone,
   MdEmail,
   MdDriveFileRenameOutline,
 } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
 import { FaUpload } from "react-icons/fa6";
 import { TfiWrite } from "react-icons/tfi";
-import useAuth from "../../../hooks/useAuth";
-import GetUser from "../Users/GetUser";
-import { updateUser } from "../Users/UsersFunctions";
-import Alerta from "../../../components/Alerta";
+
+// Librerias
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+
+// Componentes
+import { updateUser } from "../Users/UsersFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+import GetUser from "../Users/GetUser.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
+
 const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
 const Settings = () => {

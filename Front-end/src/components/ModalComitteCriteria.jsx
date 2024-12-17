@@ -23,8 +23,10 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
         error: false,
       });
     } else if (isError) {
+      console.log(error);
+      
       setAlerta({
-        msg: error?.message?.message || "Hubo un error!",
+        msg: error?.message || "Hubo un error!",
         error: true,
       });
     } else {

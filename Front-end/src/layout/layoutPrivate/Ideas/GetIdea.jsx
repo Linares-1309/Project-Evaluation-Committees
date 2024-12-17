@@ -6,7 +6,7 @@ import useProvider from "../../../hooks/useProvider";
 
 
 const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
-  const { setSeletedIdIdeas } = useProvider();
+  const { setSelectedIdIdeas } = useProvider();
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["idea-by-id", id_idea],
     queryFn: () => getIdea(id_idea),
@@ -36,7 +36,7 @@ const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
       });
     }
     if (dataForCommitte) {
-      setSeletedIdIdeas({
+      setSelectedIdIdeas({
         id_idea: dataForCommitte?.id_idea,
         nom_idea: dataForCommitte?.nom_idea,
         estado_idea: dataForCommitte?.estado_idea,
@@ -48,7 +48,7 @@ const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
           dataForCommitte?.proponente?.apellidos_proponente,
       });
     }
-  }, [data, dataForCommitte, setIdeaSelect, setSeletedIdIdeas]);
+  }, [data, dataForCommitte, setIdeaSelect, setSelectedIdIdeas]);
 };
 
 export default GetIdea;

@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { deleteUser } from "./UsersFunctions";
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect, useRef } from "react";
+
+// Componentes
+import { deleteUser } from "./UsersFunctions.jsx";
 
 const DeleteUser = ({ Id_User, onSuccessDel, setSelectedIdDelete }) => {
   // UseRef para evitar múltiples ejecuciones

@@ -1,4 +1,5 @@
-import ClientAxios from "../../../config/AxiosConfig";
+// Instancia de Axios 
+import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllUsers = async () => {
   try {

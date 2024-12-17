@@ -9,6 +9,7 @@ import ModalWindow from "../../../components/ModalDialog.jsx";
 import GetProponents from "./GetProponents.jsx";
 import DeleteProponents from "./DeleteProponents.jsx";
 import PostProponents from "./PostProponents.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 
 const ProponentsList = () => {
   const [alerta, setAlerta] = useState({});
@@ -16,6 +17,7 @@ const ProponentsList = () => {
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
+  const { roleUser } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,6 +28,7 @@ const ProponentsList = () => {
     correo_proponente: "",
     telefono_proponente: "",
   });
+  const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -81,7 +84,9 @@ const ProponentsList = () => {
     "Acciones",
   ];
 
-  const ButtonsForOtherModules = (id_proponente) => [
+  const ButtonsForOtherModules = (id_proponente) => {
+    return isAdmin ? [
+
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
@@ -103,7 +108,8 @@ const ProponentsList = () => {
     >
       <MdDelete className="mr-1" /> Eliminar
     </button>,
-  ];
+    ] : ["Sin acceso a acciones"]
+  };
 
   const proponents = data?.proponents || [];
 
@@ -126,22 +132,24 @@ const ProponentsList = () => {
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
         Proponentes
       </h1>
-      <ModalWindow
-        toggleModal={toggleModal}
-        isOpen={isOpen}
-        form={
-          <PostProponents
-            proponentSelect={proponentSelect}
-            textButton={textButton}
-            onSuccessUpdate={refreshData}
-          />
-        }
-        titleForm={titleForm}
-        updateTextButton={updateTextButton}
-      />
+      {isAdmin && (
+        <ModalWindow
+          toggleModal={toggleModal}
+          isOpen={isOpen}
+          form={
+            <PostProponents
+              proponentSelect={proponentSelect}
+              textButton={textButton}
+              onSuccessUpdate={refreshData}
+            />
+          }
+          titleForm={titleForm}
+          updateTextButton={updateTextButton}
+        />
+      )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (

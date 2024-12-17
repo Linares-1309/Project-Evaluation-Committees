@@ -1,12 +1,17 @@
 /* eslint-disable react/prop-types */
+// Iconos del componente
+import { GoNumber } from "react-icons/go";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { MdEmail, MdOutlinePassword } from "react-icons/md";
+import { BsFillSendFill } from "react-icons/bs";
+
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { createUser, updateUser } from "./UsersFunctions";
-import Alerta from "../../../components/Alerta";
-import { GoNumber } from "react-icons/go";
-import { MdEmail, MdOutlinePassword } from "react-icons/md";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { BsFillSendFill } from "react-icons/bs";
+
+// Componentes
+import { createUser, updateUser } from "./UsersFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
 
 const PostUser = ({ textButton, onSuccessUpdate }) => {
   const [idUser, setIdUser] = useState("");

@@ -4,14 +4,16 @@ import { useState, createContext, useEffect } from "react";
 import { Hourglass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
+import useAuth from "../hooks/useAuth";
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
 const Context = createContext();
 
 const Provider = ({ children }) => {
+  const { roleUser } = useAuth();
   const navigate = useNavigate();
   const [cargando, setCargando] = useState(false);
-  const [selectedIdIdea, setSeletedIdIdeas] = useState({
+  const [selectedIdIdea, setSelectedIdIdeas] = useState({
     id_idea: "",
     nom_idea: "",
     estado_idea: "",
@@ -32,11 +34,19 @@ const Provider = ({ children }) => {
   useEffect(() => {
     if (selectedIdIdea && selectedIdIdea.id_idea) {
       saveToLocalStorage("dataIdea", selectedIdIdea);
-      navigate("/admin/comites/table");
+      if (roleUser === "Admin") {
+        navigate("/admin/comites/table");
+      } else if (roleUser === "Calificador") {
+        navigate("/user/comites/table");
+      }
     }
     if (selectedCommitte && selectedCommitte?.id_comites_evaluacion) {
       saveToLocalStorage("dataCommitte", selectedCommitte);
-      navigate("/admin/comites/table");
+      if (roleUser === "Admin") {
+        navigate("/admin/comites/table");
+      } else if (roleUser === "Calificador") {
+        navigate("/user/comites/table");
+      }
     }
   }, [selectedIdIdea, selectedCommitte]);
 
@@ -63,9 +73,9 @@ const Provider = ({ children }) => {
     <Context.Provider
       value={{
         selectedIdIdea,
-        setSeletedIdIdeas,
         cargando,
         setCargando,
+        setSelectedIdIdeas,
         setSeletedCommittee,
       }}
     >

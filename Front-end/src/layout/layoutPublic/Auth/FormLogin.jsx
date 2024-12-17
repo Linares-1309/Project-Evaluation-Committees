@@ -40,11 +40,19 @@ const Login = () => {
         msg: data.msg,
         error: false,
       });
-      const timer = setTimeout(() => {
-        navigate("/admin");
-      }, 1000);
+      if (decodedToken.rol === "Admin") {
+        const timer = setTimeout(() => {
+          navigate("/admin");
+        }, 1000);
 
-      return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
+      } else if (decodedToken.rol === "Calificador") {
+        const timer = setTimeout(() => {
+          navigate("/user");
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }
     },
     onError: (error) => {
       // Limpiar el localStorage

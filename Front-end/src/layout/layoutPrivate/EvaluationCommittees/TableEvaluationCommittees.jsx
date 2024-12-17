@@ -11,13 +11,15 @@ import { getAllCriteria } from "../Criteria/CriteriaFunctions";
 import { getAllRubrics } from "../Rubrics/RubricsFunction";
 import Alerta from "../../../components/Alerta";
 import useAuth from "../../../hooks/useAuth";
+import useProvider from "../../../hooks/useProvider.jsx";
 
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
 const TableEvaluationCommittes = () => {
   const [alerta, setAlerta] = useState({});
-  const { auth } = useAuth();
+  const { auth, roleUser } = useAuth();
   const navigate = useNavigate();
+  const { setSelectedIdIdeas, setSeletedCommittee } = useProvider()
 
   // State para la tabla de los comite
   const [idComite, setIdcomite] = useState("");
@@ -167,7 +169,11 @@ const TableEvaluationCommittes = () => {
       setCommittee(committee);
       setIdea(idea);
     } else {
-      navigate("/admin/comites");
+      if (roleUser === "Admin") {
+        navigate("/admin/comites");
+      } else if (roleUser === "Calificador") {
+        navigate("/user/comites");
+      }
     }
   }, [navigate]);
 
@@ -202,7 +208,7 @@ const TableEvaluationCommittes = () => {
   const setDtaCommittees = async () => {
     setIdcomite(generateRandomIdCommittee());
     setFecha([año, mes, dia]);
-    setEvaluador(auth?.user.username);
+    setEvaluador(auth?.user.fullName);
     setTituloIdea(idea?.nom_idea);
     setCodigoIdea(idea?.id_idea);
     setProponente(idea?.nom_proponente);
@@ -231,7 +237,6 @@ const TableEvaluationCommittes = () => {
             acc[item.id_criterio] = item.cal_comite_criterios;
             return acc;
           }, {});
-          console.log(values);
           setSelectedValues((prev) => {
             const isEqual = JSON.stringify(prev) === JSON.stringify(values);
             return isEqual ? prev : values;
@@ -282,9 +287,13 @@ const TableEvaluationCommittes = () => {
     clearDataForTable();
     setViewState(false);
     const timer = setTimeout(() => {
-      navigate("/admin/ideas");
       localStorage.removeItem("dataIdea");
       localStorage.removeItem("dataCommitte");
+      if (roleUser === "Admin") {
+        navigate("/admin/ideas");
+      } else if (roleUser === "Calificador") {
+        navigate("/user/ideas");
+      }
     }, 2000);
     return () => clearTimeout(timer);
   };
@@ -301,8 +310,11 @@ const TableEvaluationCommittes = () => {
       setViewState(false);
       setSelectedValues({});
       setObsComite("");
+      setSelectedIdIdeas({})
+      setSeletedCommittee({})
     };
   }, []);
+  
 
   return (
     <>

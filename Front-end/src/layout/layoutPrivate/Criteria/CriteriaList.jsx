@@ -10,6 +10,7 @@ import Alerta from "../../../components/Alerta.jsx";
 import GetCriteria from "./GetCriteria.jsx";
 import DeleteCriteria from "./DeleteCriteria.jsx";
 import PostCriteria from "./PostCriteria.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 
 const CriteriaList = () => {
   const [alerta, setAlerta] = useState({});
@@ -17,7 +18,7 @@ const CriteriaList = () => {
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
-
+  const { roleUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const [criteriaSelect, setCriteriaSelect] = useState({
@@ -25,6 +26,7 @@ const CriteriaList = () => {
     des_criterio: "",
     id_conjunto_criterio: "",
   });
+  const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -71,13 +73,9 @@ const CriteriaList = () => {
   };
 
   const titleForm = ["Registrar Criterios de Evluación"];
-  const titles = [
-    "ID",
-    "Descripción",
-    "Conjunto de Criterios",
-    "Acciones",
-  ];
-  const ButtonsForOtherModules = (id_criterio) => [
+  const titles = ["ID", "Descripción", "Conjunto de Criterios", "Acciones"];
+  const ButtonsForOtherModules = (id_criterio) => {
+    return isAdmin ? [
     <button
       className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
@@ -99,7 +97,8 @@ const CriteriaList = () => {
     >
       <MdDelete className="mr-1" /> Eliminar
     </button>,
-  ];
+    ] : ["Sin acceso a acciones"]
+  };
   const setCriteria = data?.Criteria || [];
 
   const formattedData = setCriteria.map((criterios) => {
@@ -112,29 +111,31 @@ const CriteriaList = () => {
 
     return rowData;
   });
-  
+
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
         Criterios de Evaluación
       </h1>
-      <ModalWindow
-        toggleModal={toggleModal}
-        isOpen={isOpen}
-        form={
-          <PostCriteria
-            criteriaSelect={criteriaSelect}
-            textButton={textButton}
-            onSuccessSave={refreshData}
-          />
-        }
-        titleForm={titleForm}
-        updateTextButton={updateTextButton}
-      />
+      {isAdmin && (
+        <ModalWindow
+          toggleModal={toggleModal}
+          isOpen={isOpen}
+          form={
+            <PostCriteria
+              criteriaSelect={criteriaSelect}
+              textButton={textButton}
+              onSuccessSave={refreshData}
+            />
+          }
+          titleForm={titleForm}
+          updateTextButton={updateTextButton}
+        />
+      )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (

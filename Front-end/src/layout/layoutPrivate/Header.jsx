@@ -1,22 +1,10 @@
-
+// Librerias
 import { useState } from "react";
-// import { IoLogIn } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  //   let arr = [true, false, false, false, false, false];
-  //   const [style, setStyle] = useState(arr);
   const [dropDown, setDropDown] = useState(true);
   const [text, setText] = useState("");
-
-  //   const selected = (props) => {
-  //     let newArr = [...arr];
-  //     for (let i = 0; i < newArr.length; i++) {
-  //       newArr[i] = false;
-  //     }
-  //     newArr[props] = true;
-  //     setStyle(newArr);
-  //   };
 
   const setSelectedText = (txt) => {
     setText(txt);
@@ -33,16 +21,7 @@ export default function Header() {
               className="w-40 drop-shadow-2xl"
               alt="Logo"
             />
-            {/* <h2 className="font-bold text-2xl leading-6 text-black ">
-              TECNOPARQUE
-            </h2> */}
           </div>
-          {/* <div className=" flex space-x-5 justify-center items-center pl-2">
-            <Link to="/login" className="text-black font-medium" onClick={() => selected(null)}>
-              <IoLogIn size={28} title="Login" />
-              Iniciar Sesion
-            </Link>
-          </div> */}
           <button
             id="dropdownAvatarNameButton"
             data-dropdown-toggle="dropdownAvatarName"
@@ -72,8 +51,6 @@ export default function Header() {
               />
             </svg>
           </button>
-
-          {/* <!-- Dropdown menu --> */}
           <div
             id="dropdownAvatarName"
             className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"

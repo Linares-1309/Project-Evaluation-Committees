@@ -80,7 +80,7 @@ function WriteTable({ titles, data }) {
                             <span key={buttonIndex}>{button}</span>
                           ))
                         ) : (
-                          <span>No buttons</span>
+                          <span>Sin acceso a acciones</span>
                         )}
                       </td>
                     </tr>

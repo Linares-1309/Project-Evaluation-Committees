@@ -1,15 +1,17 @@
-import { getAllUsers } from "./UsersFunctions";
-import { useState, useEffect } from "react";
-import Alerta from "../../../components/Alerta";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { FaEdit } from "react-icons/fa";
+// Iconos del componente
 import { MdDelete } from "react-icons/md";
-import WriteTable from "../../../tables/DataTables";
-import ModalWindow from "../../../components/ModalDialog";
 
-// import GetUser from "./GetUser";
-import DeleteUser from "./DeleteUser";
-import PostUser from "./PostUser";
+// Librerias
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Componentes
+import { getAllUsers } from "./UsersFunctions.jsx";
+import WriteTable from "../../../tables/DataTables.jsx";
+import ModalWindow from "../../../components/ModalDialog.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+import DeleteUser from "./DeleteUser.jsx";
+import PostUser from "./PostUser.jsx";
 
 const UsersList = () => {
   const [alerta, setAlerta] = useState({});
@@ -19,16 +21,11 @@ const UsersList = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
   const queryClient = useQueryClient();
-
-  // const handleEditClick = (Id_User) => {
-  //   setSelectedIdEdit(Id_User);
-  // };
 
   const handleDeleteClick = (Id_User) => {
     setSelectedIdDelete(Id_User);
@@ -112,23 +109,18 @@ const UsersList = () => {
       <ModalWindow
         toggleModal={toggleModal}
         isOpen={isOpen}
-        form={
-          <PostUser
-            // userSelect={userSelect}
-            textButton={textButton}
-            onSuccessSave={refreshData}
-          />
-        }
+        form={<PostUser textButton={textButton} onSuccessSave={refreshData} />}
         titleForm={titleForm}
         updateTextButton={updateTextButton}
       />
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
-      {/* {selectedIdEdit && (
-        <GetUser Id_User={selectedIdEdit} setUserSelect={setUserSelect} />
-      )} */}
       {selectedIdDelete && (
-        <DeleteUser Id_User={selectedIdDelete} onSuccessDel={refreshData} setSelectedIdDelete={setSelectedIdDelete}/>
+        <DeleteUser
+          Id_User={selectedIdDelete}
+          onSuccessDel={refreshData}
+          setSelectedIdDelete={setSelectedIdDelete}
+        />
       )}
     </>
   );

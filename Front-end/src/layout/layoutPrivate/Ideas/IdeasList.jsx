@@ -11,8 +11,10 @@ import GetIdea from "./GetIdea.jsx";
 import DeleteIdea from "./DeleteIdea.jsx";
 import PostIdeas from "./PostIdeas.jsx";
 import { getAllIdeas } from "./IdeasFunctions.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 
 const IdeasList = () => {
+  const { roleUser } = useAuth();
   const [alerta, setAlerta] = useState({});
   const [crearDataTable, setCrearDataTable] = useState(false);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
@@ -28,6 +30,7 @@ const IdeasList = () => {
     cal_final: "",
     id_proponente: "",
   });
+  const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -85,43 +88,50 @@ const IdeasList = () => {
     "Nombre Proponente",
     "Acciones",
   ];
-  const ButtonsForOtherModules = (id_idea, estado_idea) => [
-    <button
-      className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="get"
-      title="Editar"
-      onClick={() => [
-        handleEditClick(id_idea),
-        toggleModal(),
-        setTextButton("Actualizar"),
-      ]}
-    >
-      <FaEdit className="mr-1" />
-      Editar
-    </button>,
-    <button
-      className="text-white bg-red-600 hover:bg-red-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="delete"
-      title="Eliminar"
-      onClick={() => handleDeleteClick(id_idea)}
-    >
-      <MdDelete className="mr-1" /> Eliminar
-    </button>,
-    <button
-      className={
-        estado_idea === "Convocado"
-          ? `text-black bg-green-50 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2 cursor-not-allowed`
-          : `text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2`
-      }
-      key="get"
-      title="Comite Evaluación"
-      onClick={() => [handleClickCommitte(id_idea)]}
-      disabled={estado_idea === "Convocado"}
-    >
-      <TbPencilCode className="mr-1" />
-      Comité
-    </button>,
-  ];
+  const ButtonsForOtherModules = (id_idea, estado_idea) => {
+    return [
+      <button
+        className={
+          estado_idea === "Convocado"
+            ? `text-black bg-green-50 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2 cursor-not-allowed`
+            : `text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2`
+        }
+        key="get"
+        title="Comite Evaluación"
+        onClick={() => [handleClickCommitte(id_idea)]}
+        disabled={estado_idea === "Convocado"}
+      >
+        <TbPencilCode className="mr-1" />
+        Comité
+      </button>,
+      // Botones solo para administradores
+      ...(isAdmin
+        ? [
+            <button
+              className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+              key="get"
+              title="Editar"
+              onClick={() => [
+                handleEditClick(id_idea),
+                toggleModal(),
+                setTextButton("Actualizar"),
+              ]}
+            >
+              <FaEdit className="mr-1" />
+              Editar
+            </button>,
+            <button
+              className="text-white bg-red-600 hover:bg-red-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+              key="delete"
+              title="Eliminar"
+              onClick={() => handleDeleteClick(id_idea)}
+            >
+              <MdDelete className="mr-1" /> Eliminar
+            </button>,
+          ]
+        : []),
+    ];
+  };
 
   const ideas = data?.ideas || [];
   const formattedData = ideas.map((idea) => {
@@ -145,22 +155,24 @@ const IdeasList = () => {
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
         Ideas de Innovación
       </h1>
-      <ModalWindow
-        toggleModal={toggleModal}
-        isOpen={isOpen}
-        form={
-          <PostIdeas
-            ideaSelect={ideaSelect}
-            textButton={textButton}
-            onSuccessSave={refreshData}
-          />
-        }
-        titleForm={titleForm}
-        updateTextButton={updateTextButton}
-      />
+      {isAdmin && (
+        <ModalWindow
+          toggleModal={toggleModal}
+          isOpen={isOpen}
+          form={
+            <PostIdeas
+              ideaSelect={ideaSelect}
+              textButton={textButton}
+              onSuccessSave={refreshData}
+            />
+          }
+          titleForm={titleForm}
+          updateTextButton={updateTextButton}
+        />
+      )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit ||

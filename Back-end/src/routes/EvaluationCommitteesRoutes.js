@@ -15,12 +15,12 @@ const router = express.Router();
 //Area Privada
 router
   .route("/")
-  .get(checkAuthWithRol(["Admin"]), getAllEvaluationCommittees)
-  .post(checkAuthWithRol(["Admin"]), newEvaluationCommitte);
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getAllEvaluationCommittees)
+  .post(checkAuthWithRol(["Admin", "Calificador"]), newEvaluationCommitte);
 
 router
   .route("/:id_comites_evaluacion")
-  .get(checkAuthWithRol(["Admin"]), getEvaluationCommitte)
+  .get(checkAuthWithRol(["Admin", "Calificador"]), getEvaluationCommitte)
   .put(checkAuthWithRol(["Admin"]), updateEvaluationCommitte)
   .delete(checkAuthWithRol(["Admin"]), deleteEvaluationCommitte);
 

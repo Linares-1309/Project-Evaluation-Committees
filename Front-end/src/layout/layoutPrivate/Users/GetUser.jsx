@@ -1,10 +1,13 @@
-import { getUser } from "./UsersFunctions";
+// Librerias
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import useProvider from "../../../hooks/useProvider";
+
+// Componentes
+import useProvider from "../../../hooks/useProvider.jsx";
+import { getUser } from "./UsersFunctions.jsx";
 
 const GetUser = () => {
-  const { setUserSelect, selectedIdEdit } = useProvider()
+  const { setUserSelect, selectedIdEdit } = useProvider();
 
   const { data } = useQuery({
     queryKey: ["user-by-id", selectedIdEdit],

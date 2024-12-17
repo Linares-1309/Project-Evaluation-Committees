@@ -113,7 +113,7 @@ const EvaluationCommitteesList = () => {
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
         Comites de Evaluacion de Ideas
       </h1>
       <ModalComitteCriteria

@@ -10,6 +10,7 @@ import Alerta from "../../../components/Alerta";
 import GetRubrics from "./GetRubrics";
 import PostRubrics from "./PostRubrics";
 import DeleteRubrics from "./DeleteRubrics";
+import useAuth from "../../../hooks/useAuth";
 
 const RubricsList = () => {
   const [alerta, setAlerta] = useState({});
@@ -18,12 +19,14 @@ const RubricsList = () => {
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [textButton, setTextButton] = useState("Enviar");
   const [isOpen, setIsOpen] = useState(false);
+  const { roleUser } = useAuth();
   const [rubricSelect, setRubricSelect] = useState({
     id_rubricas: "",
     des_rubricas: "",
     id_criterio: "",
   });
 
+  const isAdmin = roleUser === "Admin";
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -71,29 +74,33 @@ const RubricsList = () => {
   const titleForm = ["Registrar Rubricas"];
   const titles = ["ID", "Descripción", "Criterios", "Acciones"];
 
-  const ButtonsForOtherModules = (id_rubricas) => [
-    <button
-      className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="get"
-      title="Editar"
-      onClick={() => [
-        handleEditClick(id_rubricas),
-        toggleModal(),
-        setTextButton("Actualizar"),
-      ]}
-    >
-      <FaEdit className="mr-1" />
-      Editar
-    </button>,
-    <button
-      className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="delete"
-      title="Eliminar"
-      onClick={() => handleDeleteClick(id_rubricas)}
-    >
-      <MdDelete className="mr-1" /> Eliminar
-    </button>,
-  ];
+  const ButtonsForOtherModules = (id_rubricas) => {
+    return isAdmin
+      ? [
+          <button
+            className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="get"
+            title="Editar"
+            onClick={() => [
+              handleEditClick(id_rubricas),
+              toggleModal(),
+              setTextButton("Actualizar"),
+            ]}
+          >
+            <FaEdit className="mr-1" />
+            Editar
+          </button>,
+          <button
+            className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="delete"
+            title="Eliminar"
+            onClick={() => handleDeleteClick(id_rubricas)}
+          >
+            <MdDelete className="mr-1" /> Eliminar
+          </button>,
+        ]
+      : ["Sin acceso a acciones"];
+  };
 
   const Rubrics = data?.Rubrics || [];
 
@@ -115,20 +122,24 @@ const RubricsList = () => {
 
   return (
     <>
-      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">Rubricas</h1>
-      <ModalWindow
-        toggleModal={toggleModal}
-        isOpen={isOpen}
-        form={
-          <PostRubrics
-            rubricSelect={rubricSelect}
-            textButton={textButton}
-            onSuccessSave={refreshData}
-          />
-        }
-        titleForm={titleForm}
-        updateTextButton={updateTextButton}
-      />
+      <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
+        Rubricas
+      </h1>
+      {isAdmin && (
+        <ModalWindow
+          toggleModal={toggleModal}
+          isOpen={isOpen}
+          form={
+            <PostRubrics
+              rubricSelect={rubricSelect}
+              textButton={textButton}
+              onSuccessSave={refreshData}
+            />
+          }
+          titleForm={titleForm}
+          updateTextButton={updateTextButton}
+        />
+      )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
       {selectedIdEdit && (

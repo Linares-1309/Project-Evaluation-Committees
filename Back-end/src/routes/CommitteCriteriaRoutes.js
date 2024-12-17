@@ -8,11 +8,11 @@ import checkAuthWithRol from "../middleware/checkAuthWithRol.js";
 
 const routerC = express.Router();
 
-routerC.route("/").get(checkAuthWithRol(["Admin"]), getAllCommitteCriteria);
+routerC.route("/").get(checkAuthWithRol(["Admin", "Calificador"]), getAllCommitteCriteria);
 
 routerC.get(
   "/:id_comites_evaluacion",
-  checkAuthWithRol(["Admin"]),
+  checkAuthWithRol(["Admin", "Calificador"]),
   getCommitteCriteria
 );
 
