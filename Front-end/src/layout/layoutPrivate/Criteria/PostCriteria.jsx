@@ -13,7 +13,13 @@ import { createCriteria, updateCriteria } from "./CriteriaFunctions.jsx";
 import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 
-const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
+const PostCriteria = ({
+  criteriaSelect,
+  textButton,
+  onSuccessSave,
+  resetForm,
+  setSelectedIdEdit,
+}) => {
   const [desCriterio, setDesCriterio] = useState("");
   const [idConjuntoCriterios, setIdConjuntoCriterios] = useState("");
   const [alerta, setAlerta] = useState({});
@@ -48,11 +54,30 @@ const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
     }
   }, [loading, isError, error, data]);
 
+  const setDataForm = () => {
+    setDesCriterio(criteriaSelect.des_criterio);
+    setIdConjuntoCriterios(criteriaSelect.id_conjunto_criterio);
+    const selected = setOfCriteria.find(
+      (conjunto) =>
+        conjunto.id_conjunto_criterio === criteriaSelect.id_conjunto_criterio
+    );
+    setSelectedSetOfCriteria(selected || null);
+  };
+  useEffect(() => {
+    setDataForm();
+  }, [criteriaSelect]);
+
+  const clearForm = () => {
+    setDesCriterio("");
+    setIdConjuntoCriterios("");
+  };
+
   // Crea el NUEVO criterio
   const { mutate, isLoading } = useMutation({
     mutationFn: createCriteria,
     onSuccess: (data) => {
-      onSuccessSave()
+      onSuccessSave();
+      clearForm();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -75,7 +100,9 @@ const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
   } = useMutation({
     mutationFn: updateCriteria,
     onSuccess: (data) => {
-      onSuccessSave()
+      onSuccessSave();
+      setSelectedIdEdit(null);
+      resetForm();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -102,26 +129,23 @@ const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
       const data = { desCriterio, idConjuntoCriterios };
       mutate(data);
     } else if (textButton === "Actualizar") {
+      if (
+        desCriterio === criteriaSelect?.des_criterio &&
+        idConjuntoCriterios === criteriaSelect?.id_conjunto_criterio
+      ) {
+        setAlerta({
+          msg: "No se puede actualizar por que los datos no han cambiado!",
+          error: true,
+        });
+        return;
+      }
       const id_criterio = criteriaSelect.id_criterio;
       const data = { id_criterio, desCriterio, idConjuntoCriterios };
       mutateUpdate(data);
     }
-  };     
+  };
 
   const setOfCriteria = conjuntoCriterios.setOfCriteria || [];
-
-  const setDataForm = () => {
-    setDesCriterio(criteriaSelect.des_criterio);
-    setIdConjuntoCriterios(criteriaSelect.id_conjunto_criterio);
-    const selected = setOfCriteria.find(
-      (conjunto) =>
-        conjunto.id_conjunto_criterio === criteriaSelect.id_conjunto_criterio
-    );
-    setSelectedSetOfCriteria(selected || null);
-  };
-  useEffect(() => {
-    setDataForm();
-  }, [criteriaSelect]);
 
   return (
     <>

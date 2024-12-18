@@ -21,6 +21,10 @@ const SetOfCriteriaList = () => {
   const { roleUser } = useAuth();
 
   const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({});
+
+  const resetForm = () => {
+    setSetOfCriteriaSelect({})
+  }
   const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
@@ -122,6 +126,7 @@ const SetOfCriteriaList = () => {
         <ModalDialog
           toggleModal={toggleModal}
           isOpen={isOpen}
+          resetForm={resetForm}
           form={
             <PostSetOfCriteria
               onSuccessSave={refreshData}

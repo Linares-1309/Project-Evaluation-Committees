@@ -1,12 +1,15 @@
+// Libreia
 import { useNavigate } from "react-router-dom";
 
 const UnauthorizedPage = () => {
   const navigate = useNavigate();
 
+  // Redirige al usuario a la página de login
   const handleBackToLogin = () => {
-    navigate("/login"); // Redirige al usuario a la página de inicio de sesión
+    navigate("/login");
   };
 
+  // Retornamos el HTML de la pagina de no Autorizado
   return (
     <div className="flex items-center justify-center h-screen bg-slate-50">
       <div className="max-w-md p-8 bg-white rounded-lg shadow-lg">
@@ -17,8 +20,8 @@ const UnauthorizedPage = () => {
           Acceso Denegado
         </h2>
         <p className="mt-4 text-center text-gray-600">
-          No tienes permiso para acceder a esta página. 
-          Si crees que esto es un error, contacta al administrador del sistema.
+          No tienes permiso para acceder a esta página. Si crees que esto es un
+          error, contacta al administrador del sistema.
         </p>
         <div className="mt-6 flex justify-center">
           <button

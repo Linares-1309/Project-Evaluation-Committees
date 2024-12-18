@@ -105,15 +105,6 @@ export const updateCriteria = async (req, res) => {
         msg: "Criterio no encontrado, no se puede actualizar!",
       });
     }
-    // Verificar si los datos son los mismos que ya están almacenados
-    if (
-      existingCriterio.des_criterio === des_criterio &&
-      existingCriterio.id_conjunto_criterio === id_conjunto_criterio
-    ) {
-      return res.status(200).json({
-        msg: "Los datos no han cambiado, no se puede actualizar.",
-      });
-    }
 
     const updateCriteria = await CriteriaModel.update(
       {

@@ -1,42 +1,53 @@
 /* eslint-disable react/prop-types */
+
+// Iconos del componente
 import { AiOutlineClose } from "react-icons/ai";
+
+// Librerias
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+// Componentes
 import { getCommitteCriteria } from "../layout/layoutPrivate/EvaluationCommittees/EvaluationCommitteesFunctions.jsx";
 import Alerta from "./Alerta.jsx";
 
 const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => {
   const [alerta, setAlerta] = useState({});
 
+  // Realizar la consulta con el id_comite_criterios
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["Comite-Criterios", id_comité_criterios],
     queryFn: () => getCommitteCriteria(id_comité_criterios),
     enabled: !!id_comité_criterios,
   });
 
-  // Usamos useEffect para manejar las actualizaciones de alerta
+  // UseEffect para manejar las actualizaciones de alerta
   useEffect(() => {
     if (isLoading) {
+      // Cargando la data
       setAlerta({
         msg: "Cargando...",
         error: false,
       });
     } else if (isError) {
-      console.log(error);
-      
+      // Caso de error
       setAlerta({
         msg: error?.message || "Hubo un error!",
         error: true,
       });
     } else {
-      // Si la consulta es exitosa, no hay alerta
+      // Caso de la consulta exitosa
       setAlerta({});
     }
   }, [isLoading, isError, error]);
 
+  // Headers de la tabla
   const titles = ["ID", "Descripción del Criterio", "Calificación"];
+
+  // Extraer el Objeto CommitteCriteria de la data para poder formatearla
   const CommitteeCriteria = data?.CommitteeCriteria || [];
+
+  // Formateamos la data
   const formattedData = CommitteeCriteria.map((comite_criterio) => {
     const rowData = [
       comite_criterio?.id_comite_criterios,
@@ -45,7 +56,7 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
     ];
     return rowData;
   });
-
+  // Retornamos el HTML de la ventana modal con la tabla
   return (
     <>
       {isOpen && (
@@ -74,12 +85,14 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
               </div>
               <div className="p-4 md:p-5 space-y-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg max-h-[50vh]">
+                  {/* Si hay mensaje se muestra la alerta */}
                   {alerta.msg && (
                     <Alerta alerta={alerta} setAlerta={setAlerta} />
                   )}
                   <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
+                        {/* Mapeamos los headers de la tabla */}
                         {titles.map((title, index) => (
                           <th scope="col" key={index} className="px-6 py-3">
                             {title}
@@ -88,6 +101,7 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
                       </tr>
                     </thead>
                     <tbody>
+                      {/* Mapeamos data que formateamos anteriormente */}
                       {formattedData.map((row, rowIndex) => (
                         <tr
                           key={rowIndex}

@@ -1,10 +1,14 @@
 /* eslint-disable react/prop-types */
+
+// Libreias
 import { useState, useEffect, createContext } from "react";
-import ClientAxios from "../config/AxiosConfig.jsx";
 import { jwtDecode } from "jwt-decode";
 import { Hourglass } from "react-loader-spinner";
 
+// Componente de la instancia de Axios
+import ClientAxios from "../config/AxiosConfig.jsx";
 
+// Crear el context
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -12,21 +16,25 @@ const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [roleUser, setRoleUser] = useState("");
 
+  // Actualizar en tiempo real la foto del usuario
   const updateAvatar = (newAvatar) => {
     setAuth((prev) => ({
       ...prev,
       user: {
         ...prev.user,
-        userPotho: newAvatar, // Actualiza la foto en tiempo real
+        userPotho: newAvatar,
       },
     }));
   };
 
   useEffect(() => {
     const autenticarUser = async () => {
+      // Indicar que la pagina esta cargando
       setCargando(true)
+      // Obtener el toke del LocalStorage
       const token = localStorage.getItem("token");
 
+      // Validar que exista un token 
       if (!token) {
         setAuth({});
         setRoleUser(null);
@@ -35,31 +43,29 @@ const AuthProvider = ({ children }) => {
       }
 
       try {
+        // Si existe el token se decodifica para obtener el rol de usuario
         const decodedToken = jwtDecode(token);
         setRoleUser(decodedToken.rol); 
 
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
+        // Peticion a axios para obterner el perfil
         const url = `/user/profile`;
-        const { data } = await ClientAxios(url, config);
+        const { data } = await ClientAxios(url);
         setAuth(data);
       } catch (error) {
+        // En caso de error se borra el token del LocalStorage
         console.error(error.respoonse.data.msg);
         localStorage.removeItem("token");
         setAuth({});
         setRoleUser(null);
       } finally {
-        setCargando(false); // Terminamos la carga
+        // Terminamos la carga
+        setCargando(false); 
       }
     };
     autenticarUser();
   }, []);
 
+  // Si la pagina esta Cargando se muestra el loader
   if (cargando) {
     return (
       <>
@@ -79,12 +85,14 @@ const AuthProvider = ({ children }) => {
     );
   }
 
+  // Funcion para cerrar sesion limpiando el LocalStorage
   const cerrarSesion = () => {
     localStorage.clear();
     localStorage.removeItem("token");
     setAuth({});
     setRoleUser("");
   };
+  // Retornamos el contexto para propagar las funciones y poderlas usar en los demas conponentes
   return (
     <AuthContext.Provider
       value={{

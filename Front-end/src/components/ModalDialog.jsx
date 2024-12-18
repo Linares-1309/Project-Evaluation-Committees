@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+
+// Iconos del componente
 import { AiOutlineClose } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 
@@ -10,6 +12,7 @@ function ModalWindow({
   resetForm,
   updateTextButton,
 }) {
+  // Retornamos el HTML de la modal con el Formulario
   return (
     <>
       {/* Botón para abrir el modal */}
@@ -44,12 +47,15 @@ function ModalWindow({
                 <button
                   type="button"
                   onClick={() => {
+                    // Resetear el formulario al cerrar el modal
                     if (typeof resetForm === "function") {
-                      resetForm(); // Resetea el formulario al cerrar el modal
+                      resetForm();
                     }
+                    // Cerrar el modal
                     if (typeof toggleModal === "function") {
-                      toggleModal(); // Cierra el modal
+                      toggleModal();
                     }
+                    // Restaurar el boton al valor inicial
                     if (typeof updateTextButton === "function") {
                       updateTextButton("Enviar");
                     }

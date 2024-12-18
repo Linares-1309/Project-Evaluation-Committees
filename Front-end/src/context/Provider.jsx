@@ -1,18 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
+
+// Libreias
 import { useState, createContext, useEffect } from "react";
 import { Hourglass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
-import useAuth from "../hooks/useAuth";
+
+// Hook de useAuth para obtener el rol del usuario
+import useAuth from "../hooks/useAuth.jsx";
+
+// LLave secreta para codificar la data que almacenamos en localStorage
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
+// Creamos el context
 const Context = createContext();
 
 const Provider = ({ children }) => {
+  // Extraemos el rol del usuario
   const { roleUser } = useAuth();
   const navigate = useNavigate();
   const [cargando, setCargando] = useState(false);
+
+  // Idea seleccionada para calificar
   const [selectedIdIdea, setSelectedIdIdeas] = useState({
     id_idea: "",
     nom_idea: "",
@@ -21,8 +31,11 @@ const Provider = ({ children }) => {
     cal_final: "",
     nom_proponente: "",
   });
+
+  // Comite seleccionado para ver en la tabla
   const [selectedCommitte, setSeletedCommittee] = useState({});
 
+  // Almacenar la data en LocalStorage
   const saveToLocalStorage = (key, value) => {
     const encryptedData = CryptoJS.AES.encrypt(
       JSON.stringify(value),
@@ -32,16 +45,22 @@ const Provider = ({ children }) => {
   };
 
   useEffect(() => {
+    // Validar que si hay data y enviarla al LocalStorage
     if (selectedIdIdea && selectedIdIdea.id_idea) {
       saveToLocalStorage("dataIdea", selectedIdIdea);
+
+      // Navegar dependiendo del rol de usuario
       if (roleUser === "Admin") {
         navigate("/admin/comites/table");
       } else if (roleUser === "Calificador") {
         navigate("/user/comites/table");
       }
     }
+    // Validar que si hay data y enviarla al LocalStorage
     if (selectedCommitte && selectedCommitte?.id_comites_evaluacion) {
       saveToLocalStorage("dataCommitte", selectedCommitte);
+
+      // Navegar dependiendo del rol de usuario
       if (roleUser === "Admin") {
         navigate("/admin/comites/table");
       } else if (roleUser === "Calificador") {
@@ -50,6 +69,7 @@ const Provider = ({ children }) => {
     }
   }, [selectedIdIdea, selectedCommitte]);
 
+  // Si esta cargando se muestra el Loader
   if (cargando) {
     return (
       <>
@@ -69,6 +89,7 @@ const Provider = ({ children }) => {
     );
   }
 
+  // Retornamos el contexto para propagar las funciones y poderlas usar en los demas conponentes
   return (
     <Context.Provider
       value={{

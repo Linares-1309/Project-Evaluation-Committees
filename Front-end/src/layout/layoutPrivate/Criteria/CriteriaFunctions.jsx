@@ -1,6 +1,7 @@
 // Instancia de AXIOS
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
+// Trae todos los criteios de evaluacion
 export const getAllCriteria = async () => {
   try {
     const response = await ClientAxios("criteria/");
@@ -12,6 +13,7 @@ export const getAllCriteria = async () => {
   }
 };
 
+// Trae un criterio de evaluacion por ID
 export const getCriteria = async (id_criterio) => {
   try {
     const response = await ClientAxios(`criteria/${id_criterio}`);
@@ -23,6 +25,7 @@ export const getCriteria = async (id_criterio) => {
   }
 };
 
+// Crea un nuevo criterio de evaluacion
 export const createCriteria = async (dataCriteria) => {
   try {
     const response = await ClientAxios.post("/criteria", {
@@ -37,6 +40,7 @@ export const createCriteria = async (dataCriteria) => {
   }
 };
 
+// Actualiza un criterio de evaluacion
 export const updateCriteria = async (dataCriteria) => {
   try {
     const response = await ClientAxios.put(
@@ -54,6 +58,7 @@ export const updateCriteria = async (dataCriteria) => {
   }
 };
 
+// Elimina un criterio de evaluacion
 export const deleteCriteria = async (id_criterio) => {
   try {
     const response = await ClientAxios.delete(`criteria/${id_criterio}`);

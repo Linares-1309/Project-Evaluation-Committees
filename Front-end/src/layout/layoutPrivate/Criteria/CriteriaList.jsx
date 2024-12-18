@@ -17,31 +17,51 @@ import PostCriteria from "./PostCriteria.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
 
 const CriteriaList = () => {
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+
+  // State para crear la tabla si hay data disponible
   const [crearDataTable, setCrearDataTable] = useState(false);
+
+  // State para almacenar el Id del criterio y asi mosntar el conponente si este esta disponible
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
+
+  // Texto del boton
   const [textButton, setTextButton] = useState("Enviar");
+
+  // Rol de usuario
   const { roleUser } = useAuth();
+
+  // State para abrir y cerrar la ventana modal del formulario
   const [isOpen, setIsOpen] = useState(false);
 
-  const [criteriaSelect, setCriteriaSelect] = useState({
-    id_criterio: "",
-    des_criterio: "",
-    id_conjunto_criterio: "",
-  });
+  // Almacena el criterio que se va a editar
+  const [criteriaSelect, setCriteriaSelect] = useState({});
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
   const isAdmin = roleUser === "Admin";
 
+  // Limpiar el formulario
+  const resetForm = () => {
+    setCriteriaSelect({});
+  };
+
+  // Toggle para manejar el evnto de abrir y cerrar la modal
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
+  // Refrescar la data usando la queryKey
   const queryClient = useQueryClient();
+  const refreshData = () => {
+    queryClient.invalidateQueries("criterios");
+  };
 
+  // Almacenar los id para motan los componentes
   const handleEditClick = (id_conjunto_criterio) => {
     setSelectedIdEdit(id_conjunto_criterio);
   };
-
   const handleDeleteClick = (id_conjunto_criterio) => {
     setSelectedIdDelete(id_conjunto_criterio);
   };
@@ -71,37 +91,34 @@ const CriteriaList = () => {
     }
   }, [isLoading, isError, error]); // Dependencias: cada vez que cambien estos valores
 
-  // Función que se llama cuando se elimina un criterio
-  const refreshData = () => {
-    queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
-  };
-
   const titleForm = ["Registrar Criterios de Evluación"];
   const titles = ["ID", "Descripción", "Conjunto de Criterios", "Acciones"];
   const ButtonsForOtherModules = (id_criterio) => {
-    return isAdmin ? [
-    <button
-      className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="get"
-      title="Editar"
-      onClick={() => [
-        handleEditClick(id_criterio),
-        toggleModal(),
-        setTextButton("Actualizar"),
-      ]}
-    >
-      <FaEdit className="mr-1" />
-      Editar
-    </button>,
-    <button
-      className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
-      key="delete"
-      title="Eliminar"
-      onClick={() => handleDeleteClick(id_criterio)}
-    >
-      <MdDelete className="mr-1" /> Eliminar
-    </button>,
-    ] : ["Sin acceso a acciones"]
+    return isAdmin
+      ? [
+          <button
+            className="text-white bg-blue-600 hover:bg-blue-700 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="get"
+            title="Editar"
+            onClick={() => [
+              handleEditClick(id_criterio),
+              toggleModal(),
+              setTextButton("Actualizar"),
+            ]}
+          >
+            <FaEdit className="mr-1" />
+            Editar
+          </button>,
+          <button
+            className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
+            key="delete"
+            title="Eliminar"
+            onClick={() => handleDeleteClick(id_criterio)}
+          >
+            <MdDelete className="mr-1" /> Eliminar
+          </button>,
+        ]
+      : ["Sin acceso a acciones"];
   };
   const setCriteria = data?.Criteria || [];
 
@@ -129,11 +146,14 @@ const CriteriaList = () => {
         <ModalWindow
           toggleModal={toggleModal}
           isOpen={isOpen}
+          resetForm={resetForm}
           form={
             <PostCriteria
               criteriaSelect={criteriaSelect}
               textButton={textButton}
               onSuccessSave={refreshData}
+              resetForm={resetForm}
+              setSelectedIdEdit={setSelectedIdEdit}
             />
           }
           titleForm={titleForm}

@@ -15,7 +15,7 @@ const PostSetOfCriteria = ({
   setOfCriteriaSelect,
   textButton,
   setTextButton,
-  setSelectedIdEdit
+  setSelectedIdEdit,
 }) => {
   const [desConjuntoCriterios, setDesConjuntoCriterios] = useState("");
   const [alerta, setAlerta] = useState({});
@@ -62,7 +62,7 @@ const PostSetOfCriteria = ({
     onSuccess: (data) => {
       onSuccessSave();
       setTextButton("Enviar");
-      setSelectedIdEdit(null)
+      setSelectedIdEdit(null);
       setAlerta({
         msg: data.msg,
         error: false,

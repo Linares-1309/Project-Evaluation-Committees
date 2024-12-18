@@ -1,3 +1,4 @@
+// Libreia
 import axios from "axios";
 
 // Crear una instancia de Axios
@@ -17,7 +18,7 @@ ClientAxios.interceptors.request.use(
 
     // Detectar si se está enviando FormData
     if (config.data instanceof FormData) {
-      // Deja que el navegador configure automáticamente el Content-Type
+      // El navegador configura automáticamente el Content-Type
       delete config.headers["Content-Type"];
     }
 
