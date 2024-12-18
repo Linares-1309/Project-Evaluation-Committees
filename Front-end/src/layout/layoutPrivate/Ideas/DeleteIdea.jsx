@@ -42,7 +42,7 @@ const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: "¿Estás seguro de que quieres eliminar este registro?",
-      text: "¡No podrás revertir esto!",
+      text: "¡No podrás revertir esto! ¡Se borrara toda la informacion relacionada a este registro!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

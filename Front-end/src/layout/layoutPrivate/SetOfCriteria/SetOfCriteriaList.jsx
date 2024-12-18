@@ -20,10 +20,7 @@ const SetOfCriteriaList = () => {
   const [textButton, setTextButton] = useState("Enviar");
   const { roleUser } = useAuth();
 
-  const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({
-    id_conjunto_criterio: "",
-    des_conjunto_criterio: "",
-  });
+  const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({});
   const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
@@ -130,6 +127,8 @@ const SetOfCriteriaList = () => {
               onSuccessSave={refreshData}
               setOfCriteriaSelect={setOfCriteriaSelect}
               textButton={textButton}
+              setTextButton={setTextButton}
+              setSelectedIdEdit={setSelectedIdEdit}
             />
           }
           titleForm={titleForm}

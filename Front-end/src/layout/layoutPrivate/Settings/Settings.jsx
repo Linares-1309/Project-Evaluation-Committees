@@ -11,10 +11,10 @@ import { TfiWrite } from "react-icons/tfi";
 
 // Librerias
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Componentes
-import { updateUser } from "../Users/UsersFunctions.jsx";
+import { updateUser, updateImageUser } from "../Users/UsersFunctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 import GetUser from "../Users/GetUser.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
@@ -27,11 +27,12 @@ const Settings = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [userBiography, setUserBiography] = useState("");
-  const [userPotho, setUserPotho] = useState("");
+  const [userPotho, setUserPotho] = useState();
+  const inputFoto = useRef(null);
 
   const [alerta, setAlerta] = useState({});
 
-  const { auth } = useAuth();
+  const { auth, updateAvatar } = useAuth();
 
   const setDataUserForm = () => {
     setFullName(auth?.user?.fullName);
@@ -45,6 +46,26 @@ const Settings = () => {
   const { mutate } = useMutation({
     mutationFn: updateUser,
     onSuccess: (data) => {
+      setAlerta({
+        msg: data.msg,
+        error: false,
+      });
+    },
+    onError: (error) => {
+      setAlerta({
+        msg: error.message,
+        error: true,
+      });
+    },
+  });
+
+  // Actualizar la foto del usuario
+  const { mutate: mutateUpdateImage } = useMutation({
+    mutationFn: updateImageUser,
+    onSuccess: (data) => {
+      if (data.user) {
+        updateAvatar(data.user.userPotho);
+      }
       setAlerta({
         msg: data.msg,
         error: false,
@@ -88,12 +109,50 @@ const Settings = () => {
     mutate(data);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUserPotho(file); // Guardar el archivo en el estado
+    } else {
+      console.error("No se seleccionó ningún archivo");
+    }
+  };
+
+  const handleSubmitFile = (e) => {
+    e.preventDefault();
+    if (!userPotho) {
+      setAlerta({
+        msg: "Por favor, selecciona una imagen antes de continuar.",
+        error: true,
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("userPotho", userPotho); // Nombre clave que coincide con multer
+
+    const Id_User = auth?.user?.Id_User;
+
+    if (!Id_User) {
+      setAlerta({
+        msg: "Usuario no encontrado. Por favor, inicia sesión nuevamente.",
+        error: true,
+      });
+      return;
+    }
+
+    mutateUpdateImage({ formData, Id_User });
+  };
+
   return (
     <>
       <div className="mx-auto max-w-270">
-        <h1 className="mb-5 text-2xl font-semibold text-black text-start font-RobotoSlab">
+        <h1 className="mb-2 text-2xl font-semibold text-black text-start font-RobotoSlab">
           Ajustes de <span className="text-green-500">Cuenta</span>
         </h1>
+        <div className="px-40 mb-4">
+          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
+        </div>
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="bg-white border border-gray-100 rounded-xl shadow-default dark:border-gray-900 dark:bg-gray-950">
@@ -104,9 +163,6 @@ const Settings = () => {
               </div>
               <div className="p-7">
                 <form onSubmit={handleSubmit}>
-                  {alerta.msg && (
-                    <Alerta alerta={alerta} setAlerta={setAlerta} />
-                  )}
                   <div className="flex flex-col gap-6 mb-4 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
@@ -242,12 +298,12 @@ const Settings = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form onSubmit={handleSubmitFile}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="rounded-full h-14 w-14">
                       <img
                         width="80px"
-                        src={`${URI_FOTOS}${userPotho}`}
+                        src={`${URI_FOTOS}${auth?.user?.userPotho}`}
                         alt="No Foto"
                       />
                     </div>
@@ -262,12 +318,12 @@ const Settings = () => {
                         >
                           Borrar
                         </button>
-                        <button
+                        {/* <button
                           type="button"
                           className="text-sm text-blue-600 hover:underline"
                         >
                           Actualizar
-                        </button>
+                        </button> */}
                       </span>
                     </div>
                   </div>
@@ -280,7 +336,8 @@ const Settings = () => {
                       type="file"
                       accept="image/*"
                       className="absolute inset-0 z-50 w-full h-full p-0 m-0 outline-none opacity-0 cursor-pointer"
-                      onChange={(e) => setUserPotho(e.target.files[0])}
+                      ref={inputFoto}
+                      onChange={handleFileChange}
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span>
@@ -297,7 +354,10 @@ const Settings = () => {
                   </div>
 
                   <div className="flex justify-end ">
-                    <button className="px-5 py-2 rounded-2xl bg-green-500 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-green-400 transition-colors duration-400 mt-3 text-xs">
+                    <button
+                      className="px-5 py-2 rounded-2xl bg-green-500 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-green-400 transition-colors duration-400 mt-3 text-xs"
+                      type="submit"
+                    >
                       Guardar
                     </button>
                   </div>

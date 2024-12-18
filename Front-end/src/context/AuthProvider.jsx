@@ -12,6 +12,16 @@ const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [roleUser, setRoleUser] = useState("");
 
+  const updateAvatar = (newAvatar) => {
+    setAuth((prev) => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        userPotho: newAvatar, // Actualiza la foto en tiempo real
+      },
+    }));
+  };
+
   useEffect(() => {
     const autenticarUser = async () => {
       setCargando(true)
@@ -83,7 +93,8 @@ const AuthProvider = ({ children }) => {
         cargando,
         cerrarSesion,
         roleUser,
-        setRoleUser
+        setRoleUser,
+        updateAvatar
       }}
     >
       {children}

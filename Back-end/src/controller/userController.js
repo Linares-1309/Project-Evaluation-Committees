@@ -77,6 +77,7 @@ export const deleteUser = async (req, res) => {
 // Funcion para actualizar username
 export const updateUser = async (req, res) => {
   const { fullName, username, phoneNumber, email, userBiography } = req.body;
+
   try {
     const [updateUser] = await UserModel.update(
       {
@@ -90,6 +91,7 @@ export const updateUser = async (req, res) => {
         where: { Id_User: req.params.Id_User },
       }
     );
+
     if (updateUser === 0) {
       return res
         .status(404)
@@ -104,6 +106,30 @@ export const updateUser = async (req, res) => {
     return res
       .status(500)
       .json({ msg: "Ocurrio un error al actualizar el usuario!" });
+  }
+};
+
+export const updateUserPotho = async (req, res) => {
+  const { Id_User } = req.params;
+  const userPotho = req.file ? req.file.filename : null;
+  try {
+    const userUpdate = await UserModel.findByPk(Id_User);
+    if (userUpdate) {
+      userUpdate.userPotho = userPotho;
+      userUpdate.save();
+      return res
+        .status(200)
+        .json({ msg: "Foto Actualizada Correctamente!", user: userUpdate });
+    } else {
+      return res
+        .status(404)
+        .json({ msg: "Ocurrio un error al actualizar la foto!" });
+    }
+  } catch (error) {
+    logger.error("Error al actualizar la foto" + error);
+    return res
+      .status(404)
+      .json({ msg: "Ocurrio un error del servidor al actualizar la foto!" });
   }
 };
 

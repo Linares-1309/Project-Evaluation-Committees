@@ -1,4 +1,4 @@
-// Instancia de Axios 
+// Instancia de Axios
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllUsers = async () => {
@@ -63,13 +63,17 @@ export const createUser = async (dataUser) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await ClientAxios.post("/user/create", {
+    const response = await ClientAxios.post(
+      "/user/create",
+      {
         Id_User: dataUser?.idUser,
         username: dataUser?.userName,
         email: dataUser?.email,
         password: dataUser?.password,
-        userType: dataUser?.userType
-    }, config);
+        userType: dataUser?.userType,
+      },
+      config
+    );
     if (response.status === 201) {
       return response.data;
     }
@@ -77,7 +81,6 @@ export const createUser = async (dataUser) => {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
-
 
 export const updateUser = async (datos) => {
   try {
@@ -89,7 +92,8 @@ export const updateUser = async (datos) => {
     };
 
     const response = await ClientAxios.put(
-      `/user/${datos.Id_User}`, datos,
+      `/user/${datos.Id_User}`,
+      datos,
       config
     );
     if (response.status === 200) {
@@ -97,7 +101,23 @@ export const updateUser = async (datos) => {
     }
   } catch (error) {
     console.log(error);
-    
+
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+};
+
+export const updateImageUser = async ({ formData, Id_User }) => {
+  try {
+    const response = await ClientAxios.put(
+      `/user/updateImage/${Id_User}`,
+      formData
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.log(error);
+
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { getSetOfCriteria } from "./SetOfCriteriaFunctions.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 
 const GetSetOfCriteria = ({ id_conjunto_criterio, setSetOfCriteriaSelect }) => {
   const { data, error, isLoading, isError } = useQuery({

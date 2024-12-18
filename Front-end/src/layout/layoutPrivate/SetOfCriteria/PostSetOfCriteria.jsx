@@ -14,15 +14,29 @@ const PostSetOfCriteria = ({
   onSuccessSave,
   setOfCriteriaSelect,
   textButton,
+  setTextButton,
+  setSelectedIdEdit
 }) => {
   const [desConjuntoCriterios, setDesConjuntoCriterios] = useState("");
   const [alerta, setAlerta] = useState({});
+
+  const setDataForm = () => {
+    setDesConjuntoCriterios(setOfCriteriaSelect?.des_conjunto_criterio || "");
+  };
+  useEffect(() => {
+    setDataForm();
+  }, [setOfCriteriaSelect]);
+
+  const clearForm = () => {
+    setDesConjuntoCriterios("");
+  };
 
   // Crear nuevo vonjunto de criterios
   const { mutate, isLoading } = useMutation({
     mutationFn: createNewSetOfCriteria,
     onSuccess: (data) => {
       onSuccessSave();
+      clearForm();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -46,11 +60,16 @@ const PostSetOfCriteria = ({
   } = useMutation({
     mutationFn: updateSetOfCriteria,
     onSuccess: (data) => {
-      onSuccessSave()
+      onSuccessSave();
+      setTextButton("Enviar");
+      setSelectedIdEdit(null)
       setAlerta({
         msg: data.msg,
         error: false,
       });
+      setTimeout(() => {
+        clearForm(); // O asegúrate de que esta función maneje el estado correctamente
+      }, 0);
     },
     onError: (error) => {
       setAlerta({
@@ -73,18 +92,18 @@ const PostSetOfCriteria = ({
       const data = { desConjuntoCriterios };
       mutate(data);
     } else if (textButton === "Actualizar") {
+      if (desConjuntoCriterios === setOfCriteriaSelect.des_conjunto_criterio) {
+        setAlerta({
+          msg: "No se puede actualizar por que los datos no han cambiado!",
+          error: true,
+        });
+        return;
+      }
       const id_conjunto_criterio = setOfCriteriaSelect.id_conjunto_criterio;
       const data = { id_conjunto_criterio, desConjuntoCriterios };
       mutateUpdate(data);
     }
   };
-
-  const setDataForm = () => {
-    setDesConjuntoCriterios(setOfCriteriaSelect?.des_conjunto_criterio);
-  };
-  useEffect(() => {
-    setDataForm();
-  }, [setOfCriteriaSelect]);
 
   return (
     <>
