@@ -1,12 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+// Iconos del componente
+import { BsFillSendFill } from "react-icons/bs";
+
+// Librerias
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+
+// Componentes
 import { createCriteria, updateCriteria } from "./CriteriaFunctions.jsx";
-import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions";
+import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
-import { BsFillSendFill } from "react-icons/bs";
 
 const PostCriteria = ({ criteriaSelect, textButton, onSuccessSave }) => {
   const [desCriterio, setDesCriterio] = useState("");

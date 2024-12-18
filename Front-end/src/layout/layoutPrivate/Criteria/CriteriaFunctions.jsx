@@ -1,3 +1,4 @@
+// Instancia de AXIOS
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
 export const getAllCriteria = async () => {

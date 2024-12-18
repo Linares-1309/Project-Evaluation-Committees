@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { getCriteria } from "./CriteriaFunctions.jsx";
+// Librerias
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+
+// Componentes
+import { getCriteria } from "./CriteriaFunctions.jsx";
 
 const GetCriteria = ({ id_criterio, setCriteriaSelect }) => {
   const { data, error, isLoading, isError } = useQuery({

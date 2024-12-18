@@ -1,9 +1,13 @@
-import { getAllCriteria } from "./CriteriaFunctions.jsx";
-import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+// Iconos de Componente
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
+// Librerias
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Componentes
+import { getAllCriteria } from "./CriteriaFunctions.jsx";
 import WriteTable from "../../../tables/DataTables.jsx";
 import ModalWindow from "../../../components/ModalDialog.jsx";
 import Alerta from "../../../components/Alerta.jsx";

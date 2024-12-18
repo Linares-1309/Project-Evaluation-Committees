@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { deleteCriteria } from "./CriteriaFunctions.jsx";
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect, useRef } from "react";
+
+// Componentes
+import { deleteCriteria } from "./CriteriaFunctions.jsx";
 
 const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
   // UseRef para evitar múltiples ejecuciones
