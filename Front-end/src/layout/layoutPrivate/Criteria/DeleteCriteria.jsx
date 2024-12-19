@@ -37,7 +37,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
           confirmButtonColor: "#39a900",
           confirmButtonText: "Ok",
         }).then(() => {
-          setSelectedIdDelete(null); // Restablece el estado después del éxito
+          setSelectedIdDelete(null); // Restablece el estado después del error
           isProcessing.current = false; // Libera el bloqueo
         });
       },
@@ -84,7 +84,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
     });
   };
 
-  // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
+  // UseEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
     if (id_criterio && !isProcessing.current) {
       isProcessing.current = true; // Bloquea múltiples ejecuciones

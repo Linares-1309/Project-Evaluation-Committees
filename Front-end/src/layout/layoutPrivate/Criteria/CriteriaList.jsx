@@ -39,13 +39,15 @@ const CriteriaList = () => {
   // Almacena el criterio que se va a editar
   const [criteriaSelect, setCriteriaSelect] = useState({});
 
-  // Almacena el rol de usuario para asi renderzar botones dinamicos
-  const isAdmin = roleUser === "Admin";
-
   // Limpiar el formulario
   const resetForm = () => {
     setCriteriaSelect({});
+    setSelectedIdEdit(null);
   };
+
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
+  const isAdmin = roleUser === "Admin";
 
   // Toggle para manejar el evnto de abrir y cerrar la modal
   const toggleModal = () => {
@@ -72,7 +74,7 @@ const CriteriaList = () => {
     queryFn: getAllCriteria,
   });
 
-  // Usamos useEffect para manejar las actualizaciones de alerta
+  // UseEffect para manejar las actualizaciones de alerta
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -85,14 +87,19 @@ const CriteriaList = () => {
         error: true,
       });
     } else {
-      // Si la consulta es exitosa, no hay alerta
+      // Si la consulta es exitosa, no hay alerta y se habilita para crear el dataTable
       setAlerta({});
       setCrearDataTable(true);
     }
-  }, [isLoading, isError, error]); // Dependencias: cada vez que cambien estos valores
+  }, [isLoading, isError, error]); // se ejecuta cada que cambien las dependencias
 
+  // Titulo del formulario
   const titleForm = ["Registrar Criterios de Evluación"];
+
+  // Titulos de la tabla
   const titles = ["ID", "Descripción", "Conjunto de Criterios", "Acciones"];
+
+  // Botones de la tabla
   const ButtonsForOtherModules = (id_criterio) => {
     return isAdmin
       ? [
@@ -120,8 +127,11 @@ const CriteriaList = () => {
         ]
       : ["Sin acceso a acciones"];
   };
+
+  // Extraer los criterios de la data
   const setCriteria = data?.Criteria || [];
 
+  // Formatear la data para enviarla a la tabla
   const formattedData = setCriteria.map((criterios) => {
     const rowData = [
       criterios?.id_criterio,
@@ -133,10 +143,12 @@ const CriteriaList = () => {
     return rowData;
   });
 
+  // Actualizar el texto del boton
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
+  // Retornamos el html donde se renderizan los componetes hijos
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
@@ -152,7 +164,7 @@ const CriteriaList = () => {
               criteriaSelect={criteriaSelect}
               textButton={textButton}
               onSuccessSave={refreshData}
-              resetForm={resetForm}
+              setTextButton={setTextButton}
               setSelectedIdEdit={setSelectedIdEdit}
             />
           }

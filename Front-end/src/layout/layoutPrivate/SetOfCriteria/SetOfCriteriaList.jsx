@@ -1,30 +1,52 @@
-import { getAllSetOfCriteria } from "./SetOfCriteriaFunctions.jsx";
-import { useState, useEffect } from "react";
-import Alerta from "../../../components/Alerta.jsx";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+// iconos
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+
+// Librerias
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Componentes
+import { getAllSetOfCriteria } from "./SetOfCriteriaFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
 import WriteTable from "../../../tables/DataTables.jsx";
-import GetSetOfCriteria from "./getSetOfCriteria.jsx";
+import GetSetOfCriteria from "./GetSetOfCriteria.jsx";
 import DeleteSetOfCriteria from "./DeleteSetOfCriteria.jsx";
 import ModalDialog from "../../../components/ModalDialog.jsx";
 import PostSetOfCriteria from "./PostSetOfCriteria.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
 
+// Componente para listar los conjuntos de criterios
 const SetOfCriteriaList = () => {
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+
+  // State para crear la tabla si hay data disponible
   const [crearDataTable, setCrearDataTable] = useState(false);
+
+  // State para almacenar el Id del criterio y asi mosntar el conponente si este esta disponible
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
+
+  // Manejo del modal
   const [isOpen, setIsOpen] = useState(false);
+
+  // Texto del boton
   const [textButton, setTextButton] = useState("Enviar");
+
+  // Rol de usuario
   const { roleUser } = useAuth();
 
+  // State para almacenar el conjunto de criterios seleccionado
   const [setOfCriteriaSelect, setSetOfCriteriaSelect] = useState({});
 
+  // Limpiar el formulario
   const resetForm = () => {
-    setSetOfCriteriaSelect({})
-  }
+    setSetOfCriteriaSelect({});
+    setSelectedIdEdit(null);
+  };
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
   const isAdmin = roleUser === "Admin";
 
   const toggleModal = () => {
@@ -34,10 +56,10 @@ const SetOfCriteriaList = () => {
   // Uso de react-query para manejar el cache
   const queryClient = useQueryClient();
 
+  // Funciones para manejar los eventos de editar y eliminar
   const handleEditClick = (id_conjunto_criterio) => {
     setSelectedIdEdit(id_conjunto_criterio);
   };
-
   const handleDeleteClick = (id_conjunto_criterio) => {
     setSelectedIdDelete(id_conjunto_criterio);
   };
@@ -48,6 +70,7 @@ const SetOfCriteriaList = () => {
     queryFn: getAllSetOfCriteria,
   });
 
+  // Efecto para manejar la carga de la data
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -70,9 +93,13 @@ const SetOfCriteriaList = () => {
     queryClient.invalidateQueries("conjunto-criterios"); // Refrescar la lista de criterios
   };
 
+  // Titulo del formulario
   const titleForm = ["Registrar Conjunto de Criterios de Evluación"];
+
+  // Titulos de la tabla
   const titles = ["ID", "Descripción", "Acciones"];
 
+  // Botones de la tabla
   const ButtonsForOtherModules = (id_conjunto_criterio) => {
     return isAdmin
       ? [
@@ -103,6 +130,7 @@ const SetOfCriteriaList = () => {
 
   const setOfCriteria = data?.setOfCriteria || [];
 
+  // Formatear la data para la tabla
   const formattedData = setOfCriteria.map((conjuntoCriterio) => {
     const rowData = [
       conjuntoCriterio?.id_conjunto_criterio,
@@ -113,10 +141,12 @@ const SetOfCriteriaList = () => {
     return rowData;
   });
 
+  // Actualizar el texto del boton
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
+  // Render
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">

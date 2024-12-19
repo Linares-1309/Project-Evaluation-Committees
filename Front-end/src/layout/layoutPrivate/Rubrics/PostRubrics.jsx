@@ -1,21 +1,36 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { createRubrics, updateRubrics } from "./RubricsFunction";
-import { getAllCriteria } from "../Criteria/CriteriaFunctions";
-import Alerta from "../../../components/Alerta";
+
+// Iconos
 import { BsFillSendFill } from "react-icons/bs";
 
-const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
+// Librerias
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+
+// Componentes
+import { createRubrics, updateRubrics } from "./RubricsFunction.jsx";
+import { getAllCriteria } from "../Criteria/CriteriaFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+
+// Componente para crear y actualizar rubricas
+const PostRubrics = ({
+  rubricSelect,
+  textButton,
+  onSuccessSave,
+  setTextButton,
+  setSelectedIdEdit,
+}) => {
+  // State para el formulario de las rubricas
   const [desRubric, setDesRubric] = useState("");
   const [idCriterio, setIdCriterio] = useState("");
+
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+  // State para almacenar las rubricas seleccionadas
   const [selectedRubric, setSelectedRubric] = useState(null);
   const [criterios, setCriterios] = useState([]);
-  console.log(rubricSelect);
-  
 
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["criterios-for-rubrics"],
@@ -39,11 +54,30 @@ const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
     }
   }, [isLoading, isError, error, data]);
 
+  const setDataForm = () => {
+    setDesRubric(rubricSelect.des_rubricas);
+    setIdCriterio(rubricSelect.id_criterio);
+    const selected = Criteria.find(
+      (criterio) => criterio.id_criterio === rubricSelect.id_criterio
+    );
+    setSelectedRubric(selected || null);
+  };
+  useEffect(() => {
+    setDataForm();
+  }, [rubricSelect]);
+
+  // Limpia el formulario
+  const clearForm = () => {
+    setDesRubric("");
+    setIdCriterio("");
+  };
+
   //   Crear las nuevas rubricas
   const { mutate, isLoading: loading } = useMutation({
     mutationFn: createRubrics,
     onSuccess: (data) => {
       onSuccessSave();
+      clearForm()
       setAlerta({
         msg: data.msg,
         error: false,
@@ -67,6 +101,8 @@ const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
     mutationFn: updateRubrics,
     onSuccess: (data) => {
       onSuccessSave();
+      setTextButton("Enviar");
+      setSelectedIdEdit(null);
       setAlerta({
         msg: data.msg,
         error: false,
@@ -101,19 +137,6 @@ const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
 
   const Criteria = criterios.Criteria || [];
 
-  const setDataForm = () => {
-    setDesRubric(rubricSelect.des_rubricas);
-    setIdCriterio(rubricSelect.id_criterio);
-    const selected = Criteria.find(
-      (criterio) =>
-        criterio.id_criterio === rubricSelect.id_criterio
-    );
-    setSelectedRubric(selected || null);
-  };
-  useEffect(() => {
-    setDataForm();
-  }, [rubricSelect]);
-
   return (
     <>
       <div className="flex justify-center">
@@ -142,7 +165,10 @@ const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
               </div>
             </div>
             <div className="mb-3">
-              <label className="block text-base font-medium text-gray-700 select-none text-start mb-1" htmlFor="Criterios">
+              <label
+                className="block text-base font-medium text-gray-700 select-none text-start mb-1"
+                htmlFor="Criterios"
+              >
                 Criterios
               </label>
               <select
@@ -154,10 +180,7 @@ const PostRubrics = ({ rubricSelect, textButton, onSuccessSave }) => {
               >
                 <option value="">Seleccione un Criterio:</option>
                 {Criteria.map((critero) => (
-                  <option
-                    key={critero.id_criterio}
-                    value={critero.id_criterio}
-                  >
+                  <option key={critero.id_criterio} value={critero.id_criterio}>
                     {critero.des_criterio}
                   </option>
                 ))}

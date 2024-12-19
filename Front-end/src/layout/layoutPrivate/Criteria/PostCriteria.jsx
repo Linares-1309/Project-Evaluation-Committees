@@ -17,13 +17,18 @@ const PostCriteria = ({
   criteriaSelect,
   textButton,
   onSuccessSave,
-  resetForm,
+  setTextButton,
   setSelectedIdEdit,
 }) => {
+  // State para el formulario
   const [desCriterio, setDesCriterio] = useState("");
   const [idConjuntoCriterios, setIdConjuntoCriterios] = useState("");
+
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
   const [selectedSetOfCriteria, setSelectedSetOfCriteria] = useState(null);
+
+  // State para almacenar los conjuntos de criterios
   const [conjuntoCriterios, setConjuntoCriterios] = useState([]);
 
   // Trae todos los conjuntos de criterios
@@ -37,6 +42,7 @@ const PostCriteria = ({
     queryFn: getAllSetOfCriteria,
   });
 
+  // Almacena los conjuntos de criterios
   useEffect(() => {
     if (loading) {
       setAlerta({
@@ -54,6 +60,7 @@ const PostCriteria = ({
     }
   }, [loading, isError, error, data]);
 
+  // Setea los datos del formulario a la hora de editar
   const setDataForm = () => {
     setDesCriterio(criteriaSelect.des_criterio);
     setIdConjuntoCriterios(criteriaSelect.id_conjunto_criterio);
@@ -63,10 +70,12 @@ const PostCriteria = ({
     );
     setSelectedSetOfCriteria(selected || null);
   };
+  
   useEffect(() => {
     setDataForm();
   }, [criteriaSelect]);
 
+  // Limpia el formulario
   const clearForm = () => {
     setDesCriterio("");
     setIdConjuntoCriterios("");
@@ -101,12 +110,15 @@ const PostCriteria = ({
     mutationFn: updateCriteria,
     onSuccess: (data) => {
       onSuccessSave();
+      setTextButton("Enviar");
       setSelectedIdEdit(null);
-      resetForm();
       setAlerta({
         msg: data.msg,
         error: false,
       });
+      setTimeout(() => {
+        clearForm(); // Limpia el formulario
+      }, 0);
     },
     onError: (error) => {
       setAlerta({
@@ -116,6 +128,7 @@ const PostCriteria = ({
     },
   });
 
+  // Maneja el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (desCriterio.length < 10) {
@@ -145,8 +158,10 @@ const PostCriteria = ({
     }
   };
 
+  // Almacena los conjuntos de criterios
   const setOfCriteria = conjuntoCriterios.setOfCriteria || [];
 
+  // Render
   return (
     <>
       <div className="flex justify-center">

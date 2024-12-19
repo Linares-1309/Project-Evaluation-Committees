@@ -1,42 +1,69 @@
-import { getAllRubrics } from "./RubricsFunction";
-import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+// Iconos de Componente
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-import WriteTable from "../../../tables/DataTables";
-import ModalWindow from "../../../components/ModalDialog";
-import Alerta from "../../../components/Alerta";
-import GetRubrics from "./GetRubrics";
-import PostRubrics from "./PostRubrics";
-import DeleteRubrics from "./DeleteRubrics";
-import useAuth from "../../../hooks/useAuth";
+// Librerias
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+// Componentes
+import { getAllRubrics } from "./RubricsFunction.jsx";
+import WriteTable from "../../../tables/DataTables.jsx";
+import ModalWindow from "../../../components/ModalDialog.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+import GetRubrics from "./GetRubrics.jsx";
+import PostRubrics from "./PostRubrics.jsx";
+import DeleteRubrics from "./DeleteRubrics.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
+
+// Componente para listar las rubricas
 const RubricsList = () => {
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+
+  // State para crear la tabla si hay data disponible
   const [crearDataTable, setCrearDataTable] = useState(false);
+
+  // State para almacenar el Id de la rubrica y asi mosntar el conponente si este esta disponible
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
-  const [textButton, setTextButton] = useState("Enviar");
-  const [isOpen, setIsOpen] = useState(false);
-  const { roleUser } = useAuth();
-  const [rubricSelect, setRubricSelect] = useState({
-    id_rubricas: "",
-    des_rubricas: "",
-    id_criterio: "",
-  });
 
+  // Texto del boton
+  const [textButton, setTextButton] = useState("Enviar");
+
+  // State para abrir y cerrar la ventana modal del formulario
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
+  const { roleUser } = useAuth();
+
+  // State para almacenar la rubrica seleccionada
+  const [rubricSelect, setRubricSelect] = useState({});
+
+    // Limpiar el formulario
+    const resetForm = () => {
+      setRubricSelect({});
+      setSelectedIdEdit(null);
+    };
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
   const isAdmin = roleUser === "Admin";
+
+  // Toggle para manejar el evnto de abrir y cerrar la modal
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
+  // Refrescar la data usando la queryKey
   const queryClient = useQueryClient();
+  const refreshData = () => {
+    queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
+  };
 
+  // Almacenar los id para motar los componentes
   const handleEditClick = (id_rubricas) => {
     setSelectedIdEdit(id_rubricas);
   };
-
   const handleDeleteClick = (id_rubricas) => {
     setSelectedIdDelete(id_rubricas);
   };
@@ -47,7 +74,7 @@ const RubricsList = () => {
     queryFn: getAllRubrics,
   });
 
-  // Usamos useEffect para manejar las actualizaciones de alerta
+  // UseEffect para manejar las actualizaciones de alerta
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -66,14 +93,13 @@ const RubricsList = () => {
     }
   }, [isLoading, isError, error]); // Dependencias: cada vez que cambien estos valores
 
-  // Función que se llama cuando se elimina un criterio
-  const refreshData = () => {
-    queryClient.invalidateQueries("criterios"); // Refrescar la lista de criterios
-  };
-
+  // Titulos del formulario
   const titleForm = ["Registrar Rubricas"];
+
+  // Titulos de la tabla
   const titles = ["ID", "Descripción", "Criterios", "Acciones"];
 
+  // Botones de la tabla
   const ButtonsForOtherModules = (id_rubricas) => {
     return isAdmin
       ? [
@@ -104,6 +130,7 @@ const RubricsList = () => {
 
   const Rubrics = data?.Rubrics || [];
 
+  // Formatear la data para la tabla
   const formattedData = Rubrics.map((rubricas) => {
     const rowData = [
       rubricas?.id_rubricas,
@@ -116,10 +143,12 @@ const RubricsList = () => {
     return rowData;
   });
 
+  // Actualizar el texto del boton
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
+  // Renderizar el componente
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
@@ -129,11 +158,14 @@ const RubricsList = () => {
         <ModalWindow
           toggleModal={toggleModal}
           isOpen={isOpen}
+          resetForm={resetForm}
           form={
             <PostRubrics
               rubricSelect={rubricSelect}
               textButton={textButton}
               onSuccessSave={refreshData}
+              setTextButton={setTextButton}
+              setSelectedIdEdit={setSelectedIdEdit}
             />
           }
           titleForm={titleForm}

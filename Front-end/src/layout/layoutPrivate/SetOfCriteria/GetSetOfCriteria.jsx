@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {  useEffect } from "react";
 
 const GetSetOfCriteria = ({ id_conjunto_criterio, setSetOfCriteriaSelect }) => {
+  // Consulta para traer un conjunto de criterios por ID
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["conjunto-criterios-by-id", id_conjunto_criterio],
     queryFn: () => getSetOfCriteria(id_conjunto_criterio),
@@ -13,6 +14,7 @@ const GetSetOfCriteria = ({ id_conjunto_criterio, setSetOfCriteriaSelect }) => {
   // useEffect para actualizar los criterios cuando cambie el id_conjunto_criterio
   useEffect(() => {
     if (data) {
+      // Almacenar el conjunto de criterios seleccionado
       setSetOfCriteriaSelect({
         id_conjunto_criterio: data.id_conjunto_criterio,
         des_conjunto_criterio: data.des_conjunto_criterio,

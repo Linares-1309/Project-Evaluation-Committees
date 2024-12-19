@@ -1,5 +1,7 @@
+// instancia de axios para hacer las peticiones al backend
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
+// Trae todos los conjuntos de criterios
 export const getAllSetOfCriteria = async () => {
   try {
     const resonse = await ClientAxios("set-of-criteria/");
@@ -11,6 +13,7 @@ export const getAllSetOfCriteria = async () => {
   }
 };
 
+// Trae un conjunto de criterios por ID
 export const getSetOfCriteria = async (id_conjunto_criterio) => {
   try {
     const response = await ClientAxios(
@@ -24,6 +27,7 @@ export const getSetOfCriteria = async (id_conjunto_criterio) => {
   }
 };
 
+// Crea un nuevo conjunto de criterios
 export const createNewSetOfCriteria = async (data_SetOfCriteria) => {
   try {
     const response = await ClientAxios.post("set-of-criteria/", {
@@ -38,6 +42,7 @@ export const createNewSetOfCriteria = async (data_SetOfCriteria) => {
   }
 };
 
+// Actualiza un conjunto de criterios
 export const updateSetOfCriteria = async (data_SetOfCriteria) => {
   try {
     const response = await ClientAxios.put(
@@ -51,6 +56,8 @@ export const updateSetOfCriteria = async (data_SetOfCriteria) => {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
+
+// Elimina un conjunto de criterios
 export const deleteSetOfCriteria = async (id_conjunto_criterio) => {
   try {
     const response = await ClientAxios.delete(

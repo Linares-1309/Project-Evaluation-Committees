@@ -1,25 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+// Iconos del componente
+import { BsFillSendFill } from "react-icons/bs";
+
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+
+// Componentes
 import {
   createNewSetOfCriteria,
   updateSetOfCriteria,
-} from "./SetOfCriteriaFunctions";
-import Alerta from "../../../components/Alerta";
-import { BsFillSendFill } from "react-icons/bs";
+} from "./SetOfCriteriaFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
 
+// Componente para crear un nuevo conjunto de criterios
 const PostSetOfCriteria = ({
-  onSuccessSave,
   setOfCriteriaSelect,
+  onSuccessSave,
   textButton,
   setTextButton,
   setSelectedIdEdit,
 }) => {
+  // State para el formulario
   const [desConjuntoCriterios, setDesConjuntoCriterios] = useState("");
+
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
 
+  // Funcion para setear los datos del formulario
   const setDataForm = () => {
     setDesConjuntoCriterios(setOfCriteriaSelect?.des_conjunto_criterio || "");
   };
@@ -27,6 +37,7 @@ const PostSetOfCriteria = ({
     setDataForm();
   }, [setOfCriteriaSelect]);
 
+  // Limpiar el formulario
   const clearForm = () => {
     setDesConjuntoCriterios("");
   };
@@ -68,7 +79,7 @@ const PostSetOfCriteria = ({
         error: false,
       });
       setTimeout(() => {
-        clearForm(); // O asegúrate de que esta función maneje el estado correctamente
+        clearForm(); // Limpia el formulario
       }, 0);
     },
     onError: (error) => {
@@ -79,6 +90,7 @@ const PostSetOfCriteria = ({
     },
   });
 
+  // Funcion para manejar el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (desConjuntoCriterios.length < 10) {
@@ -105,6 +117,7 @@ const PostSetOfCriteria = ({
     }
   };
 
+  // Render
   return (
     <>
       <div className="flex justify-center">

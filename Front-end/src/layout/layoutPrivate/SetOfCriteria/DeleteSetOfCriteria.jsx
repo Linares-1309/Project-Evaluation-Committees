@@ -16,6 +16,7 @@ const DeleteSetOfCriteria = ({
   // Configuración del Mutation
   const { mutateAsync: deleteCriteria } = useMutation({
     mutationFn: deleteSetOfCriteria,
+    // Manejo de éxito
     onSuccess: () => {
       onSuccessDel(); // Refresca datos en el componente padre
       Swal.fire({
@@ -29,6 +30,7 @@ const DeleteSetOfCriteria = ({
         isProcessing.current = false; // Libera el bloqueo
       });
     },
+    // Manejo de errores
     onError: () => {
       Swal.fire({
         title: "Error",
