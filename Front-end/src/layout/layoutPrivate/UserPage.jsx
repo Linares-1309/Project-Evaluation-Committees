@@ -17,11 +17,15 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 // Componentes
 import useAuth from "../../hooks/useAuth.jsx";
 
+// Variables globales
 const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
+// Componente principal
 const UserPage = () => {
+  // Extraemos la data del usuario
   const { auth, cargando, cerrarSesion } = useAuth();
 
+  // Validamos si hay un error al cargar la pagina
   if (cargando) {
     return (
       <>

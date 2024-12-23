@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { deleteProponent } from "./ProponentsFunctions";
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect, useRef } from "react";
+
+// Componentes
+import { deleteProponent } from "./ProponentsFunctions.jsx";
 
 const DeleteProponents = ({
   id_proponente,
@@ -13,6 +16,7 @@ const DeleteProponents = ({
   // UseRef para evitar múltiples ejecuciones
   const isProcessing = useRef(false);
 
+  // Mutación para eliminar un registro
   const { mutateAsync: deleteProponentById, isLoading: isDeleting } =
     useMutation({
       mutationFn: deleteProponent,
@@ -25,7 +29,7 @@ const DeleteProponents = ({
           confirmButtonColor: "#39a900",
           confirmButtonText: "Ok",
         }).then(() => {
-          setSelectedIdDelete(null); // Restablece el estado después de cancelar
+          setSelectedIdDelete(null); // Restablece el estado después de éxito
           isProcessing.current = false; // Libera el bloqueo
         });
       },
@@ -37,7 +41,7 @@ const DeleteProponents = ({
           confirmButtonColor: "#39a900",
           confirmButtonText: "Ok",
         }).then(() => {
-          setSelectedIdDelete(null); // Restablece el estado después de cancelar
+          setSelectedIdDelete(null); // Restablece el estado después de error
           isProcessing.current = false; // Libera el bloqueo
         });
       },
@@ -62,6 +66,7 @@ const DeleteProponents = ({
     });
   };
 
+  // Función para eliminar un registro
   const handleDelete = async () => {
     try {
       await deleteProponentById(id_proponente);
@@ -71,6 +76,7 @@ const DeleteProponents = ({
     }
   };
 
+  // Función para cancelar la eliminación
   const handleCancel = () => {
     Swal.fire({
       title: "Cancelado!",
@@ -84,7 +90,7 @@ const DeleteProponents = ({
     });
   };
 
-  // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
+  // UseEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
     if (id_proponente && !isProcessing.current) {
       isProcessing.current = true; // Bloquea múltiples ejecuciones

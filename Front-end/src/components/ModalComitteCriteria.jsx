@@ -67,7 +67,7 @@ const ModalComitteCriteria = ({ toggleModal, isOpen, id_comité_criterios }) => 
           aria-hidden="true"
           className="fixed inset-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50 backdrop-blur-sm"
         >
-          <div className="relative p-4 w-full max-w-3xl max-h-full">
+          <div className="relative p-4 w-full max-w-6xl max-h-full">
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">

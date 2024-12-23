@@ -1,18 +1,25 @@
 /* eslint-disable no-unused-vars */
-import { getIdea } from "./IdeasFunctions";
+// Librerias
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import useProvider from "../../../hooks/useProvider";
 
+// Componentes
+import { getIdea } from "./IdeasFunctions.jsx";
+import useProvider from "../../../hooks/useProvider.jsx";
 
+// Componente para traer una idea por ID
 const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
+  // Contexto para almacenar la idea seleccionada
   const { setSelectedIdIdeas } = useProvider();
+
+  // Consulta para traer una idea por ID
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["idea-by-id", id_idea],
     queryFn: () => getIdea(id_idea),
     enabled: !!id_idea,
   });
 
+  // Consulta para traer una idea por ID para el comite
   const {
     data: dataForCommitte,
     error: errorForCommitte,
@@ -26,6 +33,7 @@ const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
 
   useEffect(() => {
     if (data) {
+      // Almacenar la idea seleccionada
       setIdeaSelect({
         id_idea: data?.id_idea,
         nom_idea: data?.nom_idea,
@@ -36,6 +44,7 @@ const GetIdea = ({ id_idea, setIdeaSelect, id_idea_for_committe }) => {
       });
     }
     if (dataForCommitte) {
+      // Almacenar la idea seleccionada para el comite
       setSelectedIdIdeas({
         id_idea: dataForCommitte?.id_idea,
         nom_idea: dataForCommitte?.nom_idea,

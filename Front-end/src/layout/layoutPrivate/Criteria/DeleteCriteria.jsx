@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 // Librerias
@@ -13,6 +12,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
   // UseRef para evitar múltiples ejecuciones
   const isProcessing = useRef(false);
 
+  // Mutación para eliminar un registro
   const { mutateAsync: deleteCriteriaById, isLoading: isDeleting } =
     useMutation({
       mutationFn: deleteCriteria,
@@ -62,6 +62,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
     });
   };
 
+  // Función para eliminar un registro
   const handleDelete = async () => {
     try {
       await deleteCriteriaById(id_criterio); // Realizar la eliminación
@@ -71,6 +72,7 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
     }
   };
 
+  // Función para cancelar la eliminación
   const handleCancel = () => {
     Swal.fire({
       title: "Cancelado!",
@@ -91,8 +93,6 @@ const DeleteCriteria = ({ id_criterio, onSuccessDel, setSelectedIdDelete }) => {
       confirmDelete();
     }
   }, [id_criterio]); // Solo ejecutar cuando `id_criterio` esté disponible
-
-  return null;
 };
 
 export default DeleteCriteria;

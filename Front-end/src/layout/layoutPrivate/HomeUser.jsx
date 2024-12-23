@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import { FaUsers, FaFileAlt, FaClipboardList } from "react-icons/fa";
 import { IoSettings } from "react-icons/io5";
-const HomePrivate = () => {
+const HomePrivateUser = () => {
   return (
     <div className="container mx-auto px-4">
       <header className="text-center">
         <img
           src="/public/logoTecnoParque.png"
           alt="Tecnoparque Tolima"
-          className="mx-auto w-32 h-14 md:w-48 md:h-36 object-contain"
+          className="mx-auto w-32 h-24 md:w-48 md:h-48 object-contain"
         />
         <h1 className="text-4xl md:text-6xl font-bold text-green-500 font-RobotoSlab">
           Tecnoparque Tolima
@@ -34,28 +34,28 @@ const HomePrivate = () => {
         </h2>
         <div className="flex flex-wrap justify-center gap-8 mt-7">
           <Link
-            to="/admin/ideas"
+            to="/user/ideas"
             className="block p-3 w-2/4 md:w-1/4 bg-white text-green-500 text-center rounded-lg shadow-lg transform transition-transform hover:scale-105"
           >
             <FaFileAlt size={23} className="inline-block mb-1" />
             <span className="ml-2">Ver Ideas</span>
           </Link>
           <Link
-            to="/admin/comites"
+            to="/user/comites"
             className="block p-3 w-2/4 md:w-1/4 bg-white text-green-500 text-center rounded-lg shadow-lg transform transition-transform hover:scale-105"
           >
             <FaClipboardList size={23} className="inline-block mb-1" />
             <span className="ml-2">Ver Comités</span>
           </Link>
           <Link
-            to="/admin/proponentes"
+            to="/user/proponentes"
             className="block p-3 w-2/4 md:w-1/4 bg-white text-green-500 text-center rounded-lg shadow-lg transform transition-transform hover:scale-105"
           >
             <FaUsers size={23} className="inline-block mb-1" />
             <span className="ml-2">Proponentes</span>
           </Link>
           <Link
-            to="/admin/ajustes"
+            to="/user/ajustes"
             className="block p-3 w-2/4 md:w-1/4 bg-white text-green-500 text-center rounded-lg shadow-lg transform transition-transform hover:scale-105"
           >
             <IoSettings size={23} className="inline-block mb-1" />
@@ -73,4 +73,4 @@ const HomePrivate = () => {
   );
 };
 
-export default HomePrivate;
+export default HomePrivateUser;

@@ -1,14 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { deleteIdea } from "./IdeasFunctions";
+
+// Librerias
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useEffect, useRef } from "react";
 
+// Componentes
+import { deleteIdea } from "./IdeasFunctions.jsx";
+
+// Componente para eliminar una idea
 const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
   // UseRef para evitar múltiples ejecuciones
   const isProcessing = useRef(false);
 
+  // Mutación para eliminar una idea
   const { mutateAsync: deleteIdeaById, isLoading: isDeleting } = useMutation({
     mutationFn: deleteIdea,
     onSuccess: () => {
@@ -57,6 +63,7 @@ const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
     });
   };
 
+  // Función para eliminar la idea
   const handleDelete = async () => {
     try {
       await deleteIdeaById(id_idea); // Realizar la eliminación
@@ -66,6 +73,7 @@ const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
     }
   };
 
+  // Función para cancelar la eliminación
   const handleCancel = () => {
     Swal.fire({
       title: "Cancelado!",
@@ -79,7 +87,7 @@ const DeleteIdea = ({ id_idea, onSuccessDel, setSelectedIdDelete }) => {
     });
   };
 
-  // Usar useEffect para ejecutar la confirmación solo cuando se reciba el id
+  // UseEffect para ejecutar la confirmación solo cuando se reciba el id
   useEffect(() => {
     if (id_idea && !isProcessing.current) {
       isProcessing.current = true; // Bloquea múltiples ejecuciones

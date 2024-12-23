@@ -12,6 +12,7 @@ const DeleteUser = ({ Id_User, onSuccessDel, setSelectedIdDelete }) => {
   // UseRef para evitar múltiples ejecuciones
   const isProcessing = useRef(false);
 
+  // Mutación para eliminar un usuario
   const { mutateAsync: deleteUserById, isLoading: isDeleting } = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
@@ -60,6 +61,7 @@ const DeleteUser = ({ Id_User, onSuccessDel, setSelectedIdDelete }) => {
     });
   };
 
+  // Función para eliminar un usuario
   const handleDelete = async () => {
     try {
       await deleteUserById(Id_User); // Realizar la eliminación
@@ -69,6 +71,7 @@ const DeleteUser = ({ Id_User, onSuccessDel, setSelectedIdDelete }) => {
     }
   };
 
+  // Función para cancelar la eliminación
   const handleCancel = () => {
     Swal.fire({
       title: "Cancelado!",

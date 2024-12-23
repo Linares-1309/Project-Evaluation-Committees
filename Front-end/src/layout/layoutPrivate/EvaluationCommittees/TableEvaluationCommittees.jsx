@@ -1,25 +1,35 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useMemo } from "react";
+
+// Librerías
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import CryptoJS from "crypto-js";
 
+// Componentes y funciones
 import { getAllSetOfCriteria } from "../SetOfCriteria/SetOfCriteriaFunctions.jsx";
 import { newEvaluationCommitte } from "./EvaluationCommitteesFunctions.jsx";
-import { getAllCriteria } from "../Criteria/CriteriaFunctions";
-import { getAllRubrics } from "../Rubrics/RubricsFunction";
-import Alerta from "../../../components/Alerta";
-import useAuth from "../../../hooks/useAuth";
+import { getAllCriteria } from "../Criteria/CriteriaFunctions.jsx";
+import { getAllRubrics } from "../Rubrics/RubricsFunction.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 import useProvider from "../../../hooks/useProvider.jsx";
 
+// Variables globales
 const KEY_SECRET = `${import.meta.env.VITE_SECRET_KEY_LOCAL}`;
 
+// Componente principal
 const TableEvaluationCommittes = () => {
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+
+  // Hooks
   const { auth, roleUser } = useAuth();
   const navigate = useNavigate();
-  const { setSelectedIdIdeas, setSeletedCommittee } = useProvider()
+
+  // Hooks para el manejo de los datos
+  const { setSelectedIdIdeas, setSeletedCommittee } = useProvider();
 
   // State para la tabla de los comite
   const [idComite, setIdcomite] = useState("");
@@ -31,17 +41,22 @@ const TableEvaluationCommittes = () => {
   const [selectedValues, setSelectedValues] = useState({});
   const [obsComite, setObsComite] = useState("");
 
+  // State para la información de los comites
   const [committee, setCommittee] = useState(null);
+
+  // State para la información de las ideas
   const [idea, setIdea] = useState(null);
 
+  // State para el manejo de la vista
   const [viewState, setViewState] = useState(false);
 
+  // Query para refrescar los datos
   const queryClient = useQueryClient();
-
   const refreshData = () => {
     queryClient.invalidateQueries("ideas");
   };
 
+  // Mutación para enviar la información del comite
   const { mutate, isError, isLoading } = useMutation({
     mutationFn: newEvaluationCommitte,
     onSuccess: (data) => {
@@ -70,6 +85,7 @@ const TableEvaluationCommittes = () => {
     queryFn: getAllRubrics,
   });
 
+  // Manejo de la alerta
   useEffect(() => {
     if (iSLoadingRubrics) {
       setAlerta({
@@ -97,6 +113,7 @@ const TableEvaluationCommittes = () => {
     queryFn: getAllCriteria,
   });
 
+  // Manejo de la alerta
   useEffect(() => {
     if (isLoadingCriteria) {
       setAlerta({
@@ -124,6 +141,7 @@ const TableEvaluationCommittes = () => {
     queryFn: getAllSetOfCriteria,
   });
 
+  //  Manejo de la alerta
   useEffect(() => {
     if (isLoadingSetOfCriteria) {
       setAlerta({
@@ -140,11 +158,16 @@ const TableEvaluationCommittes = () => {
     }
   }, [isLoadingSetOfCriteria, isErrorSetOfCriteria, errorSetOfCriteria]);
 
+  // Obtener la información de los criterios de evaluacion
   const criterios = dataCriteria?.Criteria || [];
+
+  // Obtener la información de los conjuntos de criterios de evaluacion
   const SetOfCriteria = dataSetOfCriteria?.setOfCriteria || [];
+
+  // Obtener la información de las rubricas
   const Rubrics = dataRubrics?.Rubrics || [];
 
-  // Manejar el cambio de los selects
+  // Función para manejar el cambio de los select
   const handleChange = (criterioId, value) => {
     setSelectedValues((prevState) => ({
       ...prevState,
@@ -152,6 +175,7 @@ const TableEvaluationCommittes = () => {
     }));
   };
 
+  // Función para cargar la información del local storage
   const loadDataFromLocalStorage = (key) => {
     const encryptedData = localStorage.getItem(key);
     if (!encryptedData) {
@@ -161,22 +185,26 @@ const TableEvaluationCommittes = () => {
     const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
     return JSON.parse(decryptedData);
   };
+
+  // Cargar la información del local storage
   useEffect(() => {
     const idea = loadDataFromLocalStorage("dataIdea");
     const committee = loadDataFromLocalStorage("dataCommitte");
 
-    if (committee || idea) {
+    if (committee) {
       setCommittee(committee);
+    } else if (idea) {
       setIdea(idea);
     } else {
       if (roleUser === "Admin") {
-        navigate("/admin/comites");
+        // navigate("/admin/comites");
       } else if (roleUser === "Calificador") {
         navigate("/user/comites");
       }
     }
-  }, [navigate]);
+  }, [navigate, roleUser]);
 
+  // Enviar la información del comite a la tabla
   useEffect(() => {
     if (committee) {
       sendTableInformationCommitte();
@@ -189,7 +217,7 @@ const TableEvaluationCommittes = () => {
     const fechaArray = committee?.fec_comite_evaluacion.split("-");
     setFecha(fechaArray);
     setIdcomite(committee?.id_comites_evaluacion);
-    setEvaluador(committee?.user?.username);
+    setEvaluador(committee?.user?.fullName);
     setTituloIdea(committee?.ideas?.nom_idea);
     setCodigoIdea(committee?.ideas?.id_idea);
     setProponente(
@@ -199,12 +227,15 @@ const TableEvaluationCommittes = () => {
     );
     setViewState(true);
   };
+
+  // Enviar la información de la idea a la tabla
   useEffect(() => {
     if (idea) {
       setDtaCommittees();
     }
   }, [idea]);
 
+  // Se envia la información de la idea a la tabla
   const setDtaCommittees = async () => {
     setIdcomite(generateRandomIdCommittee());
     setFecha([año, mes, dia]);
@@ -214,6 +245,7 @@ const TableEvaluationCommittes = () => {
     setProponente(idea?.nom_proponente);
   };
 
+  // Función para enviar la información del comite
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -257,6 +289,7 @@ const TableEvaluationCommittes = () => {
   const mes = hoy.getMonth() + 1;
   const año = hoy.getFullYear();
 
+  // Generamos un id aleatorio para el comite
   const generateRandomIdCommittee = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";
@@ -272,6 +305,7 @@ const TableEvaluationCommittes = () => {
     return code;
   };
 
+  // Limpiar los datos de la tabla
   const clearDataForTable = async () => {
     setIdcomite("");
     setFecha("");
@@ -281,12 +315,18 @@ const TableEvaluationCommittes = () => {
     setProponente("");
     setSelectedValues({});
     setObsComite("");
+    setIdea(null);
+    setCommittee(null);
   };
 
+  // Redireccionar a la vista anterior
   const handleGoBack = () => {
-    clearDataForTable();
-    setViewState(false);
+    setAlerta({
+      msg: "REDIRECCIONANDO...",
+      error: false,
+    });
     const timer = setTimeout(() => {
+      clearDataForTable();
       localStorage.removeItem("dataIdea");
       localStorage.removeItem("dataCommitte");
       if (roleUser === "Admin") {
@@ -294,13 +334,14 @@ const TableEvaluationCommittes = () => {
       } else if (roleUser === "Calificador") {
         navigate("/user/ideas");
       }
+      setViewState(false);
     }, 2000);
     return () => clearTimeout(timer);
   };
 
+  // Limpiar los estados cuando el componente se desmonte
   useEffect(() => {
     return () => {
-      // Limpiar estados cuando el componente se desmonte
       setFecha([]);
       setIdcomite("");
       setEvaluador("");
@@ -310,12 +351,19 @@ const TableEvaluationCommittes = () => {
       setViewState(false);
       setSelectedValues({});
       setObsComite("");
-      setSelectedIdIdeas({})
-      setSeletedCommittee({})
+      setSelectedIdIdeas({});
+      setSeletedCommittee({});
+      clearDataForTable();
     };
-  }, []);
+  }, [location.pathname]);
+
+  // useEffect(() => {
+  //   // Limpia al montar el componente o volver a la vista
+  //   clearDataForTable();
+  // }, []); // `location.pathname` depende de `react-router-dom`
   
 
+  // Renderizar la tabla
   return (
     <>
       <table>
@@ -470,7 +518,11 @@ const TableEvaluationCommittes = () => {
                             <select
                               name=""
                               id=""
-                              className="w-full bg-transparent placeholder:text-gray-800 text-sm border border-green-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-300 shadow-sm focus:shadow appearance-none cursor-pointer focus:ring-green-500 "
+                              className={
+                                viewState
+                                  ? "w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 cursor-not-allowed"
+                                  : "w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 cursor-pointer"
+                              }
                               onChange={(e) =>
                                 handleChange(
                                   criterio.id_criterio,
@@ -511,7 +563,11 @@ const TableEvaluationCommittes = () => {
                         </td>
                         <td className="border border-black p-2 text-center align-middle">
                           <select
-                            className="w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 "
+                            className={
+                              viewState
+                                ? "w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 cursor-not-allowed"
+                                : "w-full bg-transparent text-sm border border-green-200 rounded pl-3 pr-8 py-2 focus:outline-none focus:border-green-500 hover:border-green-300 focus:ring-green-500 cursor-pointer"
+                            }
                             onChange={(e) =>
                               handleChange(
                                 criterio.id_criterio,
@@ -534,22 +590,27 @@ const TableEvaluationCommittes = () => {
             })}
           </tbody>
         </table>
-        <table className="table-auto w-full  text-sm rtl:text-right text-center table table-responsive border-b border-black">
-          <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black">
+        <table className="table-auto w-full text-sm rtl:text-right text-center table table-responsive border-b border-black">
+          <thead className="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-black w-full">
             <tr>
-              <th className="border border-black bg-gray-200 select-none p-2">
+              <th className="border border-black bg-gray-200 select-none p-2 w-full">
                 Observaciones del Evaluador
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="w-full">
             <tr>
-              <td className="align-middle border border-black p-2">
+              <td className="align-middle border border-black p-2 w-full ">
                 <textarea
                   id="message"
-                  rows="3"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50
-                 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500 select-none"
+                  rows="5"
+                  className={
+                    viewState
+                      ? `block p-2.5 w-full text-sm text-gray-900 bg-gray-50
+            focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500 select-none cursor-not-allowed`
+                      : `block p-2.5 w-full text-sm text-gray-900 bg-gray-50
+            focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500 select-none cursor-pointer`
+                  }
                   placeholder="Escribe las observaciones..."
                   onChange={(e) => setObsComite(e?.target?.value)}
                   value={obsComite}
@@ -560,22 +621,23 @@ const TableEvaluationCommittes = () => {
           </tbody>
 
           <tfoot>
+            <tr className={alerta.msg ? `border border-black` : ``}>
+              <td className=" flex justify-center">
+                <div className={alerta.msg ? `py-3 w-2/4  ` : ``}>
+                  {alerta.msg && (
+                    <Alerta alerta={alerta} setAlerta={setAlerta} />
+                  )}
+                </div>
+              </td>
+            </tr>
             <tr className="border border-black">
-              <div className="m-4">
-                {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-              </div>
-              <td className=" flex justify-around">
+              <td className="flex justify-around">
                 {viewState ? (
                   " "
                 ) : (
                   <button
                     type="submit"
-                    className={
-                      viewState
-                        ? `bg-green-400 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36 cursor-not-allowed`
-                        : `bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36`
-                    }
-                    disabled={viewState}
+                    className="bg-green-500 text-white py-3 m-4 px-5 rounded-md font-bold uppercase w-36"
                   >
                     Guardar
                   </button>

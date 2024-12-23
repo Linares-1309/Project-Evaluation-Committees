@@ -70,7 +70,7 @@ const PostCriteria = ({
     );
     setSelectedSetOfCriteria(selected || null);
   };
-  
+
   useEffect(() => {
     setDataForm();
   }, [criteriaSelect]);

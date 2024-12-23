@@ -1,34 +1,69 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { createNewProponent, updateProponent } from "./ProponentsFunctions";
-import Alerta from "../../../components/Alerta";
-import { BsFillSendFill, BsTelephoneFill } from "react-icons/bs";
+
+// Iconos del componente
 import { GoNumber } from "react-icons/go";
+import { BsFillSendFill, BsTelephoneFill } from "react-icons/bs";
 import {
   MdDriveFileRenameOutline,
   MdOutlineTextFields,
   MdEmail,
 } from "react-icons/md";
 
-const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
+// Librerias
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+
+// Componentes
+import { createNewProponent, updateProponent } from "./ProponentsFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+
+const PostProponents = ({
+  proponentSelect,
+  textButton,
+  onSuccessUpdate,
+  setTextButton,
+  setSelectedIdEdit,
+}) => {
+  // State para el formulario
   const [idProponente, setIdProponente] = useState("");
   const [nombreProponente, setNombreProponente] = useState("");
   const [apellidoProponente, setApellidoProponente] = useState("");
   const [correoProponente, setCorreoProponente] = useState("");
   const [telefonoProponente, setTelefonoProponente] = useState("");
 
-  const [alerta, setAlerta] = useState({
-    msg: "",
-    error: false,
-  });
+  // State para la alerta
+  const [alerta, setAlerta] = useState({});
+
+  // Setea los datos del formulario a la hora de editar
+  const setDataForm = () => {
+    setIdProponente(proponentSelect?.id_proponente),
+      setNombreProponente(proponentSelect?.nombres_proponente),
+      setApellidoProponente(proponentSelect?.apellidos_proponente),
+      setCorreoProponente(proponentSelect?.correo_proponente),
+      setTelefonoProponente(proponentSelect?.telefono_proponente);
+  };
+
+  useEffect(() => {
+    setDataForm();
+  }, [proponentSelect]);
+
+  // Limpia el formulario
+  const clearForm = () => {
+    setIdProponente("");
+    setNombreProponente("");
+    setApellidoProponente("");
+    setCorreoProponente("");
+    setTelefonoProponente("");
+  };
 
   // Registrar el nuevo proponente
   const { mutate, isLoading } = useMutation({
     mutationFn: createNewProponent,
     onSuccess: (data) => {
+      onSuccessUpdate();
+      clearForm();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -52,10 +87,15 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
     mutationFn: updateProponent,
     onSuccess: (data) => {
       onSuccessUpdate();
+      setTextButton("Enviar");
+      setSelectedIdEdit(null);
       setAlerta({
         msg: data.msg,
         error: false,
       });
+      setTimeout(() => {
+        clearForm(); // Limpia el formulario
+      }, 0);
     },
     onError: (error) => {
       setAlerta({
@@ -65,6 +105,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
     },
   });
 
+  // Maneja el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!idProponente || idProponente.length < 8) {
@@ -109,18 +150,7 @@ const PostProponents = ({ proponentSelect, textButton, onSuccessUpdate }) => {
     }
   };
 
-  const setDataForm = () => {
-    setIdProponente(proponentSelect?.id_proponente),
-      setNombreProponente(proponentSelect?.nombres_proponente),
-      setApellidoProponente(proponentSelect?.apellidos_proponente),
-      setCorreoProponente(proponentSelect?.correo_proponente),
-      setTelefonoProponente(proponentSelect?.telefono_proponente);
-  };
-
-  useEffect(() => {
-    setDataForm();
-  }, [proponentSelect]);
-
+  // Render
   return (
     <>
       <div className="flex justify-center">

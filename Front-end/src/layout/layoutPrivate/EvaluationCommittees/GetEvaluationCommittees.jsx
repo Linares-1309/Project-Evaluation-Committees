@@ -1,20 +1,29 @@
 /* eslint-disable no-unused-vars */
-import { getEvaluationCommitte } from "./EvaluationCommitteesFunctions.jsx";
+
+// Libraries
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+
+// Components and functions
+import { getEvaluationCommitte } from "./EvaluationCommitteesFunctions.jsx";
 import useProvider from "../../../hooks/useProvider.jsx";
 
-const GetEvaluationCommittees = ({ setCommitteeSelect, id_comite }) => {
+// Get evaluation committees
+const GetEvaluationCommittees = ({ id_comite }) => {
+  // Custom hook to use the provider
   const { setSeletedCommittee } = useProvider();
+
+  // Get the evaluation committee
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["committe-for-table", id_comite],
     queryFn: () => getEvaluationCommitte(id_comite),
     enabled: !!id_comite,
   });
 
+  // Use effect to set the selected committee
   useEffect(() => {
-    if (data) {      
-      setSeletedCommittee(data.EvaluationCommitte)
+    if (data) {
+      setSeletedCommittee(data.EvaluationCommitte);
     }
   });
 };

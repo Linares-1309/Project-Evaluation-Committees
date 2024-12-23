@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
+// Librerías
+import { FaEye } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaEye, FaEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
+// Componentes y funciones
 import WriteTable from "../../../tables/DataTables.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 import { getAllEvaluationCommittees } from "./EvaluationCommitteesFunctions.jsx";
@@ -11,16 +11,22 @@ import ModalComitteCriteria from "../../../components/ModalComitteCriteria.jsx";
 import GetEvaluationCommittees from "./GetEvaluationCommittees.jsx";
 
 const EvaluationCommitteesList = () => {
+  // State para manejar las alertas
   const [alerta, setAlerta] = useState({});
-  const [crearDataTable, setCrearDataTable] = useState(false);
-  const [selectedIdGet, setSelectedIdGet] = useState(null);
-  const [selectedIdDelete, setSelectedIdDelete] = useState(null);
-  const [textButton, setTextButton] = useState("Enviar");
-  const [isOpen, setIsOpen] = useState(false);
-  const [id_comité_criterios, set_id_comité_criterios] = useState("");
-  const [committeeSelect, setCommitteeSelect] = useState([]);
-  const navigate = useNavigate();
 
+  // State para manejar la creación de la tabla
+  const [crearDataTable, setCrearDataTable] = useState(false);
+
+  // State para manejar el id seleccionado
+  const [selectedIdGet, setSelectedIdGet] = useState(null);
+
+  // State para manejar el modal
+  const [isOpen, setIsOpen] = useState(false);
+
+  // State para manejar el id del comite de criterios
+  const [id_comité_criterios, set_id_comité_criterios] = useState("");
+
+  // Funcion para abrir y cerrar el modal
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -50,6 +56,8 @@ const EvaluationCommitteesList = () => {
       setCrearDataTable(true);
     }
   }, [isLoading, isError, error]);
+
+  // Titulos de la tabla
   const titles = [
     "Codigo",
     "Fecha Comite",
@@ -61,13 +69,14 @@ const EvaluationCommitteesList = () => {
     "Observaciones",
     "Acciones",
   ];
-  const navigateToCommittee = (id_comites_evaluación) => {
-    setSelectedIdGet(id_comites_evaluación);
-    // Obtener la data usando el ID, luego pasarla a la tabla del comité
-      // navigate("/admin/comites/table");
 
+  // Funcion para navegar a la vista de un comite
+  const handleViewCommitte = (id_comites_evaluación) => {
+    setSelectedIdGet(id_comites_evaluación);
   };
-  const ButtonsForOtherModules = (id_comites_evaluacion) => [
+
+  // Botones para la tabla
+  const ButtonsForTable = (id_comites_evaluacion) => [
     <button
       className="text-white bg-green-500 hover:bg-green-600 mr-3 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="get"
@@ -84,7 +93,7 @@ const EvaluationCommitteesList = () => {
       key="get"
       title="Ver Comité"
       onClick={() => {
-        navigateToCommittee(id_comites_evaluacion);
+        handleViewCommitte(id_comites_evaluacion);
       }}
     >
       <FaEye className="mr-1" />
@@ -92,8 +101,10 @@ const EvaluationCommitteesList = () => {
     </button>,
   ];
 
+  // Extraer los datos para la tabla
   const ComitesEvaluacion = data?.evaluationCommittees || [];
 
+  // Formatear los datos para la tabla
   const formattedDta = ComitesEvaluacion.map((comite) => {
     const rowData = [
       comite?.id_comites_evaluacion, //Id de comite
@@ -107,10 +118,11 @@ const EvaluationCommitteesList = () => {
       comite?.ideas?.proponente?.correo_proponente,
       comite?.Obs_Comite, //Observaciones por parte del evaluador
     ];
-    rowData.push(ButtonsForOtherModules(comite?.id_comites_evaluacion));
+    rowData.push(ButtonsForTable(comite?.id_comites_evaluacion));
     return rowData;
   });
 
+  // Retornar el componente
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
@@ -124,12 +136,7 @@ const EvaluationCommitteesList = () => {
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
 
       {crearDataTable && <WriteTable titles={titles} data={formattedDta} />}
-      {selectedIdGet && (
-        <GetEvaluationCommittees
-          id_comite={selectedIdGet}
-          setCommitteeSelect={setCommitteeSelect}
-        />
-      )}
+      {selectedIdGet && <GetEvaluationCommittees id_comite={selectedIdGet} />}
     </>
   );
 };

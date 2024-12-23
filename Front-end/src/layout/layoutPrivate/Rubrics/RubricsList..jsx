@@ -100,7 +100,7 @@ const RubricsList = () => {
   const titles = ["ID", "Descripción", "Criterios", "Acciones"];
 
   // Botones de la tabla
-  const ButtonsForOtherModules = (id_rubricas) => {
+  const ButtonsForTable = (id_rubricas) => {
     return isAdmin
       ? [
           <button
@@ -138,7 +138,7 @@ const RubricsList = () => {
       rubricas?.criteria_for_rubric?.des_criterio,
     ];
 
-    rowData.push(ButtonsForOtherModules(rubricas?.id_rubricas));
+    rowData.push(ButtonsForTable(rubricas?.id_rubricas));
 
     return rowData;
   });

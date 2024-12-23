@@ -100,7 +100,7 @@ const SetOfCriteriaList = () => {
   const titles = ["ID", "Descripción", "Acciones"];
 
   // Botones de la tabla
-  const ButtonsForOtherModules = (id_conjunto_criterio) => {
+  const ButtonsForTable = (id_conjunto_criterio) => {
     return isAdmin
       ? [
           <button
@@ -136,7 +136,7 @@ const SetOfCriteriaList = () => {
       conjuntoCriterio?.id_conjunto_criterio,
       conjuntoCriterio?.des_conjunto_criterio,
     ];
-    rowData.push(ButtonsForOtherModules(conjuntoCriterio.id_conjunto_criterio));
+    rowData.push(ButtonsForTable(conjuntoCriterio.id_conjunto_criterio));
 
     return rowData;
   });

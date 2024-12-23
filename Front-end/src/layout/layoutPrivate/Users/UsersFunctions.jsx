@@ -1,16 +1,10 @@
 // Instancia de Axios
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
+// Funcion para obtener todos los usuarios
 export const getAllUsers = async () => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const response = await ClientAxios("/user", config);
+    const response = await ClientAxios("/user");
     if (response.status === 200) {
       return response.data;
     }
@@ -19,16 +13,10 @@ export const getAllUsers = async () => {
   }
 };
 
+// Funcion para obtener un usuario
 export const getUser = async (Id_User) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const response = await ClientAxios(`/user/${Id_User}`, config);
+    const response = await ClientAxios(`/user/${Id_User}`);
     if (response.status === 200) {
       return response.data;
     }
@@ -37,16 +25,10 @@ export const getUser = async (Id_User) => {
   }
 };
 
+//  Funcion para eliminar un usuario
 export const deleteUser = async (Id_User) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const response = await ClientAxios.delete(`/user/${Id_User}`, config);
+    const response = await ClientAxios.delete(`/user/${Id_User}`);
     if (response.status === 200) {
       return response.data;
     }
@@ -55,14 +37,9 @@ export const deleteUser = async (Id_User) => {
   }
 };
 
+// Funcion para crear un usuario
 export const createUser = async (dataUser) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     const response = await ClientAxios.post(
       "/user/create",
       {
@@ -72,7 +49,7 @@ export const createUser = async (dataUser) => {
         password: dataUser?.password,
         userType: dataUser?.userType,
       },
-      config
+  
     );
     if (response.status === 201) {
       return response.data;
@@ -82,19 +59,14 @@ export const createUser = async (dataUser) => {
   }
 };
 
+// Funcion para actualizar un usuario
 export const updateUser = async (datos) => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
 
     const response = await ClientAxios.put(
       `/user/${datos.Id_User}`,
       datos,
-      config
+  
     );
     if (response.status === 200) {
       return response.data;
@@ -106,6 +78,7 @@ export const updateUser = async (datos) => {
   }
 };
 
+// Funcion para actualizar la imagen de un usuario
 export const updateImageUser = async ({ formData, Id_User }) => {
   try {
     const response = await ClientAxios.put(

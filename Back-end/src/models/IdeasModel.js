@@ -6,7 +6,7 @@ const IdeasModel = db.define(
   "ideas",
   {
     id_idea: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.STRING(25),
       primaryKey: true,
       autoIncrement: true,
     },

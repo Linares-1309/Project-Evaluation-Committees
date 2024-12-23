@@ -1,21 +1,40 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
+
+// Componentes
+import { BsFillSendFill } from "react-icons/bs";
+import { MdNumbers } from "react-icons/md";
+import { CiTextAlignCenter } from "react-icons/ci";
+
+// Librerias
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { createNewIdea, updateIdea } from "./IdeasFunctions";
-import { getAllProponents } from "../Proponents/ProponentsFunctions";
-import Alerta from "../../../components/Alerta";
-import { BsFillSendFill } from "react-icons/bs";
-import { CiText, CiTextAlignCenter } from "react-icons/ci";
 
-const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
-  // const [idIdea, setIdIdea] = useState("");
+// Componentes
+import { createNewIdea, updateIdea } from "./IdeasFunctions.jsx";
+import { getAllProponents } from "../Proponents/ProponentsFunctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+
+// Componente para crear una nueva idea
+const PostIdeas = ({
+  ideaSelect,
+  textButton,
+  onSuccessSave,
+  setTextButton,
+  setSelectedIdEdit,
+}) => {
+  // State para el formulario
+  const [idIdea, setIdIdea] = useState("");
   const [nombreIdea, setNombreIdea] = useState("");
   const [descripcionIdea, setDescripcionIdea] = useState("");
   const [idProponente, setIdProponente] = useState("");
+
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
   const [selectedIdea, setSelectedIdea] = useState(null);
+
+  // State para almacenar los proponentes
   const [proponentes, setProponentes] = useState([]);
 
   // Traer todos los proponenetes para registrar la idea
@@ -29,6 +48,7 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
     queryFn: getAllProponents,
   });
 
+  // Almacena los proponentes
   useEffect(() => {
     if (loading) {
       setAlerta({
@@ -46,11 +66,37 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
     }
   }, [loading, isError, error, data]);
 
+  // Enviar la data al form para actualizar
+  const setDataForm = () => {
+    setIdIdea(ideaSelect?.id_idea);
+    setNombreIdea(ideaSelect?.nom_idea);
+    setDescripcionIdea(ideaSelect?.des_idea);
+    setIdProponente(ideaSelect?.id_proponente);
+    const selected = dataProponents.find(
+      (proponent) => proponent?.id_proponente === ideaSelect?.id_proponente
+    );
+    setSelectedIdea(selected || null);
+  };
+
+  // Setea los datos del formulario a la hora de editar
+  useEffect(() => {
+    setDataForm();
+  }, [ideaSelect]);
+
+  // Limpia el formulario
+  const clearForm = () => {
+    setIdIdea("");
+    setNombreIdea("");
+    setDescripcionIdea("");
+    setIdProponente("");
+  };
+
   // Crear la nueva idea
   const { mutate, isLoading } = useMutation({
     mutationFn: createNewIdea,
     onSuccess: (data) => {
       onSuccessSave();
+      clearForm();
       setAlerta({
         msg: data.msg,
         error: false,
@@ -68,10 +114,16 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
   const { mutate: mutateUpdate } = useMutation({
     mutationFn: updateIdea,
     onSuccess: (data) => {
+      onSuccessSave();
+      setTextButton("Enviar");
+      setSelectedIdEdit(null);
       setAlerta({
         msg: data.msg,
         error: false,
       });
+      setTimeout(() => {
+        clearForm(); // Limpia el formulario
+      }, 0);
     },
     onError: (error) => {
       setAlerta({
@@ -81,9 +133,10 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
     },
   });
 
+  // Maneja el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombreIdea || !descripcionIdea || !idProponente) {
+    if (!idIdea || !nombreIdea || !descripcionIdea || !idProponente) {
       setAlerta({
         msg: "Los campos son obligatorios!",
         error: true,
@@ -91,7 +144,7 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
       return;
     }
     if (textButton === "Enviar") {
-      const data = { nombreIdea, descripcionIdea, idProponente };
+      const data = { idIdea, nombreIdea, descripcionIdea, idProponente };
       mutate(data);
     } else if (textButton === "Actualizar") {
       const { id_idea } = ideaSelect;
@@ -100,22 +153,8 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
     }
   };
 
+  // Almacena los proponentes
   const dataProponents = proponentes?.proponents || [];
-
-  // Enviar la data al form para actualizar
-  const setDataForm = () => {
-    setNombreIdea(ideaSelect?.nom_idea);
-    setDescripcionIdea(ideaSelect?.des_idea);
-    setIdProponente(ideaSelect?.id_proponente);
-    const selected = dataProponents.find(
-      (proponent) => proponent?.id_proponente === ideaSelect?.id_proponente
-    );
-    setSelectedIdea(selected || null);
-  };
-
-  useEffect(() => {
-    setDataForm();
-  }, [ideaSelect]);
 
   return (
     <>
@@ -127,6 +166,28 @@ const PostIdeas = ({ ideaSelect, textButton, onSuccessSave }) => {
             className="w-full px-12 mx-auto flex flex-col items-center"
             onSubmit={handleSubmit}
           >
+            <div className="mb-3 w-full">
+              <label
+                htmlFor="codeIdea"
+                className="block text-base font-medium text-gray-700 select-none text-start mb-1"
+              >
+                Codigo
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                  <MdNumbers size={22} className="text-gray-700" />
+                </div>
+                <input
+                  type="text"
+                  id="codeIdea"
+                  className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500`}
+                  placeholder="Ingrese el nombre de la idea..."
+                  required
+                  value={idIdea}
+                  onChange={(e) => setIdIdea(e?.target?.value)}
+                />
+              </div>
+            </div>
             <div className="mb-3 w-full">
               <label
                 htmlFor="nameIdea"

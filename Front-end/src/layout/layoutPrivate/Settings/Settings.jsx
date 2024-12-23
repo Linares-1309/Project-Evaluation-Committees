@@ -16,12 +16,12 @@ import { useEffect, useState, useRef } from "react";
 // Componentes
 import { updateUser, updateImageUser } from "../Users/UsersFunctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
-import GetUser from "../Users/GetUser.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
 
 const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
 const Settings = () => {
+  // State para manejar los datos del usuario
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,10 +30,13 @@ const Settings = () => {
   const [userPotho, setUserPotho] = useState();
   const inputFoto = useRef(null);
 
+  // State para manejar las alertas
   const [alerta, setAlerta] = useState({});
 
+  // Custom hook para obtener los datos del usuario
   const { auth, updateAvatar } = useAuth();
 
+  // Funcion para setear los datos del usuario
   const setDataUserForm = () => {
     setFullName(auth?.user?.fullName);
     setUserName(auth?.user?.username);
@@ -79,10 +82,12 @@ const Settings = () => {
     },
   });
 
+  // UseEffect para setear los datos del usuario
   useEffect(() => {
     setDataUserForm();
   }, []);
 
+  // Funcion para manejar el submit del formulario  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -109,6 +114,7 @@ const Settings = () => {
     mutate(data);
   };
 
+  // Funcion para manejar el cambio de la foto
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -118,6 +124,7 @@ const Settings = () => {
     }
   };
 
+  // Funcion para manejar el submit del formulario de la foto
   const handleSubmitFile = (e) => {
     e.preventDefault();
     if (!userPotho) {
@@ -128,9 +135,11 @@ const Settings = () => {
       return;
     }
 
+    // Crear un objeto FormData
     const formData = new FormData();
     formData.append("userPotho", userPotho); // Nombre clave que coincide con multer
 
+    // Extraer el Id del usuario  
     const Id_User = auth?.user?.Id_User;
 
     if (!Id_User) {
@@ -140,10 +149,11 @@ const Settings = () => {
       });
       return;
     }
-
+    // Llamar a la mutación para actualizar la imagen 
     mutateUpdateImage({ formData, Id_User });
   };
 
+  // Renderizar el componente
   return (
     <>
       <div className="mx-auto max-w-270">
@@ -367,7 +377,6 @@ const Settings = () => {
           </div>
         </div>
       </div>
-      <GetUser />
     </>
   );
 };

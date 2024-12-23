@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+// Iconos de Componente
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { TbPencilCode } from "react-icons/tb";
 
+// Librerias
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Componentes
 import WriteTable from "../../../tables/DataTables.jsx";
-import ModalWindow from "../../../components/ModalDialog";
+import ModalWindow from "../../../components/ModalDialog.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 import GetIdea from "./GetIdea.jsx";
 import DeleteIdea from "./DeleteIdea.jsx";
@@ -14,48 +18,67 @@ import { getAllIdeas } from "./IdeasFunctions.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
 
 const IdeasList = () => {
-  const { roleUser } = useAuth();
+  // State para la alerta
   const [alerta, setAlerta] = useState({});
+
+  // State para crear la tabla si hay data disponible
   const [crearDataTable, setCrearDataTable] = useState(false);
+
+  // State para almacenar el Id de la idea y asi montar el conponente si este esta disponible
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
   const [selectedIdCommitte, setSelectedIdCommitte] = useState(null);
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
+
+  // Texto del boton
   const [textButton, setTextButton] = useState("Enviar");
+
+  // Rol de usuario
+  const { roleUser } = useAuth();
+
+  // State para abrir y cerrar la ventana modal del formulario
   const [isOpen, setIsOpen] = useState(false);
-  const [ideaSelect, setIdeaSelect] = useState({
-    id_idea: "",
-    nom_idea: "",
-    estado_idea: "",
-    des_idea: "",
-    cal_final: "",
-    id_proponente: "",
-  });
+
+  // Almacena la idea que se va a editar
+  const [ideaSelect, setIdeaSelect] = useState({});
+
+  // Limpiar el formulario
+  const resetForm = () => {
+    setIdeaSelect({});
+    setSelectedIdEdit(null);
+  };
+
+  // Almacena el rol de usuario para asi renderzar botones dinamicos
   const isAdmin = roleUser === "Admin";
 
+  // Toggle para manejar el evnto de abrir y cerrar la modal
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
+  // Refrescar la data usando la queryKey
   const queryClient = useQueryClient();
+  const refreshData = () => {
+    queryClient.invalidateQueries("ideas");
+  };
 
+  // Funciones para manejar los eventos de los botones
   const handleEditClick = (id_idea) => {
     setSelectedIdEdit(id_idea);
   };
-
   const handleDeleteClick = (id_idea) => {
     setSelectedIdDelete(id_idea);
   };
-
   const handleClickCommitte = async (id_idea) => {
     setSelectedIdCommitte(id_idea);
   };
 
-  //  Consumo a Axios
+  //  Realizamos la consulta
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["ideas"],
     queryFn: getAllIdeas,
   });
 
+  // Efecto para manejar la alerta
   useEffect(() => {
     if (isLoading) {
       setAlerta({
@@ -68,17 +91,16 @@ const IdeasList = () => {
         error: true,
       });
     } else {
-      // Si la consulta es exitosa, no hay alerta
+      // Si la consulta es exitosa, no hay alerta y se habilita para crear el dataTable
       setAlerta({});
       setCrearDataTable(true);
     }
   }, [isLoading, isError, error]);
 
-  const refreshData = () => {
-    queryClient.invalidateQueries("ideas");
-  };
-
+  // Titulo del formulario
   const titleForm = ["Registrar Ideas"];
+
+  // Titulos de la tabla
   const titles = [
     "ID",
     "Nombre Idea",
@@ -88,7 +110,9 @@ const IdeasList = () => {
     "Nombre Proponente",
     "Acciones",
   ];
-  const ButtonsForOtherModules = (id_idea, estado_idea) => {
+
+  // Botones de la tabla
+  const ButtonsForTable = (id_idea, estado_idea) => {
     return [
       <button
         className={
@@ -133,7 +157,10 @@ const IdeasList = () => {
     ];
   };
 
+  // Extraer las ideas de la data
   const ideas = data?.ideas || [];
+
+  // Formatear la data para enviarla a la tabla
   const formattedData = ideas.map((idea) => {
     const rowData = [
       idea?.id_idea,
@@ -145,14 +172,16 @@ const IdeasList = () => {
         " " +
         idea?.proponente?.apellidos_proponente,
     ];
-    rowData.push(ButtonsForOtherModules(idea?.id_idea, idea?.estado_idea));
+    rowData.push(ButtonsForTable(idea?.id_idea, idea?.estado_idea));
     return rowData;
   });
 
+  // Actualizar el texto del boton
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
+  // Retornamos el html donde se renderizan los componetes hijos
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl mb-3">
@@ -162,11 +191,14 @@ const IdeasList = () => {
         <ModalWindow
           toggleModal={toggleModal}
           isOpen={isOpen}
+          resetForm={resetForm}
           form={
             <PostIdeas
               ideaSelect={ideaSelect}
               textButton={textButton}
               onSuccessSave={refreshData}
+              setTextButton={setTextButton}
+              setSelectedIdEdit={setSelectedIdEdit}
             />
           }
           titleForm={titleForm}
@@ -175,14 +207,13 @@ const IdeasList = () => {
       )}
       {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
       {crearDataTable && <WriteTable titles={titles} data={formattedData} />}
-      {selectedIdEdit ||
-        (selectedIdCommitte && (
-          <GetIdea
-            id_idea={selectedIdEdit}
-            id_idea_for_committe={selectedIdCommitte}
-            setIdeaSelect={setIdeaSelect}
-          />
-        ))}
+      {(selectedIdEdit || selectedIdCommitte) && (
+        <GetIdea
+          id_idea={selectedIdEdit}
+          id_idea_for_committe={selectedIdCommitte}
+          setIdeaSelect={setIdeaSelect}
+        />
+      )}
       {selectedIdDelete && (
         <DeleteIdea
           id_idea={selectedIdDelete}

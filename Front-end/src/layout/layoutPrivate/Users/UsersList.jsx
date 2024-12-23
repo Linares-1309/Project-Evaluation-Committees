@@ -61,7 +61,10 @@ const UsersList = () => {
     queryClient.invalidateQueries("criterios"); // Refrescar la lista de usuarios
   };
 
+  // Titulo del formulario
   const titleForm = ["Agregar Usuarios"];
+
+  // Titulos de la tabla
   const titles = [
     "Documento",
     "Nombre de Usuario",
@@ -71,7 +74,8 @@ const UsersList = () => {
     "Acciones",
   ];
 
-  const ButtonsForOtherModules = (Id_User) => [
+  // Botones para la tabla
+  const ButtonsForTable = (Id_User) => [
     <button
       className="text-white bg-red-600 hover:bg-red-700 p-1 rounded flex items-center font-semibold text-xs px-2"
       key="delete"
@@ -82,8 +86,10 @@ const UsersList = () => {
     </button>,
   ];
 
+  // Extraemos los usuarios de la data
   const users = data?.users || [];
 
+  // Formateamos los datos
   const formattedData = users.map((user) => {
     const rowData = [
       user?.Id_User,
@@ -92,15 +98,17 @@ const UsersList = () => {
       user?.phoneNumber,
       user?.userType,
     ];
-    rowData.push(ButtonsForOtherModules(user?.Id_User));
+    rowData.push(ButtonsForTable(user?.Id_User));
 
     return rowData;
   });
 
+  // Función para actualizar el texto del botón
   const updateTextButton = (text) => {
     setTextButton(text);
   };
 
+  // Retornamos el componente
   return (
     <>
       <h1 className="font-RobotoSlab font-semibold uppercase text-2xl">

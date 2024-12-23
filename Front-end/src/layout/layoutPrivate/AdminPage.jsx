@@ -18,11 +18,15 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 // Componentes
 import useAuth from "../../hooks/useAuth.jsx";
 
+// Variables globales
 const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 
+// Página de administrador
 const AdminPage = () => {
+  // Extraer la data del usuario
   const { auth, cargando, cerrarSesion, roleUser } = useAuth();
 
+  // Validar si hay un error al cargar la página
   if (cargando) {
     return (
       <>
@@ -36,6 +40,7 @@ const AdminPage = () => {
     );
   }
 
+  // Retornar el componente
   return (
     <>
       {auth?.user?.Id_User || auth?.Id_User ? (

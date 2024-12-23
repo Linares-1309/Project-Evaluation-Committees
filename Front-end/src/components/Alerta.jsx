@@ -18,8 +18,8 @@ function Alerta({ alerta, setAlerta }) {
     <div
       className={`${
         alerta.error
-          ? "from-red-400 via-red-500 to-red-600"
-          : "from-green-300 via-green-400 to-green-500 text-center"
+          ? "from-red-500 via-red-500 to-red-600"
+          : "from-green-400 via-green-400 to-green-500 text-center"
       } bg-gradient-to-r text-center p-2 rounded-xl text-white font-bold`}
     >
       {alerta.msg}

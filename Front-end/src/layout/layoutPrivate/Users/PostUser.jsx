@@ -14,16 +14,21 @@ import { createUser, updateUser } from "./UsersFunctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
 
 const PostUser = ({ textButton, onSuccessUpdate }) => {
+  // Estados del formulario
   const [idUser, setIdUser] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [userType, setUserType] = useState("");
+
+  // Estados de la visibilidad de las contraseñas (ocultas por defecto)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordRepeatVisible, setIsPasswordRepeatVisible] = useState(false);
 
+  // Estado de la alerta
   const [alerta, setAlerta] = useState({});
 
+  // Funciones para alternar la visibilidad de las contraseñas
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -66,6 +71,7 @@ const PostUser = ({ textButton, onSuccessUpdate }) => {
     },
   });
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== passwordRepeat) {
@@ -82,7 +88,6 @@ const PostUser = ({ textButton, onSuccessUpdate }) => {
       });
       return;
     }
-
     if (!email || !userType || !password) {
       setAlerta({
         msg: "Los campos son obligatorios!",

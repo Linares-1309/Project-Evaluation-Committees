@@ -22,6 +22,8 @@ import RubricsList from "./layout/layoutPrivate/Rubrics/RubricsList..jsx";
 import { Provider } from "./context/Provider.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import UnauthorizedPage from "./components/Unauthorized.jsx";
+import HomePrivate from "./layout/layoutPrivate/Home.jsx";
+import HomePrivateUser from "./layout/layoutPrivate/HomeUser.jsx";
 
 function App() {
   return (
@@ -43,7 +45,7 @@ function App() {
             {/* RUTAS DE ADMIN */}
             <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
               <Route path="/admin/" element={<AdminPage />}>
-                <Route index element={<Home />} />
+                <Route index element={<HomePrivate />} />
                 <Route path="ideas" element={<IdeasList />} />
                 <Route path="comites" element={<EvaluationCommitteesList />} />
                 <Route
@@ -69,7 +71,7 @@ function App() {
                   path="conjunto-criterios"
                   element={<SetOfCriteriaList />}
                 />
-                <Route index element={<Home />} />
+                <Route index element={<HomePrivateUser />} />
                 <Route path="criterios" element={<CriteriaList />} />
                 <Route path="rubricas" element={<RubricsList />} />
                 <Route path="proponentes" element={<ProponentsList />} />

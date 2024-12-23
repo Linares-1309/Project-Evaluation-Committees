@@ -88,78 +88,8 @@ const Login = () => {
   const { msg } = alerta;
   return (
     <>
-      {/* <div className="flex justify-center p-14">
-        <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
-          <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
-            Iniciar Sesión
-          </h1>
-          {msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-          <form
-            className="max-w-sm mx-auto flex flex-col justify-center"
-            onSubmit={handleSubmit}
-          >
-            <div className="mb-2">
-              <label
-                htmlFor="website-admin-document"
-                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
-              >
-                Documento
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                  <FiUser className="text-gray-600" size={14} />
-                </span>
-                <input
-                  type="text"
-                  id="website-admin-document"
-                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Ej. 1107008523"
-                  value={Id_User}
-                  onChange={(e) => setId_User(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="website-admin-password"
-                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
-              >
-                Contraseña
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                  <MdOutlinePassword className="text-gray-600" size={14} />
-                </span>
-                <input
-                  type="password"
-                  id="website-admin-password"
-                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Ingrese su contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto"
-              disabled={isLoading}
-            >
-              {isLoading ? "Cargando..." : "Iniciar Sesión"}
-            </button>
-          </form>
-          <nav className="lg:flex lg:justify-between font-semibold mt-5">
-            <Link
-              to="/forgot-password"
-              className="block text-center text-zinc-700 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
-            >
-              Olvidé mi Contraseña
-            </Link>
-          </nav>
-        </div>
-      </div> */}
       <section className="bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center justify-center px-6 mx-auto py-24">
+        <div className="flex flex-col items-center justify-center px-6 mx-auto py-20">
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
             <div className="p-6 space-y-6 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

@@ -23,7 +23,7 @@ const CriteriaList = () => {
   // State para crear la tabla si hay data disponible
   const [crearDataTable, setCrearDataTable] = useState(false);
 
-  // State para almacenar el Id del criterio y asi mosntar el conponente si este esta disponible
+  // State para almacenar el Id del criterio y asi montar el conponente si este esta disponible
   const [selectedIdDelete, setSelectedIdDelete] = useState(null);
   const [selectedIdEdit, setSelectedIdEdit] = useState(null);
 
@@ -45,7 +45,6 @@ const CriteriaList = () => {
     setSelectedIdEdit(null);
   };
 
-
   // Almacena el rol de usuario para asi renderzar botones dinamicos
   const isAdmin = roleUser === "Admin";
 
@@ -60,7 +59,7 @@ const CriteriaList = () => {
     queryClient.invalidateQueries("criterios");
   };
 
-  // Almacenar los id para motan los componentes
+  // Almacenar los id para montar los componentes
   const handleEditClick = (id_conjunto_criterio) => {
     setSelectedIdEdit(id_conjunto_criterio);
   };
@@ -100,7 +99,7 @@ const CriteriaList = () => {
   const titles = ["ID", "Descripción", "Conjunto de Criterios", "Acciones"];
 
   // Botones de la tabla
-  const ButtonsForOtherModules = (id_criterio) => {
+  const ButtonsForTable = (id_criterio) => {
     return isAdmin
       ? [
           <button
@@ -138,7 +137,7 @@ const CriteriaList = () => {
       criterios?.des_criterio,
       criterios?.criterio?.des_conjunto_criterio,
     ];
-    rowData.push(ButtonsForOtherModules(criterios?.id_criterio));
+    rowData.push(ButtonsForTable(criterios?.id_criterio));
 
     return rowData;
   });

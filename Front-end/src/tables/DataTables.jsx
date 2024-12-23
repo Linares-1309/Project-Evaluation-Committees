@@ -49,7 +49,7 @@ function WriteTable({ titles, data }) {
           <div className="inline-block min-w-full">
             <div className="overflow-x-auto shadow-md rounded-xl bg-clip-border p-5 border-2 bg-white">
               <table
-                className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table table-responsive border-black"
+                className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table table-responsive border-black "
                 id="TableDinamic"
                 ref={tableRef}
               >
