@@ -1,75 +1,8 @@
-import ClientAxios from "../../../config/AxiosConfig";
+// Axios instance
+import ClientAxios from "../../../config/AxiosConfig.jsx";
 
-// export const getAllUsers = async () => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-
-//     const { data } = await ClientAxios("/user", config);
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.response?.data?.msg || "Error desconocido");
-//   }
-// };
-
-// export const getUser = async (Id_User) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-
-//     const { data } = await ClientAxios(`/user/${Id_User}`, config);
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.response?.data?.msg || "Error desconocido");
-//   }
-// };
-
-// export const deleteUser = async (Id_User) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-
-//     const { data } = await ClientAxios.delete(`/user/${Id_User}`, config);
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.response?.data?.msg || "Error desconocido");
-//   }
-// };
-
-// export const updateUser = async (datos) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-
-//     const { data } = await ClientAxios.update(
-//       `/user/${datos.Id_User}`,
-//       { username: datos.username },
-//       config
-//     );
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.response?.data?.msg || "Error desconocido");
-//   }
-// };
-
+// Function to login
 export const loginUser = async (credentials) => {
-
   try {
     const response = await ClientAxios.post("/user/login", credentials);
     if (response.status === 200) {
@@ -80,35 +13,44 @@ export const loginUser = async (credentials) => {
   }
 };
 
+// Function to forgot password
 export const forgotPassword = async (email) => {
   try {
-    const { data } = await ClientAxios.post(`/user/forgot-password`, {
+    const response = await ClientAxios.post(`/user/forgot-password`, {
       email: email,
     });
-    return data;
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
 
+// Function to verify token
 export const verifyToken = async (token) => {
   try {
-    const { data } = await ClientAxios(`/user/forgot-password/${token}`);
-    return data;
+    const response = await ClientAxios(`/user/forgot-password/${token}`);
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
 
+// Function to change password
 export const newPassword = async (datos) => {
   try {
-    const { data } = await ClientAxios.post(
+    const response = await ClientAxios.post(
       `/user/forgot-password/${datos.token}`,
       {
         password: datos.password,
       }
     );
-    return data;
+    if (response.status === 200) {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }

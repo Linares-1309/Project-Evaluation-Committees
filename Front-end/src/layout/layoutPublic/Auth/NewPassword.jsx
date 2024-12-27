@@ -1,18 +1,44 @@
 /* eslint-disable no-unused-vars */
+
+// Icons
+import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+
+// Libraries
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+
+// Components and Functions
 import { verifyToken, newPassword } from "./UserFuctions.jsx";
 import Alerta from "../../../components/Alerta.jsx";
-import { Link, useParams } from "react-router-dom";
-import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 
+// Component of New Password
 const NewPassword = () => {
+  // States for the form
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
+
+  // States for the alert
   const [alerta, setAlerta] = useState({});
+
+  // States for the verification of the token and the password modification
   const [tokenValido, setTokenValido] = useState(false);
   const [passwordModificado, setPasswordModificado] = useState(false);
 
+  // States for the visibility of the password
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordRepeatVisible, setIsPasswordRepeatVisible] = useState(false);
+
+  // Function to toggle the visibility of the password
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  const togglePasswordRepeatVisibility = () => {
+    setIsPasswordRepeatVisible(!isPasswordRepeatVisible);
+  };
+
+  // Hook for the parameters
   const params = useParams();
   const { token } = params;
 
@@ -62,6 +88,7 @@ const NewPassword = () => {
     verify_Token(token);
   }, [token, verify_Token]);
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,80 +111,8 @@ const NewPassword = () => {
 
   return (
     <>
-      {/* <div className="flex justify-center p-14">
-        <div className="border-2 py-10 px-8 w-3/12 bg-slate-50 shadow-lg flex flex-col items-center rounded-md">
-          <h1 className="font-bold text-2xl uppercase text-gray-600 mb-2">
-            Actualizar Contraseña
-          </h1>
-          {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
-          <form
-            className="max-w-sm mx-auto flex flex-col justify-center"
-            onSubmit={handleSubmit}
-          >
-            <div className="mb-2">
-              <label
-                htmlFor="website-admin-password"
-                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
-              >
-                Contraseña
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                  <RiLockPasswordLine className="text-gray-600" size={14} />
-                </span>
-                <input
-                  type="password"
-                  id="website-admin-password"
-                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Ingrese la contraseña!"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="website-admin-password-repeat"
-                className="block mb-1 text-base font-medium text-gray-900 dark:text-white text-start"
-              >
-                Repita la Contraseña
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                  <RiLockPasswordFill className="text-gray-600" size={14} />
-                </span>
-                <input
-                  type="password"
-                  id="website-admin-password-repeat"
-                  className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-green-500 focus:border-green-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                  placeholder="Ingrese su contraseña"
-                  value={passwordRepeat}
-                  onChange={(e) => setPasswordRepeat(e.target.value)}
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="bg-green-500 w-full py-2 px-6 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-600 md:w-auto"
-              disabled={verifyLoading}
-            >
-              {verifyLoading ? "Cargando..." : "Guardar Contraseña"}
-            </button>
-          </form>
-          {passwordModificado && (
-            <nav className="lg:flex lg:justify-between font-semibold mt-5">
-              <Link
-                to="/login"
-                className="block text-center text-zinc-700 mx-2 hover:text-link hover:scale-105 transition-transform duration-200 ease-in-out hover:rounded-md"
-              >
-                Iniciar Sesión
-              </Link>
-            </nav>
-          )}
-        </div>
-      </div> */}
       <section className="bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center justify-center px-6 mx-auto py-24">
+        <div className="flex flex-col items-center justify-center px-6 mx-auto py-20">
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
             <div className="p-6 space-y-6 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -166,7 +121,7 @@ const NewPassword = () => {
               {alerta.msg && <Alerta alerta={alerta} setAlerta={setAlerta} />}
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
-                  <div className="mb-3 w-full">
+                  <div className="mb-2 w-full">
                     <label
                       htmlFor="password"
                       className="block text-base font-medium text-gray-700 select-none text-start mb-1"
@@ -181,8 +136,7 @@ const NewPassword = () => {
                         />
                       </div>
                       <input
-                      type="password"
-                        // type={isPasswordVisible ? "text" : "password"}
+                        type={isPasswordRepeatVisible ? "text" : "password"}
                         id="password"
                         aria-describedby="helper-text-explanation"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
@@ -192,9 +146,21 @@ const NewPassword = () => {
                         onChange={(e) => setPassword(e?.target?.value)}
                         autoComplete="off"
                       />
+                      <span
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                        onClick={togglePasswordRepeatVisibility} // Alterna la visibilidad de la contraseña
+                      >
+                        {isPasswordRepeatVisible ? (
+                          // Icono de ojo abierto (contraseña visible)
+                          <AiFillEye size={20} />
+                        ) : (
+                          // Icono de ojo cerrado (contraseña oculta)
+                          <AiFillEyeInvisible size={20} />
+                        )}
+                      </span>
                     </div>
                   </div>
-                  <div className="mb-3 w-full">
+                  <div className="mb-2 w-full">
                     <label
                       htmlFor="password"
                       className="block text-base font-medium text-gray-700 select-none text-start mb-1"
@@ -203,13 +169,13 @@ const NewPassword = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                        <RiLockPasswordLine
+                        <RiLockPasswordFill
                           size={18}
                           className="text-gray-600"
                         />
                       </div>
                       <input
-                        // type={isPasswordVisible ? "text" : "password"}
+                        type={isPasswordVisible ? "text" : "password"}
                         id="password"
                         aria-describedby="helper-text-explanation"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
@@ -219,6 +185,18 @@ const NewPassword = () => {
                         onChange={(e) => setPasswordRepeat(e?.target?.value)}
                         autoComplete="off"
                       />
+                      <span
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                        onClick={togglePasswordVisibility} // Alterna la visibilidad de la contraseña
+                      >
+                        {isPasswordVisible ? (
+                          // Icono de ojo abierto (contraseña visible)
+                          <AiFillEye size={20} />
+                        ) : (
+                          // Icono de ojo cerrado (contraseña oculta)
+                          <AiFillEyeInvisible size={20} />
+                        )}
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -32,9 +32,6 @@ export default function Header() {
               className="w-40 drop-shadow-2xl"
               alt="Logo"
             />
-            {/* <h2 className="font-bold text-2xl leading-6 text-black ">
-              TECNOPARQUE
-            </h2> */}
           </div>
           <ul className="hidden md:flex flex-auto space-x-2 items-center">
             <Link
@@ -60,7 +57,7 @@ export default function Header() {
               Contacto
             </Link>
             <Link
-              to="lineas"
+              to="about"
               onClick={() => selected(2)}
               className={`${
                 style[2]
@@ -68,7 +65,7 @@ export default function Header() {
                   : "text-black"
               } cursor-pointer px-3 py-2.5 font-bold text-xs leading-3 rounded uppercase font-serif`}
             >
-              Lineas
+              Sobre Nosotros
             </Link>
           </ul>
           <div className=" flex space-x-5 justify-center items-center pl-2">
@@ -99,7 +96,7 @@ export default function Header() {
               </span>
               <p
                 id="textClicked"
-                className="font-bold uppercase text-sm leading-3 focus:outline-none hover:bg-gray-800 duration-100 cursor-pointer "
+                className="font-bold uppercase text-sm leading-3 focus:outline-none duration-100 cursor-pointer "
               >
                 {text ? text : "Inicio"}
               </p>
@@ -146,11 +143,11 @@ export default function Header() {
                 Contacto
               </Link>
               <Link
-                to="lineas"
-                onClick={() => setSelectedText("Lineas")}
+                to="about"
+                onClick={() => setSelectedText("Sobre Nosotros")}
                 className="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-bold uppercase"
               >
-                Lineas
+                Contacto
               </Link>
             </ul>
           </div>

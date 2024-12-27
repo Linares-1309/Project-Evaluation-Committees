@@ -6,6 +6,7 @@ import Contacto from "./layout/layoutPublic/Contacto.jsx";
 import Login from "./layout/layoutPublic/Auth/FormLogin.jsx";
 import ForgotPassword from "./layout/layoutPublic/Auth/ForgotPassword.jsx";
 import NewPassword from "./layout/layoutPublic/Auth/NewPassword.jsx";
+import About from "./layout/layoutPublic/About.jsx";
 
 // Parte Privada
 import UserPage from "./layout/layoutPrivate/UserPage.jsx";
@@ -38,6 +39,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="contact" element={<Contacto />} />
               <Route path="login" element={<Login />} />
+              <Route path="about" element={<About />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="forgot-password/:token" element={<NewPassword />} />
             </Route>

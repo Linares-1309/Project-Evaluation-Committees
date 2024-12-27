@@ -1,24 +1,41 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "./UserFuctions.jsx";
-import Alerta from "../../../components/Alerta.jsx";
-import { Link, useNavigate } from "react-router-dom";
-import useAuth from "./../../../hooks/useAuth.jsx";
-import { FiUser } from "react-icons/fi";
+
+// Icons
 import { MdOutlinePassword } from "react-icons/md";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { FiUser } from "react-icons/fi";
+
+// Libraries
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
+
+// Components and Functions
+import { loginUser } from "./UserFuctions.jsx";
+import Alerta from "../../../components/Alerta.jsx";
+import useAuth from "./../../../hooks/useAuth.jsx";
 import ClientAxios from "../../../config/AxiosConfig.jsx";
 
+// Component of Login
 const Login = () => {
+  // States for the form
   const [Id_User, setId_User] = useState("");
   const [password, setPassword] = useState("");
+
+  // States for the alert
   const [alerta, setAlerta] = useState({});
+
+  // Hook for navigation
   const navigate = useNavigate();
+
+  // Hook for authentication
   const { setAuth, setRoleUser } = useAuth();
+
+  // State for the visibility of the password
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  // Function to toggle the visibility of the password
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -32,9 +49,7 @@ const Login = () => {
       localStorage.setItem("token", token);
       const decodedToken = jwtDecode(token);
       setRoleUser(decodedToken.rol);
-
       handleProfile();
-
       setAuth(data);
       setAlerta({
         msg: data.msg,
@@ -66,11 +81,13 @@ const Login = () => {
     },
   });
 
+  // Función para obtener el perfil del usuario
   const handleProfile = async () => {
     const userProfile = await ClientAxios.get("/user/profile");
     setAuth(userProfile.data);
   };
 
+  // Función para enviar el formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if ([Id_User, password].includes("")) {
@@ -81,6 +98,7 @@ const Login = () => {
       return;
     }
 
+    // Creamos un objeto con las credenciales
     const credentials = { Id_User, password };
     mutate(credentials); // Llamamos a la mutación con las credenciales
   };
@@ -163,25 +181,6 @@ const Login = () => {
                 </div>
 
                 <div className="flex items-center justify-end">
-                  {/* <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <input
-                        id="remember"
-                        aria-describedby="remember"
-                        type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-green-200 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-green-500 dark:ring-offset-gray-800"
-                        required=""
-                      />
-                    </div>
-                    <div className="ml-3 text-sm">
-                      <label
-                        htmlFor="remember"
-                        className="text-gray-500 dark:text-gray-300 select-none"
-                      >
-                        Remember me
-                      </label>
-                    </div>
-                  </div> */}
                   <Link
                     to="/forgot-password"
                     className="font-RobotoSlab text-sm font-medium text-green-500 hover:underline dark:text-green-400"
