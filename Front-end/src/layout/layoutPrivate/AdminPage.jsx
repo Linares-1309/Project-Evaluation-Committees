@@ -132,7 +132,6 @@ const AdminPage = () => {
                             id="toast-default"
                             className="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg drop-shadow-xl dark:text-gray-400 dark:bg-gray-800 z-50 select-none"
                             role="alert"
-                            onClick={() => setShowNotifications(false)}
                           >
                             <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-50 rounded-lg dark:bg-blue-800 dark:text-blue-200">
                               <svg
@@ -152,17 +151,14 @@ const AdminPage = () => {
                               </svg>
                               <span className="sr-only">Fire icon</span>
                             </div>
+                            <Link
+                              to={`/admin/messages/${notification.id_message}`}
 
-                            <li
-                              key={notification.id_message}
-                              className="p-2 border-b border-gray-200"
+                              onClick={() => setShowNotifications(false)}
+                              className="p-2 border-b border-gray-200 block w-full text-gray-800 dark:text-gray-400"
                             >
-                              <Link
-                                to={`/admin/messages/${notification.id_message}`}
-                              >
-                                {notification.des_message}
-                              </Link>
-                            </li>
+                              {notification.des_message}
+                            </Link>
 
                             <button
                               type="button"

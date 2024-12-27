@@ -25,19 +25,19 @@ const MessageDetail = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold mb-4 text-green-600">
+        <h1 className="text-3xl font-bold mb-4 text-green-500 font-RobotoSlab">
           Detalle del Mensaje
         </h1>
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Nombre</h2>
+          <h2 className="text-xl font-semibold text-gray-800 font-RobotoSlab">Nombre</h2>
           <p className="text-gray-600">{message.username}</p>
         </div>
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Email</h2>
+          <h2 className="text-xl font-semibold text-gray-800 font-RobotoSlab">Email</h2>
           <p className="text-gray-600">{message.email}</p>
         </div>
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Mensaje</h2>
+          <h2 className="text-xl font-semibold text-gray-800 font-RobotoSlab">Mensaje</h2>
           <p className="text-gray-600">{message.des_message}</p>
         </div>
         <div className="text-right">
