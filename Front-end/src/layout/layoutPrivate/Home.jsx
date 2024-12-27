@@ -10,7 +10,7 @@ const HomePrivate = () => {
           alt="Tecnoparque Tolima"
           className="mx-auto w-32 h-14 md:w-48 md:h-36 object-contain"
         />
-        <h1 className="text-4xl md:text-6xl font-bold text-green-500 font-RobotoSlab">
+        <h1 className="text-4xl md:text-6xl font-bold text-green-500 font-RobotoSlab drop-shadow-2xl">
           Tecnoparque Tolima
         </h1>
         <p className="text-xl md:text-2xl text-gray-600 mt-2 font-medium">

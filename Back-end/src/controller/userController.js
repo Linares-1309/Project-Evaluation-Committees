@@ -3,6 +3,7 @@ import { generateToken } from "../helpers/generateToken.js";
 import { generateJWT } from "../helpers/generateJWT.js";
 import { emailForgotPassword } from "../helpers/emailForgotPassword.js";
 import { logger } from "../middleware/logMiddleware.js";
+import { emailContact } from "../helpers/emailContact.js";
 
 // Funcion para que el admin pueda ver todos los usuarios
 export const getAllUsers = async (req, res) => {
@@ -337,3 +338,22 @@ export const newPassword = async (req, res) => {
     return res.status(500).json({ msg: "Error al actualizar la contraseña." }); // Captura de errores y manejo de excepciones.
   }
 };
+
+export const sendEmailContact = async ( req, res ) => {
+  const { email, username, message } = req.body;
+  try {
+    // Enviar Email de contacto.
+    emailContact({
+      username,
+      email,
+      message,
+    });
+
+    return res.json({ msg: "Hemos enviado tu mensaje!" });
+  } catch (error) {
+    logger.error("Error al enviar el correo de contacto", error);
+    return res
+      .status(500)
+      .json({ msg: "Error al enviar el correo de contacto" });
+  }
+}

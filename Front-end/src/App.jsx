@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import UnauthorizedPage from "./components/Unauthorized.jsx";
 import HomePrivate from "./layout/layoutPrivate/Home.jsx";
 import HomePrivateUser from "./layout/layoutPrivate/HomeUser.jsx";
+import MessageDetail from "./layout/layoutPrivate/MessageDetail.jsx";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
               <Route path="/admin/" element={<AdminPage />}>
                 <Route index element={<HomePrivate />} />
+                <Route path="messages/:id" element={<MessageDetail />} />
                 <Route path="ideas" element={<IdeasList />} />
                 <Route path="comites" element={<EvaluationCommitteesList />} />
                 <Route

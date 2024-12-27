@@ -55,3 +55,14 @@ export const newPassword = async (datos) => {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
+
+export const newMessage = async (datos) => {
+  try {
+    const response = await ClientAxios.post("/message", datos);
+    if (response.status === 201) {
+      return response.data;
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+}

@@ -27,6 +27,7 @@ import IdeasRoutes from "./routes/IdeasRoutes.js";
 import EvaluationCommitteesRoutes from "./routes/EvaluationCommitteesRoutes.js";
 import RubricsRoutes from "./routes/RubricRoutes.js";
 import routerC from "./routes/CommitteCriteriaRoutes.js";
+import MessageRoutes from "./routes/messageRoutes.js";
 
 // Modelos para las relaciones
 import UserModel from "./models/userModel.js";
@@ -80,6 +81,7 @@ app.use("/api/ideas", IdeasRoutes);
 app.use("/api/evaluation-committees", EvaluationCommitteesRoutes);
 app.use("/api/rubrics", RubricsRoutes);
 app.use("/api/committe-criterias", routerC);
+app.use("/api/message", MessageRoutes);
 
 // Navegar hacia arriba desde src para encontrar public
 const publicDir = path.resolve(__dirname, "../public");

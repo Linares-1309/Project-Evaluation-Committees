@@ -11,11 +11,16 @@ import { LiaUsersCogSolid } from "react-icons/lia";
 import { IoSettings } from "react-icons/io5";
 import { VscLightbulbAutofix } from "react-icons/vsc";
 import { RiLogoutCircleFill } from "react-icons/ri";
+import { FaBell } from "react-icons/fa";
+import { TbBellRingingFilled } from "react-icons/tb";
 
 // Librerias
+import { useEffect, useState } from "react";
 import { Link, Navigate, Outlet } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 // Componentes
+import { getUnreadMessages } from "./Users/UsersFunctions.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 
 // Variables globales
@@ -25,6 +30,34 @@ const URI_FOTOS = import.meta.env.VITE_FOTOS_URL;
 const AdminPage = () => {
   // Extraer la data del usuario
   const { auth, cargando, cerrarSesion, roleUser } = useAuth();
+
+  // Estado para las notificaciones
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["notificaciones"],
+    queryFn: getUnreadMessages,
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      setNotifications([]);
+    } else if (isError) {
+      setNotifications([]);
+    } else {
+      setNotifications(data);
+    }
+  }, [isLoading, isError, data]);
+
+  // Manejar la eliminación de una notificación
+  const handleRemoveNotification = (id) => {
+    setNotifications(
+      notifications.filter((notification) => notification.id_message !== id)
+    );
+  };
+
+  const hasNotifications = true;
 
   // Validar si hay un error al cargar la página
   if (cargando) {
@@ -79,27 +112,117 @@ const AdminPage = () => {
                     />
                   </Link>
                 </div>
-                <Link to="/admin/ajustes" className="flex items-center mr-5">
-                  <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">
-                    {auth?.user?.username || auth?.username}
-                  </h3>
-                  <div className="flex items-center ms-3">
-                    <div>
-                      <button
-                        type="button"
-                        className="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 border-2 "
-                        aria-expanded="false"
-                      >
-                        <span className="sr-only">Open Menu</span>
-                        <img
-                          className="w-12 h-12 rounded-full"
-                          src={`${URI_FOTOS}${auth?.user?.userPotho}`}
-                          alt="user photo"
-                        />
-                      </button>
-                    </div>
+                <div className="flex items-center space-x-5">
+                  <div
+                    className="cursor-pointer relative my-5"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                  >
+                    {hasNotifications ? (
+                      <TbBellRingingFilled size={22} color="black" />
+                    ) : (
+                      <FaBell size={22} color="black" />
+                    )}
                   </div>
-                </Link>
+                  {showNotifications && (
+                    <>
+                      <div className="grid grid-cols-1 space-y-3 z-50 absolute top-20 right-10 w-80 bg-transparent rounded-lg  dark:bg-gray-800 dark:text-gray-400">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification.id_message}
+                            id="toast-default"
+                            className="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg drop-shadow-xl dark:text-gray-400 dark:bg-gray-800 z-50 select-none"
+                            role="alert"
+                            onClick={() => setShowNotifications(false)}
+                          >
+                            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-50 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+                              <svg
+                                className="w-4 h-4"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 18 20"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M15.147 15.085a7.159 7.159 0 0 1-6.189 3.307A6.713 6.713 0 0 1 3.1 15.444c-2.679-4.513.287-8.737.888-9.548A4.373 4.373 0 0 0 5 1.608c1.287.953 6.445 3.218 5.537 10.5 1.5-1.122 2.706-3.01 2.853-6.14 1.433 1.049 3.993 5.395 1.757 9.117Z"
+                                />
+                              </svg>
+                              <span className="sr-only">Fire icon</span>
+                            </div>
+
+                            <li
+                              key={notification.id_message}
+                              className="p-2 border-b border-gray-200"
+                            >
+                              <Link
+                                to={`/admin/messages/${notification.id_message}`}
+                              >
+                                {notification.des_message}
+                              </Link>
+                            </li>
+
+                            <button
+                              type="button"
+                              className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                              data-dismiss-target="#toast-default"
+                              aria-label="Close"
+                              onClick={() =>
+                                handleRemoveNotification(
+                                  notification.id_message
+                                )
+                              }
+                            >
+                              <span className="sr-only">Close</span>
+                              <svg
+                                className="w-3 h-3"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 14 14"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  <Link
+                    to="/admin/ajustes"
+                    className="flex items-center mr-5 select-none"
+                  >
+                    <h3 className="font-serif uppercase text-sm font-semibold text-gray-800">
+                      {auth?.user?.username || auth?.username}
+                    </h3>
+                    <div className="flex items-center ms-3">
+                      <div>
+                        <button
+                          type="button"
+                          className="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 border-2 "
+                          aria-expanded="false"
+                        >
+                          <span className="sr-only">Open Menu</span>
+                          <img
+                            className="w-12 h-12 rounded-full"
+                            src={`${URI_FOTOS}${auth?.user?.userPotho}`}
+                            alt="user photo"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
           </nav>

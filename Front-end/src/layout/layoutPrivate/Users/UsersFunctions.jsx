@@ -40,17 +40,13 @@ export const deleteUser = async (Id_User) => {
 // Funcion para crear un usuario
 export const createUser = async (dataUser) => {
   try {
-    const response = await ClientAxios.post(
-      "/user/create",
-      {
-        Id_User: dataUser?.idUser,
-        username: dataUser?.userName,
-        email: dataUser?.email,
-        password: dataUser?.password,
-        userType: dataUser?.userType,
-      },
-  
-    );
+    const response = await ClientAxios.post("/user/create", {
+      Id_User: dataUser?.idUser,
+      username: dataUser?.userName,
+      email: dataUser?.email,
+      password: dataUser?.password,
+      userType: dataUser?.userType,
+    });
     if (response.status === 201) {
       return response.data;
     }
@@ -62,12 +58,7 @@ export const createUser = async (dataUser) => {
 // Funcion para actualizar un usuario
 export const updateUser = async (datos) => {
   try {
-
-    const response = await ClientAxios.put(
-      `/user/${datos.Id_User}`,
-      datos,
-  
-    );
+    const response = await ClientAxios.put(`/user/${datos.Id_User}`, datos);
     if (response.status === 200) {
       return response.data;
     }
@@ -91,6 +82,42 @@ export const updateImageUser = async ({ formData, Id_User }) => {
   } catch (error) {
     console.log(error);
 
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+};
+
+// Funcion para obtener los mensajes
+export const getMessages = async () => {
+  try {
+    const response = await ClientAxios("/message");
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+};
+
+// Funcion para obtener los mensajes no leidos
+export const getUnreadMessages = async () => {
+  try {
+    const response = await ClientAxios("/message/unread");
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.msg || "Error desconocido");
+  }
+};
+
+// Funcion para obtener un mensaje por id
+export const getMessageById = async (id) => {
+  try {
+    const response = await ClientAxios(`/message/${id}`);
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
     throw new Error(error.response?.data?.msg || "Error desconocido");
   }
 };
